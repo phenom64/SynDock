@@ -59,7 +59,6 @@ find_package(Qt6 ${QT_MIN_VERSION} REQUIRED COMPONENTS
 # KDE Frameworks 6
 # ============================================================================
 find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
-    Activities
     Archive
     CoreAddons
     Declarative
@@ -82,6 +81,7 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
 # ============================================================================
 find_package(Plasma ${PLASMA_MIN_VERSION} REQUIRED)
 find_package(PlasmaQuick ${PLASMA_MIN_VERSION} REQUIRED)
+find_package(PlasmaActivities REQUIRED)  # Activities moved from KF5 to Plasma in KF6
 find_package(LibTaskManager REQUIRED)
 add_definitions(-DPLASMA_WORKSPACE_VERSION="${LibTaskManager_VERSION}")
 

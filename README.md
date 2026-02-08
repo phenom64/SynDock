@@ -26,7 +26,7 @@ Developed and maintained by Syndromatic Ltd. Based on "Latte Dock" (2016, Michai
 
 SynDock targets SynOS Canora (Kubuntu 26.04 LTS base) with Qt 6 and KF6.
 
-### Required (Debian/Ubuntu with KDE Neon or Kubuntu 26.04+)
+### Required (Debian/Ubuntu with KDE Neon or Kubuntu 25.10+)
 
 ```
 build-essential cmake extra-cmake-modules ninja-build
@@ -36,13 +36,13 @@ qt6-base-dev qt6-declarative-dev qt6-wayland-dev
 
 # KDE Frameworks 6
 libkf6coreaddons-dev libkf6guiaddons-dev libkf6dbusaddons-dev
-libkf6windowsystem-dev libkf6globalaccel-dev libkf6activities-dev
-libkf6crash-dev libkf6notifications-dev libkf6archive-dev
-libkf6iconthemes-dev libkf6kio-dev libkf6xmlgui-dev libkf6svg-dev
-libkf6package-dev libkf6declarative-dev
+libkf6windowsystem-dev libkf6globalaccel-dev libkf6crash-dev
+libkf6notifications-dev libkf6archive-dev libkf6iconthemes-dev
+libkf6kio-dev libkf6xmlgui-dev libkf6svg-dev libkf6package-dev
+libkf6declarative-dev
 
-# Plasma 6
-libplasma-dev plasma-wayland-protocols
+# Plasma 6 (includes Activities, which moved from KF5 to Plasma in KF6)
+libplasma-dev libplasmaactivities-dev plasma-wayland-protocols
 
 # Layer Shell
 layer-shell-qt-dev

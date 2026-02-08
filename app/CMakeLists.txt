@@ -77,7 +77,6 @@ target_link_libraries(syndock
     Qt6::WaylandClient
     
     # KDE Frameworks 6
-    KF6::Activities
     KF6::Archive
     KF6::CoreAddons
     KF6::Crash
@@ -95,6 +94,7 @@ target_link_libraries(syndock
     # Plasma 6
     Plasma::Plasma
     Plasma::PlasmaQuick
+    Plasma::Activities  # Moved from KF5::Activities to Plasma in KF6
     
     # Wayland
     Wayland::Client
