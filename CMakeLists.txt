@@ -91,13 +91,9 @@ add_definitions(-DPLASMA_WORKSPACE_VERSION="${LibTaskManager_VERSION}")
 find_package(LayerShellQt REQUIRED)
 find_package(PlasmaWaylandProtocols 1.6 REQUIRED)
 find_package(Wayland REQUIRED COMPONENTS Client)
-find_package(KWayland CONFIG QUIET)
-find_package(KF6Wayland CONFIG QUIET)
-find_package(KF6WaylandClient CONFIG QUIET)
-
-if(NOT TARGET KWayland::Client AND NOT TARGET KF6::WaylandClient)
-    message(FATAL_ERROR "SynDock requires KWayland client development files (KWayland::Client or KF6::WaylandClient).")
-endif()
+find_package(KWayland QUIET)
+find_package(KF6Wayland QUIET)
+find_package(KF6WaylandClient QUIET)
 
 # Wayland-only build - explicitly disable X11
 set(HAVE_X11 OFF)

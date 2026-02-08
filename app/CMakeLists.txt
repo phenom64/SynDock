@@ -67,16 +67,25 @@ qt6_generate_wayland_protocol_client_sources(syndock
 
 include(FakeTarget.cmake)
 
-# Resolve the KWayland client target name across distro packaging variants.
+# Resolve KWayland client linkage across distro packaging variants.
 set(SYNDOCK_KWAYLAND_CLIENT_TARGET "")
+set(SYNDOCK_KWAYLAND_CLIENT_LIBRARIES "")
+set(SYNDOCK_KWAYLAND_CLIENT_INCLUDE_DIRS "")
 if(TARGET KWayland::Client)
     set(SYNDOCK_KWAYLAND_CLIENT_TARGET KWayland::Client)
 elseif(TARGET KF6::WaylandClient)
     set(SYNDOCK_KWAYLAND_CLIENT_TARGET KF6::WaylandClient)
+elseif(TARGET KF6::KWaylandClient)
+    set(SYNDOCK_KWAYLAND_CLIENT_TARGET KF6::KWaylandClient)
+elseif(DEFINED KWayland_LIBRARIES AND NOT "${KWayland_LIBRARIES}" STREQUAL "")
+    set(SYNDOCK_KWAYLAND_CLIENT_LIBRARIES ${KWayland_LIBRARIES})
+    if(DEFINED KWayland_INCLUDE_DIRS)
+        set(SYNDOCK_KWAYLAND_CLIENT_INCLUDE_DIRS ${KWayland_INCLUDE_DIRS})
+    endif()
 endif()
 
-if(SYNDOCK_KWAYLAND_CLIENT_TARGET STREQUAL "")
-    message(FATAL_ERROR "SynDock requires a KWayland client target (KWayland::Client or KF6::WaylandClient)")
+if(SYNDOCK_KWAYLAND_CLIENT_TARGET STREQUAL "" AND "${SYNDOCK_KWAYLAND_CLIENT_LIBRARIES}" STREQUAL "")
+    message(FATAL_ERROR "SynDock requires KWayland client development files (target KWayland::Client/KF6::WaylandClient or KWayland_LIBRARIES from find_package).")
 endif()
 
 # Resolve activities target across framework variants.
@@ -126,8 +135,13 @@ target_link_libraries(syndock
     # Wayland
     Wayland::Client
     ${SYNDOCK_KWAYLAND_CLIENT_TARGET}
+    ${SYNDOCK_KWAYLAND_CLIENT_LIBRARIES}
     LayerShellQt::Interface
 )
+
+if(NOT "${SYNDOCK_KWAYLAND_CLIENT_INCLUDE_DIRS}" STREQUAL "")
+    target_include_directories(syndock PRIVATE ${SYNDOCK_KWAYLAND_CLIENT_INCLUDE_DIRS})
+endif()
 
 # Desktop files - renamed from latte-dock to syndock
 configure_file(org.kde.latte-dock.desktop.cmake org.syndromatic.syndock.desktop)
