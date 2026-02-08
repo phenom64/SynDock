@@ -6,7 +6,7 @@
 #include "contextmenulayerquickitem.h"
 
 // local
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../layouts/storage.h"
 #include "../view/view.h"
 

@@ -17,7 +17,7 @@
 #include "../../data/layoutstable.h"
 #include "../../data/genericbasictable.h"
 #include "../../data/viewstable.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../layout/abstractlayout.h"
 #include "../../layout/centrallayout.h"
 #include "../../layouts/manager.h"

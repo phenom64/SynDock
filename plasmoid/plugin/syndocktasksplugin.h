@@ -3,8 +3,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef LATTETASKSPLUGIN_H
-#define LATTETASKSPLUGIN_H
+#ifndef SYNDOCKTASKSPLUGIN_H
+#define SYNDOCKTASKSPLUGIN_H
 
 // Qt
 #include <QQmlExtensionPlugin>
@@ -12,7 +12,7 @@
 // Plasma
 #include <PlasmaQuick/Dialog>
 
-class LatteTasksPlugin : public QQmlExtensionPlugin
+class SyndockTasksPlugin : public QQmlExtensionPlugin
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.qt-project.Qt.QQmlExtensionInterface")

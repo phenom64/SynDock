@@ -62,8 +62,8 @@
         "Description[zh_CN]": "Latte 默认指示器",
         "Description[zh_TW]": "Latte 預設指示器",
         "EnabledByDefault": true,
-        "Icon": "latte-dock",
-        "Id": "org.kde.latte.default",
+        "Icon": "syndock",
+        "Id": "org.kde.syndock.default",
         "License": "GPL v2+",
         "Name": "Latte",
         "Name[ar]": "لاتيه",
@@ -104,7 +104,7 @@
         "Name[zh_CN]": "Latte",
         "Name[zh_TW]": "Latte",
         "ServiceTypes": [
-            "Latte/Indicator"
+            "SynDock/Indicator"
         ],
         "Version": "0.1"
     },

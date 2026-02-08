@@ -29,6 +29,7 @@
 #include <QFile>
 #include <QHeaderView>
 #include <QItemSelection>
+#include <QRegularExpression>
 #include <QStringList>
 #include <QTemporaryDir>
 #include <QTemporaryFile>
@@ -130,7 +131,7 @@ void Layouts::initView()
     m_view->sortByColumn(m_viewSortColumn, m_viewSortOrder);
 
     //!find the available colors
-    m_iconsPath = m_handler->corona()->kPackage().path() + "../../shells/org.kde.latte.shell/contents/images/canvas/";
+    m_iconsPath = m_handler->corona()->kPackage().path() + "../../shells/org.kde.syndock.shell/contents/images/canvas/";
 
     QDir layoutDir(m_iconsPath);
     QStringList filter;
@@ -347,7 +348,7 @@ const NSE::Data::ScreensTable Layouts::screensData()
     //! Print no-removable screens
     /*for (int i=0; i<scrtable.rowCount(); ++i) {
         if (!scrtable[i].isRemovable) {
-            qDebug() <<"org.kde.latte NO REMOVABLE EXP SCREEN ::: " << scrtable[i].id;
+            qDebug() <<"org.kde.syndock NO REMOVABLE EXP SCREEN ::: " << scrtable[i].id;
         }
     }*/
 
@@ -467,7 +468,7 @@ QString Layouts::uniqueTempDirectory()
 
 QString Layouts::uniqueLayoutName(QString name)
 {
-    int pos_ = name.lastIndexOf(QRegExp(QString(" - [0-9]+")));
+    int pos_ = name.lastIndexOf(QRegularExpression(QStringLiteral(" - [0-9]+")));
 
     if (m_model->containsCurrentName(name) && pos_ > 0) {
         name = name.left(pos_);

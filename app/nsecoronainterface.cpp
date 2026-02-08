@@ -8,13 +8,13 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 
-#include "lattecorona.h"
+#include "nsecoronainterface.h"
 
 // local
 #include <coretypes.h>
 #include "alternativeshelper.h"
 #include "apptypes.h"
-#include "lattedockadaptor.h"
+#include "syndockadaptor.h"
 #include "screenpool.h"
 #include "data/generictable.h"
 #include "data/layouticondata.h"
@@ -28,7 +28,7 @@
 #include "layouts/manager.h"
 #include "layouts/synchronizer.h"
 #include "shortcuts/globalshortcuts.h"
-#include "package/lattepackage.h"
+#include "package/syndockpackage.h"
 #include "plasma/extended/backgroundcache.h"
 #include "plasma/extended/backgroundtracker.h"
 #include "plasma/extended/screengeometries.h"
@@ -44,7 +44,7 @@
 #include "view/windowstracker/currentscreentracker.h"
 #include "wm/abstractwindowinterface.h"
 #include "wm/schemecolors.h"
-#include "wm/waylandinterface.h"
+#include "wm/nsewaylandinterface.h"
 // NOTE: X11 support removed - SynDock is Wayland-only
 // #include "wm/xwindowinterface.h"
 #include "wm/tracker/lastactivewindow.h"
@@ -60,6 +60,7 @@
 // NOTE: QDesktopWidget removed in Qt 6 - using QScreen instead
 #include <QFile>
 #include <QFontDatabase>
+#include <QPointer>
 #include <QQmlContext>
 #include <QProcess>
 
@@ -112,7 +113,7 @@ Corona::Corona(bool defaultLayoutOnStartup, QString layoutNameOnStartUp, QString
     if (!KWindowSystem::isPlatformWayland()) {
         qWarning() << "SynDock requires Wayland. X11 is not supported.";
     }
-    m_wm = new WindowSystem::WaylandInterface(this);
+    m_wm = new WindowSystem::NSEWaylandInterface(this);
 
     setupWaylandIntegration();
 
@@ -144,7 +145,7 @@ Corona::Corona(bool defaultLayoutOnStartup, QString layoutNameOnStartUp, QString
 
     m_viewsScreenSyncTimer.setSingleShot(true);
     m_viewsScreenSyncTimer.setInterval(m_universalSettings->screenTrackerInterval());
-    connect(&m_viewsScreenSyncTimer, &QTimer::timeout, this, &Corona::syncLatteViewsToScreens);
+    connect(&m_viewsScreenSyncTimer, &QTimer::timeout, this, &Corona::syncDockViewsToScreens);
     connect(m_universalSettings, &UniversalSettings::screenTrackerIntervalChanged, this, [this]() {
         m_viewsScreenSyncTimer.setInterval(m_universalSettings->screenTrackerInterval());
     });
@@ -152,7 +153,7 @@ Corona::Corona(bool defaultLayoutOnStartup, QString layoutNameOnStartUp, QString
     //! Dbus adaptor initialization
     new SynDockAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
-    dbus.registerObject(QStringLiteral("/Latte"), this);
+    dbus.registerObject(QStringLiteral("/SynDock"), this);
 }
 
 Corona::~Corona()
@@ -169,7 +170,7 @@ Corona::~Corona()
         cleanConfig();
     }
 
-    qDebug() << "Latte Corona - unload: containments ...";
+    qDebug() << "SynDock Corona - unload: containments ...";
     m_layoutsManager->unload();*/
 
     m_plasmaGeometries->deleteLater();
@@ -186,14 +187,15 @@ Corona::~Corona()
     disconnect(m_activitiesConsumer, &KActivities::Consumer::serviceStatusChanged, this, &Corona::load);
     delete m_activitiesConsumer;
 
-    qDebug() << "Latte Corona - deleted...";
+    qDebug() << "SynDock Corona - deleted...";
 
     if (!m_importFullConfigurationFile.isEmpty()) {
-        //!NOTE: Restart latte to import the new configuration
-        QString importCommand = "syndock --import-full \"" + m_importFullConfigurationFile + "\"";
-        qDebug() << "Executing Import Full Configuration command : " << importCommand;
+        //! NOTE: Restart SynDock to import the new configuration
+        const QString program = QStringLiteral("syndock");
+        const QStringList arguments{QStringLiteral("--import-full"), m_importFullConfigurationFile};
+        qDebug() << "Executing Import Full Configuration command :" << program << arguments;
 
-        QProcess::startDetached(importCommand);
+        QProcess::startDetached(program, arguments);
     }
 }
 
@@ -215,7 +217,7 @@ void Corona::onAboutToQuit()
         m_layoutsManager->importer()->setMultipleLayoutsStatus(NSE::MultipleLayouts::Paused);
     }
 
-    qDebug() << "Latte Corona - unload: containments ...";
+    qDebug() << "SynDock Corona - unload: containments ...";
     m_layoutsManager->unload();
 }
 
@@ -329,7 +331,7 @@ void Corona::setupWaylandIntegration()
                      [this, registry](quint32 name, quint32 version) {
         KWayland::Client::PlasmaWindowManagement *pwm = registry->createPlasmaWindowManagement(name, version, this);
 
-        WindowSystem::WaylandInterface *wI = qobject_cast<WindowSystem::WaylandInterface *>(m_wm);
+        WindowSystem::NSEWaylandInterface *wI = qobject_cast<WindowSystem::NSEWaylandInterface *>(m_wm);
 
         if (wI) {
             wI->initWindowManagement(pwm);
@@ -341,7 +343,7 @@ void Corona::setupWaylandIntegration()
                      [this, registry] (quint32 name, quint32 version) {
         KWayland::Client::PlasmaVirtualDesktopManagement *vdm = registry->createPlasmaVirtualDesktopManagement(name, version, this);
 
-        WindowSystem::WaylandInterface *wI = qobject_cast<WindowSystem::WaylandInterface *>(m_wm);
+        WindowSystem::NSEWaylandInterface *wI = qobject_cast<WindowSystem::NSEWaylandInterface *>(m_wm);
 
         if (wI) {
             wI->initVirtualDesktopManagement(vdm);
@@ -651,8 +653,8 @@ QRegion Corona::availableScreenRegionWithCriteria(int id,
                 break;
             }
 
-            // Usually availableScreenRect is used by the desktop,
-            // but Latte don't have desktop, then here just
+            // Usually availableScreenRect is used by the desktop.
+            // SynDock has no desktop shell, so calculate only view-occupied space.
             // need calculate available space for top and bottom location,
             // because the left and right are those who dodge others views
             switch (view->location()) {
@@ -803,8 +805,8 @@ QRect Corona::availableScreenRectWithCriteria(int id,
 
             int appliedThickness = view->behaveAsPlasmaPanel() ? view->screenEdgeMargin() + view->normalThickness() : view->normalThickness();
 
-            // Usually availableScreenRect is used by the desktop,
-            // but Latte don't have desktop, then here just
+            // Usually availableScreenRect is used by the desktop.
+            // SynDock has no desktop shell, so calculate only view-occupied space.
             // need calculate available space for top and bottom location,
             // because the left and right are those who dodge others docks
             switch (view->location()) {
@@ -902,9 +904,9 @@ void Corona::onScreenGeometryChanged(const QRect &geometry)
     }
 }
 
-//! the central functions that updates loading/unloading latteviews
+//! Central function that updates loading/unloading dock views
 //! concerning screen changed (for multi-screen setups mainly)
-void Corona::syncLatteViewsToScreens()
+void Corona::syncDockViewsToScreens()
 {
     m_layoutsManager->synchronizer()->syncLatteViewsToScreens();
 }
@@ -956,7 +958,7 @@ int Corona::screenForContainment(const Plasma::Containment *containment) const
     //FIXME: indexOf is not a proper way to support multi-screen
     // as for environment to environment the indexes change
     // also there is the following issue triggered
-    // from latteView adaptToScreen()
+    // from dock view adaptToScreen()
     //
     // in a multi-screen environment that
     // primary screen is not set to 0 it was
@@ -991,13 +993,13 @@ void Corona::showAlternativesForApplet(Plasma::Applet *applet)
         return;
     }
 
-    NSE::View *latteView =  m_layoutsManager->synchronizer()->viewForContainment(applet->containment());
+    QPointer<NSE::View> dockView =  m_layoutsManager->synchronizer()->viewForContainment(applet->containment());
 
     KDeclarative::QmlObjectSharedEngine *qmlObj{nullptr};
 
-    if (latteView) {
-        latteView->setAlternativesIsShown(true);
-        qmlObj = new KDeclarative::QmlObjectSharedEngine(latteView);
+    if (dockView) {
+        dockView->setAlternativesIsShown(true);
+        qmlObj = new KDeclarative::QmlObjectSharedEngine(dockView);
     } else {
         qmlObj = new KDeclarative::QmlObjectSharedEngine(this);
     }
@@ -1012,8 +1014,10 @@ void Corona::showAlternativesForApplet(Plasma::Applet *applet)
     qmlObj->completeInitialization();
 
     //! Alternative dialog signals
-    connect(helper, &QObject::destroyed, this, [latteView]() {
-        latteView->setAlternativesIsShown(false);
+    connect(helper, &QObject::destroyed, this, [dockView]() {
+        if (dockView) {
+            dockView->setAlternativesIsShown(false);
+        }
     });
 
     connect(qmlObj->rootObject(), SIGNAL(visibleChanged(bool)),
@@ -1136,7 +1140,7 @@ void Corona::importLayoutFile(const QString &filepath, const QString &suggestedL
 
     //! Import and load runtime a layout through dbus interface
     //! It can be used from external programs that want to update runtime
-    //! the Latte shown layout
+    //! the currently shown layout
     QString layoutPath = filepath;
 
     //! cleanup layout path
@@ -1335,14 +1339,14 @@ void Corona::importFullConfiguration(const QString &file)
 inline void Corona::qmlRegisterTypes() const
 {   
     qmlRegisterUncreatableMetaObject(NSE::Settings::staticMetaObject,
-                                     "org.kde.latte.private.app",          // import statement
+                                     "org.kde.syndock.private.app",          // import statement
                                      0, 1,                                 // major and minor version of the import
                                      "Settings",                           // name in QML
-                                     "Error: only enums of latte app settings");
+                                     "Error: only enums of SynDock app settings");
 
-    qmlRegisterType<NSE::BackgroundTracker>("org.kde.latte.private.app", 0, 1, "BackgroundTracker");
-    qmlRegisterType<NSE::Interfaces>("org.kde.latte.private.app", 0, 1, "Interfaces");
-    qmlRegisterType<NSE::ContextMenuLayerQuickItem>("org.kde.latte.private.app", 0, 1, "ContextMenuLayer");
+    qmlRegisterType<NSE::BackgroundTracker>("org.kde.syndock.private.app", 0, 1, "BackgroundTracker");
+    qmlRegisterType<NSE::Interfaces>("org.kde.syndock.private.app", 0, 1, "Interfaces");
+    qmlRegisterType<NSE::ContextMenuLayerQuickItem>("org.kde.syndock.private.app", 0, 1, "ContextMenuLayer");
     qmlRegisterAnonymousType<QScreen>("syndock", 1);
     qmlRegisterAnonymousType<NSE::View>("syndock", 1);
     qmlRegisterAnonymousType<NSE::ViewPart::WindowsTracker>("syndock", 1);

@@ -39,11 +39,20 @@ Factory::Factory(QObject *parent)
 {
     m_parentWidget = new QWidget();
 
-    m_mainPaths = NSE::Layouts::Importer::standardPaths();
+    const QStringList basePaths = NSE::Layouts::Importer::standardPaths();
+    m_mainPaths.clear();
 
-    for(int i=0; i<m_mainPaths.count(); ++i) {
-        m_mainPaths[i] = m_mainPaths[i] + "/latte/indicators";
-        discoverNewIndicators(m_mainPaths[i]);
+    for (const auto &basePath : basePaths) {
+        const QString syndockPath = basePath + "/syndock/indicators";
+        m_mainPaths << syndockPath;
+        discoverNewIndicators(syndockPath);
+
+        // Keep legacy user indicators discoverable during migration.
+        const QString legacyLattePath = basePath + "/latte/indicators";
+        if (!m_mainPaths.contains(legacyLattePath)) {
+            m_mainPaths << legacyLattePath;
+            discoverNewIndicators(legacyLattePath);
+        }
     }
 
     //! track paths for changes
@@ -68,7 +77,7 @@ Factory::Factory(QObject *parent)
         }
     });
 
-    qDebug() << m_plugins["org.kde.latte.default"].name();
+    qDebug() << m_plugins["org.kde.syndock.default"].name();
 }
 
 Factory::~Factory()
@@ -132,9 +141,9 @@ void Factory::reload(const QString &indicatorPath)
                     m_pluginUiPaths[metadata.pluginId()] = QFileInfo(uiFile).absolutePath();
                 }
 
-                if ((metadata.pluginId() != "org.kde.latte.default")
-                        && (metadata.pluginId() != "org.kde.latte.plasma")
-                        && (metadata.pluginId() != "org.kde.latte.plasmatabstyle")) {
+                if ((metadata.pluginId() != "org.kde.syndock.default")
+                        && (metadata.pluginId() != "org.kde.syndock.plasma")
+                        && (metadata.pluginId() != "org.kde.syndock.plasmatabstyle")) {
 
                     //! find correct alphabetical position
                     int newPos = -1;
@@ -231,7 +240,7 @@ void Factory::removeIndicatorRecords(const QString &path)
 
 bool Factory::isCustomType(const QString &id) const
 {
-    return ((id != "org.kde.latte.default") && (id != "org.kde.latte.plasma") && (id != "org.kde.latte.plasmatabstyle"));
+    return ((id != "org.kde.syndock.default") && (id != "org.kde.syndock.plasma") && (id != "org.kde.syndock.plasmatabstyle"));
 }
 
 bool Factory::metadataAreValid(KPluginMetaData &metadata)
@@ -341,7 +350,7 @@ NSE::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
 
     if (metadataAreValid(metadata)) {
         QStringList standardPaths = NSE::Layouts::Importer::standardPaths();
-        QString installPath = standardPaths[0] + "/latte/indicators/" + metadata.pluginId();
+        QString installPath = standardPaths[0] + "/syndock/indicators/" + metadata.pluginId();
 
         bool updated{QDir(installPath).exists()};
 
@@ -393,7 +402,7 @@ void Factory::removeIndicator(QString id)
 
             qDebug() << "Trying to remove indicator :: " << id;
             QProcess process;
-            process.start(QString("kpackagetool5 -r " +id + " -t Latte/Indicator"));
+            process.start(QString("kpackagetool6 -r " +id + " -t SynDock/Indicator"));
             process.waitForFinished();
             showRemovedSucceed(pluginName);
         });

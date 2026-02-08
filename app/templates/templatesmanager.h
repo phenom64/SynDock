@@ -7,7 +7,7 @@
 #define TEMPLATESMANAGER_H
 
 // local
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../data/appletdata.h"
 #include "../data/layoutdata.h"
 #include "../data/layoutstable.h"

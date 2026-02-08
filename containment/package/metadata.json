@@ -63,7 +63,7 @@
         "Description[zh_CN]": "用于 Latte 停靠栏的容器",
         "Description[zh_TW]": "提供給 Latte Dock 使用的容器",
         "EnabledByDefault": true,
-        "Id": "org.kde.latte.containment",
+        "Id": "org.kde.syndock.containment",
         "License": "GPL",
         "Name": "Latte Containment",
         "Name[ar]": "حاوية لاتيه",

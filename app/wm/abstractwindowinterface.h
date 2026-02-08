@@ -144,7 +144,7 @@ signals:
 
     void isShowingDesktopChanged();
 
-    void latteWindowAdded();
+    void syndockWindowAdded();
 
 protected:
     QString m_currentDesktop;

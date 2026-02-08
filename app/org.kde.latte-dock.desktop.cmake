@@ -1,5 +1,5 @@
 [Desktop Entry]
-Name=Latte Dock
+Name=SynDock
 Name[ar]=رصيف لاتيه
 Name[az]=Latte Dok Paneli
 Name[ca]=Acoblador Latte
@@ -111,15 +111,15 @@ GenericName[tr]=Rıhtım
 GenericName[uk]=Панель
 GenericName[zh_CN]=停靠栏
 GenericName[zh_TW]=Dock
-Icon=latte-dock
+Icon=syndock
 Categories=Utility;X-SuSE-DesktopUtility;
-Exec=@CMAKE_INSTALL_PREFIX@/bin/latte-dock
+Exec=@CMAKE_INSTALL_PREFIX@/bin/syndock
 InitialPreference=1
 StartupNotify=false
 Terminal=false
 Type=Application
-StartupWMClass=latte-dock
-X-DBUS-ServiceName=org.kde.lattedock
+StartupWMClass=syndock
+X-DBUS-ServiceName=org.syndromatic.syndock
 X-DBUS-StartupType=unique
 X-KDE-PluginInfo-Author=@AUTHOR@
 X-KDE-PluginInfo-Email=@EMAIL@
@@ -128,4 +128,3 @@ X-KDE-PluginInfo-Website=@WEBSITE@
 X-KDE-StartupNotify=false
 X-KDE-SubstituteUID=false
 X-KDE-Wayland-Interfaces=org_kde_plasma_window_management,org_kde_kwin_keystate,zkde_screencast_unstable_v1
-

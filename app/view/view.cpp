@@ -16,7 +16,7 @@
 #include "settings/viewsettingsfactory.h"
 #include "settings/widgetexplorerview.h"
 #include "../apptypes.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../data/layoutdata.h"
 #include "../data/viewstable.h"
 #include "../declarativeimports/interfaces.h"
@@ -375,13 +375,13 @@ void View::init(Plasma::Containment *plasma_containment)
     QQuickItem *containmentGraphicItem = qobject_cast<QQuickItem *>(plasma_containment->property("_plasma_graphicObject").value<QObject *>());
 
     if (containmentGraphicItem) {
-        containmentGraphicItem->setProperty("_latte_globalShortcuts_object", QVariant::fromValue(m_corona->globalShortcuts()->shortcutsTracker()));
-        containmentGraphicItem->setProperty("_latte_layoutsManager_object", QVariant::fromValue(m_corona->layoutsManager()));
-        containmentGraphicItem->setProperty("_latte_themeExtended_object", QVariant::fromValue(m_corona->themeExtended()));
-        containmentGraphicItem->setProperty("_latte_universalSettings_object", QVariant::fromValue(m_corona->universalSettings()));
-        containmentGraphicItem->setProperty("_latte_view_object", QVariant::fromValue(this));
+        containmentGraphicItem->setProperty("_syndock_globalShortcuts_object", QVariant::fromValue(m_corona->globalShortcuts()->shortcutsTracker()));
+        containmentGraphicItem->setProperty("_syndock_layoutsManager_object", QVariant::fromValue(m_corona->layoutsManager()));
+        containmentGraphicItem->setProperty("_syndock_themeExtended_object", QVariant::fromValue(m_corona->themeExtended()));
+        containmentGraphicItem->setProperty("_syndock_universalSettings_object", QVariant::fromValue(m_corona->universalSettings()));
+        containmentGraphicItem->setProperty("_syndock_view_object", QVariant::fromValue(this));
 
-        NSE::Interfaces *ifacesGraphicObject = qobject_cast<NSE::Interfaces *>(containmentGraphicItem->property("_latte_view_interfacesobject").value<QObject *>());
+        NSE::Interfaces *ifacesGraphicObject = qobject_cast<NSE::Interfaces *>(containmentGraphicItem->property("_syndock_view_interfacesobject").value<QObject *>());
 
         if (ifacesGraphicObject) {
             ifacesGraphicObject->updateView();
@@ -389,7 +389,7 @@ void View::init(Plasma::Containment *plasma_containment)
         }
     }
 
-    setSource(corona()->kPackage().filePath("lattedockui"));
+    setSource(corona()->kPackage().filePath("syndockui"));
 
     //! immediateSyncGeometry helps avoiding binding loops from containment qml side
     m_positioner->immediateSyncGeometry();
@@ -1494,7 +1494,7 @@ void View::setInterfacesGraphicObj(NSE::Interfaces *ifaces)
         QQuickItem *containmentGraphicItem = qobject_cast<QQuickItem *>(containment()->property("_plasma_graphicObject").value<QObject *>());
 
         if (containmentGraphicItem) {
-            containmentGraphicItem->setProperty("_latte_view_interfacesobject", QVariant::fromValue(m_interfacesGraphicObj));
+            containmentGraphicItem->setProperty("_syndock_view_interfacesobject", QVariant::fromValue(m_interfacesGraphicObj));
         }
     }
 

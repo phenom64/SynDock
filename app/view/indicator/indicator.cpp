@@ -10,7 +10,7 @@
 #include "indicatorinfo.h"
 #include "../containmentinterface.h"
 #include "../view.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../indicator/factory.h"
 
 // Qt
@@ -50,7 +50,7 @@ Indicator::Indicator(NSE::View *parent)
 
     connect(m_view, &NSE::View::indicatorPluginRemoved, [this](const QString &indicatorId) {
         if (m_corona && m_type == indicatorId && !m_corona->indicatorFactory()->pluginExists(indicatorId)) {
-            setType("org.kde.latte.default");
+            setType("org.kde.syndock.default");
         }
 
         if (m_corona && m_corona->indicatorFactory()->isCustomType(indicatorId)) {
@@ -141,11 +141,11 @@ void Indicator::setPluginIsReady(bool ready)
 
 int Indicator::index(const QString &type)
 {
-    if (type == QLatin1String("org.kde.latte.default")) {
+    if (type == QLatin1String("org.kde.syndock.default")) {
         return 0;
-    } else if (type == QLatin1String("org.kde.latte.plasma")) {
+    } else if (type == QLatin1String("org.kde.syndock.plasma")) {
         return 1;
-    } else if (type == QLatin1String("org.kde.latte.plasmatabstyle")) {
+    } else if (type == QLatin1String("org.kde.syndock.plasmatabstyle")) {
         return 2;
     } else if (customPluginIds().contains(type)){
         return 3 + customPluginIds().indexOf(type);
@@ -257,9 +257,9 @@ void Indicator::load(QString type)
 
         //! create all indicators with the new type
         setPluginIsReady(true);
-    } else if (type!="org.kde.latte.default") {
+    } else if (type!="org.kde.syndock.default") {
         qDebug() << " Indicator metadata are not valid : " << type;
-        setType("org.kde.latte.default");
+        setType("org.kde.syndock.default");
     }
 }
 
@@ -283,7 +283,7 @@ void Indicator::loadPlasmaComponent()
 {
     auto prevComponent = m_plasmaComponent;
 
-    KPluginMetaData metadata = m_corona->indicatorFactory()->metadata("org.kde.latte.plasmatabstyle");
+    KPluginMetaData metadata = m_corona->indicatorFactory()->metadata("org.kde.syndock.plasmatabstyle");
     QString uiPath = metadata.value("X-Latte-MainScript");
 
     if (!uiPath.isEmpty()) {
@@ -335,7 +335,8 @@ void Indicator::loadConfig()
     auto config = m_view->containment()->config().group("Indicator");
     m_customType = config.readEntry("customType", QString());
     m_enabled = config.readEntry("enabled", true);
-    m_type = config.readEntry("type", "org.kde.latte.default");
+    m_type = config.readEntry("type", "org.kde.syndock.default");
+
 }
 
 void Indicator::saveConfig()

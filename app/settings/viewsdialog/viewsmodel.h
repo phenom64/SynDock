@@ -12,7 +12,7 @@
 #define VIEWSMODEL_H
 
 // local
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../data/genericbasictable.h"
 #include "../../data/screendata.h"
 #include "../../data/viewdata.h"

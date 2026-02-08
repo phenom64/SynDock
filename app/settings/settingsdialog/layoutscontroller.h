@@ -10,7 +10,7 @@
 #include <coretypes.h>
 #include "layoutsheaderview.h"
 #include "layoutsmodel.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../data/layoutdata.h"
 #include "../../data/layoutstable.h"
 #include "../../data/screendata.h"

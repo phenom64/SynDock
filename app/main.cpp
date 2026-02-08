@@ -25,7 +25,7 @@
 #include "config-syndock.h"
 #include "apptypes.h"
 #include "NSETypes.h"
-#include "lattecorona.h"
+#include "nsecoronainterface.h"
 #include "layouts/importer.h"
 #include "templates/templatesmanager.h"
 
@@ -96,7 +96,7 @@ int main(int argc, char **argv)
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addOptions({
-                          {{"r", "replace"}, i18nc("command line", "Replace the current Latte instance.")}
+                          {{"r", "replace"}, i18nc("command line", "Replace the current SynDock instance.")}
                           , {{"d", "debug"}, i18nc("command line", "Show the debugging messages on stdout.")}
                           , {{"cc", "clear-cache"}, i18nc("command line", "Clear qml cache. It can be useful after system upgrades.")}
                           , {"enable-autostart", i18nc("command line", "Enable autostart for this application")}
@@ -200,7 +200,7 @@ int main(int argc, char **argv)
         QStringList layouts = NSE::Layouts::Importer::availableLayouts();
 
         if (layouts.count() > 0) {
-            qInfo() << i18n("Available layouts that can be used to start Latte:");
+            qInfo() << i18n("Available layouts that can be used to start SynDock:");
 
             for (const auto &layout : layouts) {
                 qInfo() << "     " << layout;
@@ -300,7 +300,7 @@ int main(int argc, char **argv)
     }
 
     if (!lockFile.tryLock(timeout)) {
-        QDBusInterface iface("org.kde.lattedock", "/Latte", "", QDBusConnection::sessionBus());
+        QDBusInterface iface("org.syndromatic.syndock", "/SynDock", "org.syndromatic.SynDock", QDBusConnection::sessionBus());
         bool addview{parser.isSet(QStringLiteral("add-dock"))};
         bool importlayout{parser.isSet(QStringLiteral("import-layout"))};
         bool enableautostart{parser.isSet(QStringLiteral("enable-autostart"))};
@@ -329,7 +329,7 @@ int main(int argc, char **argv)
         }
 
         if (!validaction) {
-            qInfo() << i18n("An instance is already running!, use --replace to restart Latte");
+            qInfo() << i18n("An instance is already running! Use --replace to restart SynDock.");
         }
 
         qGuiApp->exit();
@@ -338,7 +338,7 @@ int main(int argc, char **argv)
 
     //! clear-cache option
     if (parser.isSet(QStringLiteral("clear-cache"))) {
-        QDir cacheDir(QDir::homePath() + "/.cache/lattedock/qmlcache");
+        QDir cacheDir(QDir::homePath() + "/.cache/syndock/qmlcache");
 
         if (cacheDir.exists()) {
             cacheDir.removeRecursively();

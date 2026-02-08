@@ -7,7 +7,7 @@
 #define VIEWSUBWINDOW_H
 
 // local
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../wm/windowinfowrap.h"
 
 // Qt

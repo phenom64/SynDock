@@ -19,477 +19,257 @@
  * SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
  * SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
  * SPDX-License-Identifier: GPL-2.0-or-later
+ *
+ * This is the primary Wayland backend for SynDock.
  */
 
 #include "nsewaylandinterface.h"
-#include "../lattecorona.h"
-#include "../view/view.h"
+
+// local
+#include <coretypes.h>
 #include "../view/positioner.h"
+#include "../view/view.h"
+#include "../view/settings/subconfigview.h"
+#include "../view/helpers/screenedgeghostwindow.h"
+#include "../nsecoronainterface.h"
+
+// C++
+#include <algorithm>
 
 // Qt
 #include <QDebug>
-#include <QGuiApplication>
 #include <QTimer>
+#include <QApplication>
+#include <QQuickView>
+#include <QLatin1String>
 
-// KDE Frameworks 6
+// KDE
 #include <KWindowSystem>
-#include <KWindowEffects>
+#include <KWindowInfo>
+#include <KWayland/Client/surface.h>
+#include <KWayland/Client/plasmavirtualdesktop.h>
 
-Q_LOGGING_CATEGORY(nseWayland, "nse.wayland", QtInfoMsg)
+using namespace KWayland::Client;
 
 namespace NSE {
+
+class Private::GhostWindow : public QQuickView
+{
+    Q_OBJECT
+
+public:
+    WindowSystem::WindowId m_winId;
+
+    GhostWindow(WindowSystem::NSEWaylandInterface *waylandInterface)
+        : m_waylandInterface(waylandInterface) {
+        setFlags(Qt::FramelessWindowHint
+                 | Qt::WindowStaysOnTopHint
+                 | Qt::NoDropShadowWindowHint
+                 | Qt::WindowDoesNotAcceptFocus);
+
+        setColor(QColor(Qt::transparent));
+        setClearBeforeRendering(true);
+
+        connect(m_waylandInterface, &WindowSystem::AbstractWindowInterface::syndockWindowAdded, this, &GhostWindow::identifyWinId);
+
+        setupWaylandIntegration();
+        show();
+    }
+
+    ~GhostWindow() {
+        if (m_waylandInterface) {
+            m_waylandInterface->unregisterIgnoredWindow(m_winId);
+        }
+        delete m_shellSurface;
+    }
+
+    void setGeometry(const QRect &rect) {
+        if (geometry() == rect) {
+            return;
+        }
+
+        m_validGeometry = rect;
+
+        setMinimumSize(rect.size());
+        setMaximumSize(rect.size());
+        resize(rect.size());
+
+        if (m_shellSurface) {
+            m_shellSurface->setPosition(rect.topLeft());
+        }
+    }
+
+    void setupWaylandIntegration() {
+        using namespace KWayland::Client;
+
+        if (m_shellSurface)
+            return;
+
+        Surface *s{Surface::fromWindow(this)};
+
+        if (!s)
+            return;
+
+        auto *coronaShell = m_waylandInterface->waylandCoronaInterface();
+        if (!coronaShell) {
+            return;
+        }
+
+        m_shellSurface = coronaShell->createSurface(s, this);
+        qDebug() << "wayland ghost window surface was created...";
+
+        m_shellSurface->setSkipTaskbar(true);
+        m_shellSurface->setPanelTakesFocus(false);
+        m_shellSurface->setRole(PlasmaShellSurface::Role::Panel);
+        m_shellSurface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AlwaysVisible);
+    }
+
+    KWayland::Client::PlasmaShellSurface *m_shellSurface{nullptr};
+    WindowSystem::NSEWaylandInterface *m_waylandInterface{nullptr};
+
+    //! geometry() function under wayland does not return nice results
+    QRect m_validGeometry;
+
+public slots:
+    void identifyWinId() {
+        if (!m_waylandInterface || !m_winId.isNull() || m_validGeometry.isNull()) {
+            return;
+        }
+
+        m_winId = m_waylandInterface->winIdFor("syndock", m_validGeometry);
+        m_waylandInterface->registerIgnoredWindow(m_winId);
+    }
+};
+
 namespace WindowSystem {
 
-// =============================================================================
-// Construction / Destruction
-// =============================================================================
-
 NSEWaylandInterface::NSEWaylandInterface(QObject *parent)
-    : NSE::WindowSystem::AbstractWindowInterface(parent)
+    : AbstractWindowInterface(parent)
 {
-    m_corona = qobject_cast<NSE::Corona*>(parent);
-    
-    if (!m_corona) {
-        setError("Constructor", "Parent is not a valid Corona object");
-    }
-    
-    qCInfo(nseWayland) << "NSE Wayland Interface constructed (KWin 6.x only)";
+    m_corona = qobject_cast<NSE::Corona *>(parent);
 }
 
 NSEWaylandInterface::~NSEWaylandInterface()
 {
-    // Clean up LayerShell windows
-    for (auto it = m_layerWindows.begin(); it != m_layerWindows.end(); ++it) {
-        // LayerShellQt::Window is owned by the QWindow, no explicit delete needed
-    }
-    m_layerWindows.clear();
-    
-    qCInfo(nseWayland) << "NSE Wayland Interface destroyed";
+    qDeleteAll(m_ghostWindows);
+    m_ghostWindows.clear();
 }
 
-// =============================================================================
-// Initialisation
-// =============================================================================
-
-bool NSEWaylandInterface::init()
+void NSEWaylandInterface::init()
 {
-    if (m_initialised) {
-        qCWarning(nseWayland) << "Already initialised, skipping";
-        return true;
-    }
-    
-    // Verify we're running on Wayland
-    if (!QGuiApplication::platformName().contains(QLatin1String("wayland"))) {
-        setError("init", "SynDock requires a Wayland session. Current platform: " 
-                 + QGuiApplication::platformName());
-        emit compositorError(m_lastError);
-        return false;
-    }
-    
-    // Initialise LayerShellQt
-    LayerShellQt::Shell::useLayerShell();
-    
-    // Verify LayerShell is available
-    // Note: LayerShellQt doesn't have an explicit availability check,
-    // but we can verify by checking the platform
-    if (!KWindowSystem::isPlatformWayland()) {
-        setError("init", "KWindowSystem reports non-Wayland platform");
-        emit compositorError(m_lastError);
-        return false;
-    }
-    
-    m_initialised = true;
-    qCInfo(nseWayland) << "LayerShellQt initialised successfully for KWin 6.x";
-    
-    emit layerShellAvailabilityChanged(true);
-    return true;
 }
 
-// =============================================================================
-// LayerShell Configuration
-// =============================================================================
-
-bool NSEWaylandInterface::configurePanelSurface(QWindow *window, 
-                                                 NSE::DockEdge edge,
-                                                 NSE::Visibility visibility)
+void NSEWaylandInterface::initWindowManagement(KWayland::Client::PlasmaWindowManagement *windowManagement)
 {
-    if (!window) {
-        setError("configurePanelSurface", "Null window pointer");
-        return false;
-    }
-    
-    if (!m_initialised) {
-        setError("configurePanelSurface", "Interface not initialised");
-        return false;
-    }
-    
-    LayerShellQt::Window *layerWindow = getLayerWindow(window);
-    if (!layerWindow) {
-        setError("configurePanelSurface", 
-                 QString("Failed to get LayerShell window for %1")
-                     .arg(window->title()));
-        return false;
-    }
-    
-    // Configure anchors based on edge
-    layerWindow->setAnchors(edgeToAnchors(edge));
-    
-    // Configure layer based on visibility mode
-    layerWindow->setLayer(visibilityToLayer(visibility));
-    
-    // Panel-specific settings
-    layerWindow->setKeyboardInteractivity(
-        LayerShellQt::Window::KeyboardInteractivityOnDemand);
-    
-    // Set scope for identification
-    layerWindow->setScope(QStringLiteral("syndock-panel"));
-    
-    qCDebug(nseWayland) << "Configured panel surface:" 
-                        << "edge=" << NSE::dockEdgeToString(edge)
-                        << "visibility=" << NSE::visibilityToString(visibility)
-                        << "window=" << window->title();
-    
-    return true;
-}
-
-void NSEWaylandInterface::setExclusiveZone(QWindow *window, int size)
-{
-    if (!window) {
-        qCWarning(nseWayland) << "setExclusiveZone: null window";
+    if (!windowManagement) {
         return;
     }
-    
-    LayerShellQt::Window *layerWindow = getLayerWindow(window);
-    if (layerWindow) {
-        layerWindow->setExclusiveZone(size);
-        qCDebug(nseWayland) << "Set exclusive zone:" << size << "px for" << window->title();
-    }
-}
 
-void NSEWaylandInterface::clearExclusiveZone(QWindow *window)
-{
-    setExclusiveZone(window, 0);
-}
-
-// =============================================================================
-// AbstractWindowInterface Overrides
-// =============================================================================
-
-void NSEWaylandInterface::setViewExtraFlags(QObject *view, bool isPanelWindow,
-                                            NSE::Types::Visibility mode)
-{
-    NSE::View *latteView = qobject_cast<NSE::View*>(view);
-    
-    if (!latteView) {
-        qCWarning(nseWayland) << "setViewExtraFlags: view is not a NSE::View";
+    if (m_windowManagement == windowManagement) {
         return;
     }
-    
-    QWindow *window = latteView;
-    if (!window) {
-        qCWarning(nseWayland) << "setViewExtraFlags: failed to get QWindow";
-        return;
-    }
-    
-    // Convert Latte visibility to NSE visibility
-    NSE::Visibility nseVisibility = NSE::Visibility::AlwaysVisible;
-    switch (mode) {
-        case NSE::Types::AutoHide:
-            nseVisibility = NSE::Visibility::AutoHide;
-            break;
-        case NSE::Types::DodgeActive:
-            nseVisibility = NSE::Visibility::DodgeActive;
-            break;
-        case NSE::Types::DodgeMaximized:
-            nseVisibility = NSE::Visibility::DodgeMaximised;
-            break;
-        case NSE::Types::DodgeAllWindows:
-            nseVisibility = NSE::Visibility::DodgeAllWindows;
-            break;
-        case NSE::Types::WindowsGoBelow:
-            nseVisibility = NSE::Visibility::WindowsGoBelow;
-            break;
-        case NSE::Types::WindowsCanCover:
-            nseVisibility = NSE::Visibility::WindowsCanCover;
-            break;
-        case NSE::Types::WindowsAlwaysCover:
-            nseVisibility = NSE::Visibility::WindowsAlwaysCover;
-            break;
-        case NSE::Types::SideBar:
-            nseVisibility = NSE::Visibility::SideBar;
-            break;
-        default:
-            nseVisibility = NSE::Visibility::AlwaysVisible;
-            break;
-    }
-    
-    // Get edge from view positioner
-    NSE::DockEdge edge = NSE::DockEdge::Bottom;
-    if (latteView->positioner()) {
-        switch (latteView->location()) {
-            case Plasma::Types::TopEdge:
-                edge = NSE::DockEdge::Top;
-                break;
-            case Plasma::Types::BottomEdge:
-                edge = NSE::DockEdge::Bottom;
-                break;
-            case Plasma::Types::LeftEdge:
-                edge = NSE::DockEdge::Left;
-                break;
-            case Plasma::Types::RightEdge:
-                edge = NSE::DockEdge::Right;
-                break;
-            default:
-                edge = NSE::DockEdge::Bottom;
-                break;
+
+    m_windowManagement = windowManagement;
+
+    connect(m_windowManagement, &PlasmaWindowManagement::windowCreated, this, &NSEWaylandInterface::windowCreatedProxy);
+    connect(m_windowManagement, &PlasmaWindowManagement::activeWindowChanged, this, [&]() noexcept {
+        auto w = m_windowManagement->activeWindow();
+        if (!w || (w && (!m_ignoredWindows.contains(w->internalId()))) ) {
+            emit activeWindowChanged(w ? w->internalId() : 0);
         }
+
+    }, Qt::QueuedConnection);
+}
+
+void NSEWaylandInterface::initVirtualDesktopManagement(KWayland::Client::PlasmaVirtualDesktopManagement *virtualDesktopManagement)
+{
+    if (!virtualDesktopManagement) {
+        return;
     }
-    
-    if (isPanelWindow) {
-        configurePanelSurface(window, edge, nseVisibility);
+
+    if (m_virtualDesktopManagement == virtualDesktopManagement) {
+        return;
     }
-}
 
-void NSEWaylandInterface::setViewStruts(QWindow &view, const QRect &rect,
-                                         Plasma::Types::Location location)
-{
-    // Calculate exclusive zone based on location and rect
-    int exclusiveSize = 0;
-    
-    switch (location) {
-        case Plasma::Types::TopEdge:
-        case Plasma::Types::BottomEdge:
-            exclusiveSize = rect.height();
-            break;
-        case Plasma::Types::LeftEdge:
-        case Plasma::Types::RightEdge:
-            exclusiveSize = rect.width();
-            break;
-        default:
-            exclusiveSize = 0;
-            break;
-    }
-    
-    setExclusiveZone(&view, exclusiveSize);
-}
+    m_virtualDesktopManagement = virtualDesktopManagement;
 
-void NSEWaylandInterface::removeViewStruts(QWindow &view)
-{
-    clearExclusiveZone(&view);
-}
+    connect(m_virtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::desktopCreated, this,
+            [this](const QString &id, quint32 position) {
+        addDesktop(id, position);
+    });
 
-WindowId NSEWaylandInterface::activeWindow()
-{
-    // TODO: Implement using KWindowSystem for KF6
-    // KWindowSystem::activeWindow() works on Wayland in KF6
-    return WindowId();
-}
+    connect(m_virtualDesktopManagement, &KWayland::Client::PlasmaVirtualDesktopManagement::desktopRemoved, this,
+            [this](const QString &id) {
+        m_desktops.removeAll(id);
 
-void NSEWaylandInterface::skipTaskBar(const QDialog &dialog)
-{
-    // In KF6/Wayland, this is handled via window hints
-    // The PlasmaShellSurface approach is deprecated
-    qCDebug(nseWayland) << "skipTaskBar: using window hints for dialog";
-}
-
-void NSEWaylandInterface::slideWindow(QWindow &view, Slide location)
-{
-    auto slideLocation = KWindowEffects::NoEdge;
-    
-    switch (location) {
-        case Slide::Top:
-            slideLocation = KWindowEffects::TopEdge;
-            break;
-        case Slide::Bottom:
-            slideLocation = KWindowEffects::BottomEdge;
-            break;
-        case Slide::Left:
-            slideLocation = KWindowEffects::LeftEdge;
-            break;
-        case Slide::Right:
-            slideLocation = KWindowEffects::RightEdge;
-            break;
-        default:
-            break;
-    }
-    
-    KWindowEffects::slideWindow(&view, slideLocation);
-}
-
-void NSEWaylandInterface::enableBlurBehind(QWindow &view)
-{
-    KWindowEffects::enableBlurBehind(&view, true);
-}
-
-void NSEWaylandInterface::setActiveEdge(QWindow *view, bool active)
-{
-    // Auto-hide edge activation for LayerShell
-    if (!view) return;
-    
-    LayerShellQt::Window *layerWindow = getLayerWindow(view);
-    if (layerWindow) {
-        if (active) {
-            // Show panel when edge is active
-            layerWindow->setExclusiveZone(-1); // Auto-exclusive
-        } else {
-            layerWindow->setExclusiveZone(0);
+        if (m_currentDesktop == id) {
+            setCurrentDesktop(QString());
         }
+    });
+}
+
+void NSEWaylandInterface::addDesktop(const QString &id, quint32 position)
+{
+    Q_UNUSED(position);
+
+    if (!m_virtualDesktopManagement) {
+        return;
+    }
+
+    if (m_desktops.contains(id)) {
+        return;
+    }
+
+    const KWayland::Client::PlasmaVirtualDesktop *desktop = m_virtualDesktopManagement->getVirtualDesktop(id);
+
+    if (!desktop) {
+        return;
+    }
+
+    m_desktops.append(id);
+
+    QObject::connect(desktop, &KWayland::Client::PlasmaVirtualDesktop::activated, this,
+                     [desktop, this]() {
+        setCurrentDesktop(desktop->id());
+    }
+    );
+
+    if (desktop->isActive()) {
+        setCurrentDesktop(id);
     }
 }
 
-void NSEWaylandInterface::setFrameExtents(QWindow *view, const QMargins &extents)
+void NSEWaylandInterface::setCurrentDesktop(QString desktop)
 {
-    Q_UNUSED(view)
-    Q_UNUSED(extents)
-    // Frame extents not directly supported in LayerShell
-    // Margins are handled differently in Wayland
-}
-
-void NSEWaylandInterface::setInputMask(QWindow *window, const QRect &rect)
-{
-    if (window) {
-        window->setMask(QRegion(rect));
+    if (m_currentDesktop == desktop) {
+        return;
     }
+
+    m_currentDesktop = desktop;
+    emit currentDesktopChanged();
 }
 
-WindowInfoWrap NSEWaylandInterface::requestInfoActive()
+KWayland::Client::PlasmaShell *NSEWaylandInterface::waylandCoronaInterface() const
 {
-    // TODO: Implement using KWindowSystem for KF6
-    return WindowInfoWrap();
+    if (!m_corona) {
+        return nullptr;
+    }
+
+    return m_corona->waylandCoronaInterface();
 }
 
-WindowInfoWrap NSEWaylandInterface::requestInfo(WindowId wid)
-{
-    Q_UNUSED(wid)
-    // TODO: Implement using KWindowSystem for KF6
-    return WindowInfoWrap();
-}
-
-AppData NSEWaylandInterface::appDataFor(WindowId wid)
-{
-    Q_UNUSED(wid)
-    // TODO: Implement using task manager
-    return AppData();
-}
-
-QIcon NSEWaylandInterface::iconFor(WindowId wid)
-{
-    Q_UNUSED(wid)
-    // TODO: Implement using task manager
-    return QIcon();
-}
-
-WindowId NSEWaylandInterface::winIdFor(QString appId, QString title)
-{
-    Q_UNUSED(appId)
-    Q_UNUSED(title)
-    // TODO: Implement window search
-    return WindowId();
-}
-
-WindowId NSEWaylandInterface::winIdFor(QString appId, QRect geometry)
-{
-    Q_UNUSED(appId)
-    Q_UNUSED(geometry)
-    // TODO: Implement window search
-    return WindowId();
-}
-
-bool NSEWaylandInterface::windowCanBeDragged(WindowId wid)
-{
-    Q_UNUSED(wid)
-    // TODO: Implement with window info
-    return true;
-}
-
-bool NSEWaylandInterface::windowCanBeMaximized(WindowId wid)
-{
-    Q_UNUSED(wid)
-    // TODO: Implement with window info
-    return true;
-}
-
-void NSEWaylandInterface::requestActivate(WindowId wid)
-{
-    Q_UNUSED(wid)
-    // TODO: Implement using KWindowSystem
-}
-
-void NSEWaylandInterface::requestClose(WindowId wid)
-{
-    Q_UNUSED(wid)
-    // TODO: Implement using task manager
-}
-
-void NSEWaylandInterface::requestMoveWindow(WindowId wid, QPoint from)
-{
-    Q_UNUSED(wid)
-    Q_UNUSED(from)
-    // TODO: Implement window move
-}
-
-void NSEWaylandInterface::requestToggleIsOnAllDesktops(WindowId wid)
-{
-    Q_UNUSED(wid)
-    // TODO: Implement desktop toggle
-}
-
-void NSEWaylandInterface::requestToggleKeepAbove(WindowId wid)
-{
-    Q_UNUSED(wid)
-    // TODO: Implement keep above toggle
-}
-
-void NSEWaylandInterface::setKeepAbove(WindowId wid, bool active)
-{
-    Q_UNUSED(wid)
-    Q_UNUSED(active)
-    // TODO: Implement keep above
-}
-
-void NSEWaylandInterface::setKeepBelow(WindowId wid, bool active)
-{
-    Q_UNUSED(wid)
-    Q_UNUSED(active)
-    // TODO: Implement keep below
-}
-
-void NSEWaylandInterface::requestToggleMinimized(WindowId wid)
-{
-    Q_UNUSED(wid)
-    // TODO: Implement minimize toggle
-}
-
-void NSEWaylandInterface::requestToggleMaximized(WindowId wid)
-{
-    Q_UNUSED(wid)
-    // TODO: Implement maximize toggle
-}
-
-void NSEWaylandInterface::setWindowOnActivities(const WindowId &wid,
-                                                 const QStringList &activities)
-{
-    Q_UNUSED(wid)
-    Q_UNUSED(activities)
-    // TODO: Implement activity assignment
-}
-
-void NSEWaylandInterface::switchToNextVirtualDesktop()
-{
-    // TODO: Implement using KWindowSystem
-    qCDebug(nseWayland) << "switchToNextVirtualDesktop";
-}
-
-void NSEWaylandInterface::switchToPreviousVirtualDesktop()
-{
-    // TODO: Implement using KWindowSystem
-    qCDebug(nseWayland) << "switchToPreviousVirtualDesktop";
-}
-
+//! Register SynDock ignored windows so they are not tracked
 void NSEWaylandInterface::registerIgnoredWindow(WindowId wid)
 {
     if (!wid.isNull() && !m_ignoredWindows.contains(wid)) {
         m_ignoredWindows.append(wid);
+
+        KWayland::Client::PlasmaWindow *w = windowFor(wid);
+
+        if (w) {
+            untrackWindow(w);
+        }
+
         emit windowChanged(wid);
     }
 }
@@ -502,97 +282,739 @@ void NSEWaylandInterface::unregisterIgnoredWindow(WindowId wid)
     }
 }
 
-// =============================================================================
-// Internal Helpers
-// =============================================================================
-
-LayerShellQt::Window::Anchors NSEWaylandInterface::edgeToAnchors(NSE::DockEdge edge) const
+void NSEWaylandInterface::setViewExtraFlags(QObject *view, bool isPanelWindow, NSE::Types::Visibility mode)
 {
-    using Anchor = LayerShellQt::Window::Anchor;
-    
-    switch (edge) {
-        case NSE::DockEdge::Bottom:
-            return Anchor::AnchorBottom | Anchor::AnchorLeft | Anchor::AnchorRight;
-        case NSE::DockEdge::Top:
-            return Anchor::AnchorTop | Anchor::AnchorLeft | Anchor::AnchorRight;
-        case NSE::DockEdge::Left:
-            return Anchor::AnchorLeft | Anchor::AnchorTop | Anchor::AnchorBottom;
-        case NSE::DockEdge::Right:
-            return Anchor::AnchorRight | Anchor::AnchorTop | Anchor::AnchorBottom;
-        case NSE::DockEdge::Centre:
-            // Floating dock - no anchors, positioned in centre
-            return {};
+    KWayland::Client::PlasmaShellSurface *surface = qobject_cast<KWayland::Client::PlasmaShellSurface *>(view);
+    NSE::View *dockView = qobject_cast<NSE::View *>(view);
+    NSE::ViewPart::SubConfigView *configView = qobject_cast<NSE::ViewPart::SubConfigView *>(view);
+
+    WindowId winId;
+
+    if (dockView) {
+        surface = dockView->surface();
+        winId = dockView->positioner()->trackedWindowId();
+    } else if (configView) {
+        surface = configView->surface();
+        winId = configView->trackedWindowId();
     }
-    
-    return Anchor::AnchorBottom | Anchor::AnchorLeft | Anchor::AnchorRight;
+
+    if (!surface) {
+        return;
+    }
+
+    surface->setSkipTaskbar(true);
+    surface->setSkipSwitcher(true);
+
+    bool atBottom{!isPanelWindow && (mode == NSE::Types::WindowsCanCover || mode == NSE::Types::WindowsAlwaysCover)};
+
+    if (isPanelWindow) {
+        surface->setRole(PlasmaShellSurface::Role::Panel);
+        surface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AutoHide);
+    } else {
+        surface->setRole(PlasmaShellSurface::Role::Normal);
+    }
+
+    if (dockView || configView) {
+        auto w = windowFor(winId);
+        if (w && !w->isOnAllDesktops()) {
+            requestToggleIsOnAllDesktops(winId);
+        }
+
+        //! Layer to be applied
+        if (mode == NSE::Types::WindowsCanCover || mode == NSE::Types::WindowsAlwaysCover) {
+            setKeepBelow(winId, true);
+        } else if (mode == NSE::Types::NormalWindow) {
+            setKeepBelow(winId, false);
+            setKeepAbove(winId, false);
+        } else {
+            setKeepAbove(winId, true);
+        }
+    }
+
+    if (atBottom){
+        //! trying to workaround WM behavior in order
+        //!  1. View at the end MUST NOT HAVE FOCUSABILITY (issue example: clicking a single active task is not minimized)
+        //!  2. View at the end MUST BE AT THE BOTTOM of windows stack
+
+        QTimer::singleShot(50, [this, surface]() {
+            surface->setRole(PlasmaShellSurface::Role::ToolTip);
+        });
+    }
 }
 
-LayerShellQt::Window::Layer NSEWaylandInterface::visibilityToLayer(
-    NSE::Visibility visibility) const
+void NSEWaylandInterface::setViewStruts(QWindow &view, const QRect &rect, Plasma::Types::Location location)
 {
-    using Layer = LayerShellQt::Window::Layer;
-    
-    switch (visibility) {
-        case NSE::Visibility::AlwaysVisible:
-        case NSE::Visibility::AutoHide:
-        case NSE::Visibility::DodgeActive:
-        case NSE::Visibility::DodgeMaximised:
-        case NSE::Visibility::DodgeAllWindows:
-            // Panels typically use the Top layer
-            return Layer::LayerTop;
-            
-        case NSE::Visibility::WindowsGoBelow:
-            // Panel above windows
-            return Layer::LayerOverlay;
-            
-        case NSE::Visibility::WindowsCanCover:
-        case NSE::Visibility::WindowsAlwaysCover:
-            // Panel below windows
-            return Layer::LayerBottom;
-            
-        case NSE::Visibility::SideBar:
-            return Layer::LayerTop;
+    if (!m_ghostWindows.contains(view.winId())) {
+        m_ghostWindows[view.winId()] = new Private::GhostWindow(this);
     }
-    
-    return Layer::LayerTop;
+
+    auto w = m_ghostWindows[view.winId()];
+
+    switch (location) {
+    case Plasma::Types::TopEdge:
+    case Plasma::Types::BottomEdge:
+        w->setGeometry({rect.x() + rect.width() / 2 - rect.height(), rect.y(), rect.height() + 1, rect.height()});
+        break;
+
+    case Plasma::Types::LeftEdge:
+    case Plasma::Types::RightEdge:
+        w->setGeometry({rect.x(), rect.y() + rect.height() / 2 - rect.width(), rect.width(), rect.width() + 1});
+        break;
+
+    default:
+        break;
+    }
 }
 
-LayerShellQt::Window* NSEWaylandInterface::getLayerWindow(QWindow *window)
+void NSEWaylandInterface::switchToNextVirtualDesktop()
 {
+    if (!m_virtualDesktopManagement || m_desktops.count() <= 1) {
+        return;
+    }
+
+    int curPos = m_desktops.indexOf(m_currentDesktop);
+    int nextPos = curPos + 1;
+
+    if (curPos >= m_desktops.count()-1) {
+        if (isVirtualDesktopNavigationWrappingAround()) {
+            nextPos = 0;
+        } else {
+            return;
+        }
+    }
+
+    KWayland::Client::PlasmaVirtualDesktop *desktopObj = m_virtualDesktopManagement->getVirtualDesktop(m_desktops[nextPos]);
+
+    if (desktopObj) {
+        desktopObj->requestActivate();
+    }
+}
+
+void NSEWaylandInterface::switchToPreviousVirtualDesktop()
+{
+    if (!m_virtualDesktopManagement || m_desktops.count() <= 1) {
+        return;
+    }
+
+    int curPos = m_desktops.indexOf(m_currentDesktop);
+    int nextPos = curPos - 1;
+
+    if (curPos <= 0) {
+        if (isVirtualDesktopNavigationWrappingAround()) {
+            nextPos = m_desktops.count()-1;
+        } else {
+            return;
+        }
+    }
+
+    KWayland::Client::PlasmaVirtualDesktop *desktopObj = m_virtualDesktopManagement->getVirtualDesktop(m_desktops[nextPos]);
+
+    if (desktopObj) {
+        desktopObj->requestActivate();
+    }
+}
+
+void NSEWaylandInterface::setWindowOnActivities(const WindowId &wid, const QStringList &nextactivities)
+{
+    auto winfo = requestInfo(wid);
+    auto w = windowFor(wid);
+
+    if (!w) {
+        return;
+    }
+
+    QStringList curactivities = winfo.activities();
+
+    if (!winfo.isOnAllActivities() && nextactivities.isEmpty()) {
+        //! window must be set to all activities
+        for(int i=0; i<curactivities.count(); ++i) {
+            w->requestLeaveActivity(curactivities[i]);
+        }
+    } else if (curactivities != nextactivities) {
+        QStringList requestenter;
+        QStringList requestleave;
+
+        for (int i=0; i<nextactivities.count(); ++i) {
+            if (!curactivities.contains(nextactivities[i])) {
+                requestenter << nextactivities[i];
+            }
+        }
+
+        for (int i=0; i<curactivities.count(); ++i) {
+            if (!nextactivities.contains(curactivities[i])) {
+                requestleave << curactivities[i];
+            }
+        }
+
+        //! leave afterwards from deprecated activities
+        for (int i=0; i<requestleave.count(); ++i) {
+            w->requestLeaveActivity(requestleave[i]);
+        }
+
+        //! first enter to new activities
+        for (int i=0; i<requestenter.count(); ++i) {
+            w->requestEnterActivity(requestenter[i]);
+        }
+    }
+}
+
+void NSEWaylandInterface::removeViewStruts(QWindow &view)
+{
+    delete m_ghostWindows.take(view.winId());
+}
+
+WindowId NSEWaylandInterface::activeWindow()
+{
+    if (!m_windowManagement) {
+        return 0;
+    }
+
+    auto wid = m_windowManagement->activeWindow();
+
+    return wid ? wid->internalId() : 0;
+}
+
+void NSEWaylandInterface::skipTaskBar(const QDialog &dialog)
+{
+    KWindowSystem::setState(dialog.winId(), NET::SkipTaskbar);
+}
+
+void NSEWaylandInterface::slideWindow(QWindow &view, AbstractWindowInterface::Slide location)
+{
+    auto slideLocation = KWindowEffects::NoEdge;
+
+    switch (location) {
+    case Slide::Top:
+        slideLocation = KWindowEffects::TopEdge;
+        break;
+
+    case Slide::Bottom:
+        slideLocation = KWindowEffects::BottomEdge;
+        break;
+
+    case Slide::Left:
+        slideLocation = KWindowEffects::LeftEdge;
+        break;
+
+    case Slide::Right:
+        slideLocation = KWindowEffects::RightEdge;
+        break;
+
+    default:
+        break;
+    }
+
+    KWindowEffects::slideWindow(view.winId(), slideLocation, -1);
+}
+
+void NSEWaylandInterface::enableBlurBehind(QWindow &view)
+{
+    KWindowEffects::enableBlurBehind(view.winId());
+}
+
+void NSEWaylandInterface::setActiveEdge(QWindow *view, bool active)
+{
+    ViewPart::ScreenEdgeGhostWindow *window = qobject_cast<ViewPart::ScreenEdgeGhostWindow *>(view);
+
     if (!window) {
+        return;
+    }
+
+    auto *parentView = window->parentView();
+    if (!parentView) {
+        return;
+    }
+    auto *ghostSurface = window->surface();
+    if (!ghostSurface) {
+        return;
+    }
+
+    if (parentView->surface() && parentView->visibility()
+            && (parentView->visibility()->mode() == Types::DodgeActive
+                || parentView->visibility()->mode() == Types::DodgeMaximized
+                || parentView->visibility()->mode() == Types::DodgeAllWindows
+                || parentView->visibility()->mode() == Types::AutoHide)) {
+        if (active) {
+            window->showWithMask();
+            ghostSurface->requestHideAutoHidingPanel();
+        } else {
+            window->hideWithMask();
+            ghostSurface->requestShowAutoHidingPanel();
+        }
+    }
+}
+
+void NSEWaylandInterface::setFrameExtents(QWindow *view, const QMargins &extents)
+{
+    //! do nothing until there is a wayland way to provide this
+}
+
+void NSEWaylandInterface::setInputMask(QWindow *window, const QRect &rect)
+{
+    //! do nothins, QWindow::mask() is sufficient enough in order to define Window input mask
+}
+
+WindowInfoWrap NSEWaylandInterface::requestInfoActive()
+{
+    if (!m_windowManagement) {
+        return {};
+    }
+
+    auto w = m_windowManagement->activeWindow();
+
+    if (!w) return {};
+
+    return requestInfo(w->internalId());
+}
+
+WindowInfoWrap NSEWaylandInterface::requestInfo(WindowId wid)
+{
+    WindowInfoWrap winfoWrap;
+
+    auto w = windowFor(wid);
+
+    //!used to track Plasma DesktopView windows because during startup can not be identified properly
+    bool plasmaBlockedWindow = w && (w->appId() == QLatin1String("org.kde.plasmashell")) && !isAcceptableWindow(w);
+
+    if (w) {
+        winfoWrap.setIsValid(isValidWindow(w) && !plasmaBlockedWindow);
+        winfoWrap.setWid(wid);
+        winfoWrap.setParentId(w->parentWindow() ? w->parentWindow()->internalId() : 0);
+        winfoWrap.setIsActive(w->isActive());
+        winfoWrap.setIsMinimized(w->isMinimized());
+        winfoWrap.setIsMaxVert(w->isMaximized());
+        winfoWrap.setIsMaxHoriz(w->isMaximized());
+        winfoWrap.setIsFullscreen(w->isFullscreen());
+        winfoWrap.setIsShaded(w->isShaded());
+        winfoWrap.setIsOnAllDesktops(w->isOnAllDesktops());
+        winfoWrap.setIsOnAllActivities(w->plasmaActivities().isEmpty());
+        winfoWrap.setIsKeepAbove(w->isKeepAbove());
+        winfoWrap.setIsKeepBelow(w->isKeepBelow());
+        winfoWrap.setGeometry(w->geometry());
+        winfoWrap.setHasSkipSwitcher(w->skipSwitcher());
+        winfoWrap.setHasSkipTaskbar(w->skipTaskbar());
+
+        //! BEGIN:Window Abilities
+        winfoWrap.setIsClosable(w->isCloseable());
+        winfoWrap.setIsFullScreenable(w->isFullscreenable());
+        winfoWrap.setIsMaximizable(w->isMaximizeable());
+        winfoWrap.setIsMinimizable(w->isMinimizeable());
+        winfoWrap.setIsMovable(w->isMovable());
+        winfoWrap.setIsResizable(w->isResizable());
+        winfoWrap.setIsShadeable(w->isShadeable());
+        winfoWrap.setIsVirtualDesktopsChangeable(w->isVirtualDesktopChangeable());
+        //! END:Window Abilities
+
+        winfoWrap.setDisplay(w->title());
+        winfoWrap.setDesktops(w->plasmaVirtualDesktops());
+        winfoWrap.setActivities(w->plasmaActivities());
+
+    } else {
+        winfoWrap.setIsValid(false);
+    }
+
+    if (plasmaBlockedWindow) {
+        windowRemoved(w->internalId());
+    }
+
+    return winfoWrap;
+}
+
+AppData NSEWaylandInterface::appDataFor(WindowId wid)
+{
+    auto window = windowFor(wid);
+
+    if (window) {
+        const AppData &data = appDataFromUrl(windowUrlFromMetadata(window->appId(),
+                                                                   window->pid(), rulesConfig));
+
+        return data;
+    }
+
+    AppData empty;
+
+    return empty;
+}
+
+KWayland::Client::PlasmaWindow *NSEWaylandInterface::windowFor(WindowId wid)
+{
+    if (!m_windowManagement) {
         return nullptr;
     }
-    
-    // Check cache first
-    if (m_layerWindows.contains(window)) {
-        return m_layerWindows.value(window);
+
+    auto it = std::find_if(m_windowManagement->windows().constBegin(), m_windowManagement->windows().constEnd(), [&wid](PlasmaWindow * w) noexcept {
+            return w->isValid() && w->internalId() == wid;
+});
+
+    if (it == m_windowManagement->windows().constEnd()) {
+        return nullptr;
     }
-    
-    // Create new LayerShell window
-    LayerShellQt::Window *layerWindow = LayerShellQt::Window::get(window);
-    
-    if (layerWindow) {
-        m_layerWindows.insert(window, layerWindow);
-        
-        // Clean up when window is destroyed
-        connect(window, &QObject::destroyed, this, [this, window]() {
-            m_layerWindows.remove(window);
-        });
-    } else {
-        qCWarning(nseWayland) << "Failed to create LayerShell window for:" 
-                              << window->title();
-    }
-    
-    return layerWindow;
+
+    return *it;
 }
 
-void NSEWaylandInterface::setError(const QString &context, const QString &message)
+QIcon NSEWaylandInterface::iconFor(WindowId wid)
 {
-    m_lastError = QString("[%1] %2").arg(context, message);
-    qCCritical(nseWayland) << m_lastError;
+    auto window = windowFor(wid);
+
+    if (window) {
+        return window->icon();
+    }
+
+
+    return QIcon();
 }
 
-} // namespace WindowSystem
-} // namespace NSE
+WindowId NSEWaylandInterface::winIdFor(QString appId, QString title)
+{
+    if (!m_windowManagement) {
+        return WindowId{};
+    }
+
+    auto it = std::find_if(m_windowManagement->windows().constBegin(), m_windowManagement->windows().constEnd(), [&appId, &title](PlasmaWindow * w) noexcept {
+        return w->isValid() && w->appId() == appId && w->title().startsWith(title);
+    });
+
+    if (it == m_windowManagement->windows().constEnd()) {
+        return WindowId{};
+    }
+
+    return (*it)->internalId();
+}
+
+WindowId NSEWaylandInterface::winIdFor(QString appId, QRect geometry)
+{
+    if (!m_windowManagement) {
+        return WindowId{};
+    }
+
+    auto it = std::find_if(m_windowManagement->windows().constBegin(), m_windowManagement->windows().constEnd(), [&appId, &geometry](PlasmaWindow * w) noexcept {
+        return w->isValid() && w->appId() == appId && w->geometry() == geometry;
+    });
+
+    if (it == m_windowManagement->windows().constEnd()) {
+        return WindowId{};
+    }
+
+    return (*it)->internalId();
+}
+
+bool NSEWaylandInterface::windowCanBeDragged(WindowId wid)
+{
+    auto w = windowFor(wid);
+
+    if (w && isValidWindow(w)) {
+        WindowInfoWrap winfo = requestInfo(wid);
+        return (winfo.isValid()
+                && w->isMovable()
+                && !winfo.isMinimized()
+                && inCurrentDesktopActivity(winfo));
+    }
+
+    return false;
+}
+
+bool NSEWaylandInterface::windowCanBeMaximized(WindowId wid)
+{
+    auto w = windowFor(wid);
+
+    if (w && isValidWindow(w)) {
+        WindowInfoWrap winfo = requestInfo(wid);
+        return (winfo.isValid()
+                && w->isMaximizeable()
+                && !winfo.isMinimized()
+                && inCurrentDesktopActivity(winfo));
+    }
+
+    return false;
+}
+
+void NSEWaylandInterface::requestActivate(WindowId wid)
+{
+    auto w = windowFor(wid);
+
+    if (w) {
+        w->requestActivate();
+    }
+}
+
+void NSEWaylandInterface::requestClose(WindowId wid)
+{
+    auto w = windowFor(wid);
+
+    if (w) {
+        w->requestClose();
+    }
+}
+
+
+void NSEWaylandInterface::requestMoveWindow(WindowId wid, QPoint from)
+{
+    WindowInfoWrap wInfo = requestInfo(wid);
+
+    if (windowCanBeDragged(wid) && inCurrentDesktopActivity(wInfo)) {
+        auto w = windowFor(wid);
+
+        if (w && isValidWindow(w)) {
+            w->requestMove();
+        }
+    }
+}
+
+void NSEWaylandInterface::requestToggleIsOnAllDesktops(WindowId wid)
+{
+    auto w = windowFor(wid);
+
+    if (w && isValidWindow(w) && m_desktops.count() > 1) {
+        if (w->isOnAllDesktops()) {
+            if (!m_currentDesktop.isEmpty()) {
+                w->requestEnterVirtualDesktop(m_currentDesktop);
+            }
+        } else {
+            const QStringList &now = w->plasmaVirtualDesktops();
+
+            for (const QString &desktop : now) {
+                w->requestLeaveVirtualDesktop(desktop);
+            }
+        }
+    }
+}
+
+void NSEWaylandInterface::requestToggleKeepAbove(WindowId wid)
+{
+    auto w = windowFor(wid);
+
+    if (w) {
+        w->requestToggleKeepAbove();
+    }
+}
+
+void NSEWaylandInterface::setKeepAbove(WindowId wid, bool active)
+{
+    auto w = windowFor(wid);
+
+    if (w) {
+        if (active) {
+            setKeepBelow(wid, false);
+        }
+
+        if ((w->isKeepAbove() && active) || (!w->isKeepAbove() && !active)) {
+            return;
+        }
+
+        w->requestToggleKeepAbove();
+    }
+}
+
+void NSEWaylandInterface::setKeepBelow(WindowId wid, bool active)
+{
+    auto w = windowFor(wid);
+
+    if (w) {
+        if (active) {
+            setKeepAbove(wid, false);
+        }
+
+        if ((w->isKeepBelow() && active) || (!w->isKeepBelow() && !active)) {
+            return;
+        }
+
+        w->requestToggleKeepBelow();
+    }
+}
+
+void NSEWaylandInterface::requestToggleMinimized(WindowId wid)
+{
+    auto w = windowFor(wid);
+    WindowInfoWrap wInfo = requestInfo(wid);
+
+    if (w && isValidWindow(w) && inCurrentDesktopActivity(wInfo)) {
+        if (!m_currentDesktop.isEmpty()) {
+            w->requestEnterVirtualDesktop(m_currentDesktop);
+        }
+        w->requestToggleMinimized();
+    }
+}
+
+void NSEWaylandInterface::requestToggleMaximized(WindowId wid)
+{
+    auto w = windowFor(wid);
+    WindowInfoWrap wInfo = requestInfo(wid);
+
+    if (w && isValidWindow(w) && windowCanBeMaximized(wid) && inCurrentDesktopActivity(wInfo)) {
+        if (!m_currentDesktop.isEmpty()) {
+            w->requestEnterVirtualDesktop(m_currentDesktop);
+        }
+        w->requestToggleMaximized();
+    }
+}
+
+bool NSEWaylandInterface::isPlasmaPanel(const KWayland::Client::PlasmaWindow *w) const
+{
+    if (!w || (w->appId() != QLatin1String("org.kde.plasmashell"))) {
+        return false;
+    }
+
+    return AbstractWindowInterface::isPlasmaPanel(w->geometry());
+}
+
+bool NSEWaylandInterface::isFullScreenWindow(const KWayland::Client::PlasmaWindow *w) const
+{
+    if (!w) {
+        return false;
+    }
+
+    return w->isFullscreen() || AbstractWindowInterface::isFullScreenWindow(w->geometry());
+}
+
+bool NSEWaylandInterface::isSidepanel(const KWayland::Client::PlasmaWindow *w) const
+{
+    if (!w) {
+        return false;
+    }
+
+    return AbstractWindowInterface::isSidepanel(w->geometry());
+}
+
+bool NSEWaylandInterface::isValidWindow(const KWayland::Client::PlasmaWindow *w)
+{
+    if (!w || !w->isValid()) {
+        return false;
+    }
+
+    if (windowsTracker()->isValidFor(w->internalId())) {
+        return true;
+    }
+
+    return isAcceptableWindow(w);
+}
+
+bool NSEWaylandInterface::isAcceptableWindow(const KWayland::Client::PlasmaWindow *w)
+{
+    if (!w || !w->isValid()) {
+        return false;
+    }
+
+    //! ignored windows that are not tracked
+    if (hasBlockedTracking(w->internalId())) {
+        return false;
+    }
+
+    //! whitelisted/approved windows
+    if (isWhitelistedWindow(w->internalId())) {
+        return true;
+    }
+
+    //! Window Checks
+    bool hasSkipTaskbar = w->skipTaskbar();
+    bool isSkipped = hasSkipTaskbar;
+    bool hasSkipSwitcher = w->skipSwitcher();
+    isSkipped = hasSkipTaskbar && hasSkipSwitcher;
+
+    if (isSkipped
+            && ((w->appId() == QLatin1String("yakuake")
+                 || (w->appId() == QLatin1String("krunner"))) )) {
+        registerWhitelistedWindow(w->internalId());
+    } else if (w->appId() == QLatin1String("org.kde.plasmashell")) {
+        if (isSkipped && isSidepanel(w)) {
+            registerWhitelistedWindow(w->internalId());
+            return true;
+        } else if (isPlasmaPanel(w) || isFullScreenWindow(w)) {
+            registerPlasmaIgnoredWindow(w->internalId());
+            return false;
+        }
+    } else if ((w->appId() == QLatin1String("syndock"))
+               || (w->appId().startsWith(QLatin1String("ksmserver")))) {
+        if (isFullScreenWindow(w)) {
+            registerIgnoredWindow(w->internalId());
+            return false;
+        }
+    }
+
+    return !isSkipped;
+}
+
+void NSEWaylandInterface::updateWindow()
+{
+    PlasmaWindow *pW = qobject_cast<PlasmaWindow*>(QObject::sender());
+
+    if (isValidWindow(pW)) {
+        considerWindowChanged(pW->internalId());
+    }
+}
+
+void NSEWaylandInterface::windowUnmapped()
+{
+    PlasmaWindow *pW = qobject_cast<PlasmaWindow*>(QObject::sender());
+
+    if (pW) {
+        untrackWindow(pW);
+        emit windowRemoved(pW->internalId());
+    }
+}
+
+void NSEWaylandInterface::trackWindow(KWayland::Client::PlasmaWindow *w)
+{
+    if (!w) {
+        return;
+    }
+
+    connect(w, &PlasmaWindow::activeChanged, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::titleChanged, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::fullscreenChanged, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::geometryChanged, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::maximizedChanged, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::minimizedChanged, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::shadedChanged, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::skipTaskbarChanged, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::onAllDesktopsChanged, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::parentWindowChanged, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::plasmaVirtualDesktopEntered, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::plasmaVirtualDesktopLeft, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::plasmaActivityEntered, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::plasmaActivityLeft, this, &NSEWaylandInterface::updateWindow);
+    connect(w, &PlasmaWindow::unmapped, this, &NSEWaylandInterface::windowUnmapped);
+}
+
+void NSEWaylandInterface::untrackWindow(KWayland::Client::PlasmaWindow *w)
+{
+    if (!w) {
+        return;
+    }
+
+    disconnect(w, &PlasmaWindow::activeChanged, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::titleChanged, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::fullscreenChanged, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::geometryChanged, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::maximizedChanged, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::minimizedChanged, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::shadedChanged, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::skipTaskbarChanged, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::onAllDesktopsChanged, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::parentWindowChanged, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::plasmaVirtualDesktopEntered, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::plasmaVirtualDesktopLeft, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::plasmaActivityEntered, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::plasmaActivityLeft, this, &NSEWaylandInterface::updateWindow);
+    disconnect(w, &PlasmaWindow::unmapped, this, &NSEWaylandInterface::windowUnmapped);
+}
+
+
+void NSEWaylandInterface::windowCreatedProxy(KWayland::Client::PlasmaWindow *w)
+{
+    if (!isAcceptableWindow(w))  {
+        return;
+    }
+
+    trackWindow(w);
+    emit windowAdded(w->internalId());
+
+    if (w->appId() == QLatin1String("syndock")) {
+        emit syndockWindowAdded();
+    }
+}
+
+}
+}
 
 #include "nsewaylandinterface.moc"

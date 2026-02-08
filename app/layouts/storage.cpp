@@ -9,7 +9,7 @@
 #include <coretypes.h>
 #include "importer.h"
 #include "manager.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../screenpool.h"
 #include "../data/errordata.h"
 #include "../data/viewdata.h"
@@ -87,17 +87,15 @@ bool Storage::isLatteContainment(const Plasma::Containment *containment) const
         return false;
     }
 
-    if (containment->pluginMetaData().pluginId() == QLatin1String("org.kde.latte.containment")) {
-        return true;
-    }
+    const QString pluginId = containment->pluginMetaData().pluginId();
 
-    return false;
+    return pluginId == QLatin1String("org.kde.syndock.containment");
 }
 
 bool Storage::isLatteContainment(const KConfigGroup &group) const
 {
-    QString pluginId = group.readEntry("plugin", "");
-    return pluginId == QLatin1String("org.kde.latte.containment");
+    const QString pluginId = group.readEntry("plugin", "");
+    return pluginId == QLatin1String("org.kde.syndock.containment");
 }
 
 bool Storage::isSubContainment(const Plasma::Corona *corona, const Plasma::Applet *applet) const

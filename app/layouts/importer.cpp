@@ -10,7 +10,7 @@
 // local
 #include <coretypes.h>
 #include "manager.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../screenpool.h"
 #include "../layout/abstractlayout.h"
 #include "../settings/universalsettings.h"
@@ -20,6 +20,7 @@
 // Qt
 #include <QFile>
 #include <QLatin1String>
+#include <QRegularExpression>
 
 // KDE
 #include <KArchive/KTar>
@@ -108,10 +109,12 @@ bool Importer::importOldLayout(QString oldAppletsPath, QString newName, bool alt
 
         bool shouldImport = false;
 
-        if (plugin == QLatin1String("org.kde.latte.containment") && session == DefaultSession && !alternative) {
+        const bool isDockContainment = plugin == QLatin1String("org.kde.syndock.containment");
+
+        if (isDockContainment && session == DefaultSession && !alternative) {
             qDebug() << containmentId << " - " << plugin << " - " << session;
             shouldImport = true;
-        } else if (plugin == QLatin1String("org.kde.latte.containment") && session == AlternativeSession && alternative) {
+        } else if (isDockContainment && session == AlternativeSession && alternative) {
             qDebug() << containmentId << " - " << plugin << " - " << session;
             shouldImport = true;
         }
@@ -730,7 +733,7 @@ QString Importer::systemShellDataPath()
 {
     QStringList paths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
     QString rootpath = paths.count() > 0 ? paths[paths.count()-1] : "/usr/share";
-    return  rootpath + "/plasma/shells/org.kde.latte.shell";
+    return  rootpath + "/plasma/shells/org.kde.syndock.shell";
 }
 
 QString Importer::layoutTemplateSystemFilePath(const QString &name)
@@ -740,7 +743,7 @@ QString Importer::layoutTemplateSystemFilePath(const QString &name)
 
 QString Importer::uniqueLayoutName(QString name)
 {
-    int pos_ = name.lastIndexOf(QRegExp(QString(" - [0-9]+")));
+    int pos_ = name.lastIndexOf(QRegularExpression(QStringLiteral(" - [0-9]+")));
 
     if (layoutExists(name) && pos_ > 0) {
         name = name.left(pos_);

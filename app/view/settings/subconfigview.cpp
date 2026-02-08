@@ -8,7 +8,7 @@
 //local
 #include <config-syndock.h>
 #include "../view.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../layouts/manager.h"
 #include "../../plasma/extended/theme.h"
 #include "../../settings/universalsettings.h"
@@ -38,7 +38,7 @@ SubConfigView::SubConfigView(NSE::View *view, const QString &title, const bool &
         m_corona->wm()->registerIgnoredWindow(winId());
     } else {
         connect(this, &QWindow::windowTitleChanged, this, &SubConfigView::updateWaylandId);
-        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &SubConfigView::updateWaylandId);
+        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::syndockWindowAdded, this, &SubConfigView::updateWaylandId);
     }
 
     m_validTitle = title;

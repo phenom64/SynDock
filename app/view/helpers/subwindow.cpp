@@ -117,7 +117,7 @@ SubWindow::SubWindow(NSE::View *view, QString debugType) :
         m_trackedWindowId = winId();
         m_corona->wm()->registerIgnoredWindow(m_trackedWindowId);
     } else {
-        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &SubWindow::updateWaylandId);
+        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::syndockWindowAdded, this, &SubWindow::updateWaylandId);
     }
 
     setScreen(m_latteView->screen());

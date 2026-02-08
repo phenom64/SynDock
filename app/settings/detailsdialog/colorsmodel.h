@@ -7,7 +7,7 @@
 #define COLORSMODEL_H
 
 // local
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../data/layoutcolordata.h"
 
 // Qt

@@ -7,7 +7,7 @@
 
 // local
 #include "layoutscontroller.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../layout/centrallayout.h"
 #include "../../layouts/manager.h"
 #include "../../layouts/synchronizer.h"

@@ -67,7 +67,7 @@ void LayoutMenuItemWidget::paintEvent(QPaintEvent* e)
     }
 
     //! background
-    Latte::drawBackground(&painter, style(), opt);
+    NSE::drawBackground(&painter, style(), opt);
 
     //! radio button
     int radiosize = opt.rect.height() - 2*MARGIN;
@@ -83,16 +83,15 @@ void LayoutMenuItemWidget::paintEvent(QPaintEvent* e)
 
     //! icon
     int thickpadding = (opt.rect.height() - qMax(16, opt.maxIconWidth)) / 2; //old value 4
-    remained = Latte::remainedFromLayoutIcon(opt, Qt::AlignLeft, 1, thickpadding);
-    Latte::drawLayoutIcon(&painter, opt, m_isBackgroundFile, m_iconName, Qt::AlignLeft, 1, thickpadding);
+    remained = NSE::remainedFromLayoutIcon(opt, Qt::AlignLeft, 1, thickpadding);
+    NSE::drawLayoutIcon(&painter, opt, m_isBackgroundFile, m_iconName, Qt::AlignLeft, 1, thickpadding);
     opt.rect  = remained;
 
     //! text
     opt.text = opt.text.remove("&");
     //style()->drawControl(QStyle::CE_MenuItem, &opt, &painter, this);
-    Latte::drawFormattedText(&painter, opt);
+    NSE::drawFormattedText(&painter, opt);
 
     painter.restore();
 }
-
 

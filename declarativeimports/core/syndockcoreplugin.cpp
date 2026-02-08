@@ -5,7 +5,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "lattecoreplugin.h"
+#include "syndockcoreplugin.h"
 
 // local
 #include "dialog.h"
@@ -20,10 +20,10 @@
 #include <QtQml>
 
 
-void LatteCorePlugin::registerTypes(const char *uri)
+void SyndockCorePlugin::registerTypes(const char *uri)
 {
-    Q_ASSERT(uri == QLatin1String("org.kde.latte.core"));
-    qmlRegisterUncreatableType<Latte::Types>(uri, 0, 2, "Types", "Latte Types uncreatable");
+    Q_ASSERT(uri == QLatin1String("org.kde.syndock.core"));
+    qmlRegisterUncreatableType<Latte::Types>(uri, 0, 2, "Types", "SynDock Types uncreatable");
     qmlRegisterType<Latte::IconItem>(uri, 0, 2, "IconItem");
     qmlRegisterType<Latte::Quick::Dialog>(uri, 0, 2, "Dialog");
     qmlRegisterSingletonType<Latte::Environment>(uri, 0, 2, "Environment", &Latte::environment_qobject_singletontype_provider);

@@ -7,7 +7,7 @@
 #define SETTINGSLAYOUTSMODEL_H
 
 // local
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../data/activitydata.h"
 #include "../../data/layoutdata.h"
 #include "../../data/layouticondata.h"

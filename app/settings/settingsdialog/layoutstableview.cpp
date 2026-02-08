@@ -36,8 +36,8 @@ LayoutsTableView::LayoutsTableView(QWidget *parent)
     m_overlayDropMessage->setAlignment(Qt::AlignCenter);
 
     QPalette palette = m_overlayDropMessage->palette();
-    QColor backgroundColor = palette.color(QPalette::Background);
-    QColor foregroundColor = palette.color(QPalette::Foreground);
+    QColor backgroundColor = palette.color(QPalette::Window);
+    QColor foregroundColor = palette.color(QPalette::WindowText);
 
     QColor borderColor = foregroundColor;
     borderColor.setAlphaF(0.5);
@@ -81,4 +81,3 @@ void LayoutsTableView::dragLeft()
 }
 }
 }
-

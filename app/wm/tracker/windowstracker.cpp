@@ -13,7 +13,7 @@
 #include "../abstractwindowinterface.h"
 #include "../schemecolors.h"
 #include "../../apptypes.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../layout/genericlayout.h"
 #include "../../layouts/manager.h"
 #include "../../view/view.h"

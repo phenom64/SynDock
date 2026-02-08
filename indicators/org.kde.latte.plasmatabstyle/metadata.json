@@ -62,8 +62,8 @@
         "Description[zh_CN]": "Latte 的 Plasma 标签页风格指示器",
         "Description[zh_TW]": "適用於 Latte 的 Plasma 分頁樣式指示器",
         "EnabledByDefault": true,
-        "Icon": "latte-dock",
-        "Id": "org.kde.latte.plasmatabstyle",
+        "Icon": "syndock",
+        "Id": "org.kde.syndock.plasmatabstyle",
         "License": "GPL v2+",
         "Name": "Plasma Tab Style",
         "Name[ar]": "نمط ألسنة بلازما",
@@ -97,7 +97,7 @@
         "Name[zh_CN]": "Plasma 标签页风格",
         "Name[zh_TW]": "Plasma 分頁樣式",
         "ServiceTypes": [
-            "Latte/Indicator"
+            "SynDock/Indicator"
         ],
         "Version": "0.1"
     },

@@ -91,6 +91,10 @@ add_definitions(-DPLASMA_WORKSPACE_VERSION="${LibTaskManager_VERSION}")
 find_package(LayerShellQt REQUIRED)
 find_package(PlasmaWaylandProtocols 1.6 REQUIRED)
 find_package(Wayland REQUIRED COMPONENTS Client)
+find_package(KWayland QUIET)
+if(NOT KWayland_FOUND)
+    find_package(KF6Wayland REQUIRED)
+endif()
 
 # Wayland-only build - explicitly disable X11
 set(HAVE_X11 OFF)

@@ -11,7 +11,7 @@
 #include "screensdialog.h"
 #include "screensmodel.h"
 #include "delegates/checkboxdelegate.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../screenpool.h"
 
 // KDE

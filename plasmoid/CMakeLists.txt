@@ -8,7 +8,7 @@ kpackage_install_package(package org.kde.syndock.plasmoid plasma plasmoids)
 
 set(tasks_SRCS
     plugin/types.cpp
-    plugin/lattetasksplugin.cpp
+    plugin/syndocktasksplugin.cpp
 )
 
 add_library(syndocktasksplugin SHARED ${tasks_SRCS})

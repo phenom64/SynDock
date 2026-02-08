@@ -27,6 +27,7 @@
 // Qt
 #include <QHeaderView>
 #include <QItemSelection>
+#include <QRegularExpression>
 
 // KDE
 #include <KMessageWidget>
@@ -873,7 +874,7 @@ void Views::save()
     QHash<QString, Data::View> cuttedpastedactiveviews;
 
     m_debugSaveCall++;
-    qDebug() << "org.kde.latte ViewsDialog::save() call: " << m_debugSaveCall << "-------- ";
+    qDebug() << "org.kde.syndock ViewsDialog::save() call: " << m_debugSaveCall << "-------- ";
 
     //! add new views that are accepted
     for(int i=0; i<newViews.rowCount(); ++i){
@@ -905,7 +906,7 @@ void Views::save()
     //! update altered views
     for (int i=0; i<alteredViews.rowCount(); ++i) {
         if (alteredViews[i].state() == Data::View::IsCreated && !alteredViews[i].isMoveOrigin) {
-            qDebug() << "org.kde.latte ViewsDialog::save() updating altered view :: " << alteredViews[i];
+            qDebug() << "org.kde.syndock ViewsDialog::save() updating altered view :: " << alteredViews[i];
             central->updateView(alteredViews[i]);
         }
     }
@@ -914,7 +915,7 @@ void Views::save()
     NSE::Data::ViewsTable removedViews = originalViews.subtracted(currentViews);
 
     for (int i=0; i<removedViews.rowCount(); ++i) {
-        qDebug() << "org.kde.latte ViewsDialog::save() real removing view :: " << removedViews[i];
+        qDebug() << "org.kde.syndock ViewsDialog::save() real removing view :: " << removedViews[i];
         central->removeView(removedViews[i]);
     }
 
@@ -929,7 +930,7 @@ void Views::save()
             continue;
         }
 
-        qDebug() << "org.kde.latte ViewsDialog::save() removing cut-pasted view :: " << cuttedpastedviews[vid];
+        qDebug() << "org.kde.syndock ViewsDialog::save() removing cut-pasted view :: " << cuttedpastedviews[vid];
 
         //! Be Careful: Remove deprecated views from Cut->Paste Action
         QString origincurrentid = cuttedpastedviews[vid].originLayout();
@@ -956,7 +957,7 @@ void Views::save()
         QString tempviewid = pastedactiveview.id;
         pastedactiveview.id = QString::number(originviewid);
 
-        qDebug() << "org.kde.latte ViewsDialog::save() move to another layout cutted-pasted active view :: " << pastedactiveview;
+        qDebug() << "org.kde.syndock ViewsDialog::save() move to another layout cutted-pasted active view :: " << pastedactiveview;
 
         if (view) {
             //! onscreen_view->onscreen_view
@@ -1004,7 +1005,7 @@ QString Views::uniqueViewName(QString name)
         return name;
     }
 
-    int pos_ = name.lastIndexOf(QRegExp(QString(" - [0-9]+")));
+    int pos_ = name.lastIndexOf(QRegularExpression(QStringLiteral(" - [0-9]+")));
 
     if (m_model->containsCurrentName(name) && pos_ > 0) {
         name = name.left(pos_);
@@ -1089,4 +1090,3 @@ void Views::saveConfig()
 }
 }
 }
-

@@ -9,7 +9,7 @@
 // local
 #include <coretypes.h>
 #include "viewsmodel.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../data/viewdata.h"
 #include "../../data/viewstable.h"
 

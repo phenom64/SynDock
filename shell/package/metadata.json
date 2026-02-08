@@ -60,7 +60,7 @@
         "Description[uk]": "Оболонка панелі Латте",
         "Description[zh_CN]": "用于 Latte 停靠栏的 Shell",
         "Description[zh_TW]": "提供給 Latte Dock 用的 Shell",
-        "Id": "org.kde.latte.shell",
+        "Id": "org.kde.syndock.shell",
         "License": "GPLv3+",
         "Name": "Latte Shell",
         "Name[ar]": "صدفة لاتيه",
@@ -137,5 +137,5 @@
     "Keywords[x-test]": "xxshellxx",
     "Keywords[zh_CN]": "shell",
     "Keywords[zh_TW]": "shell",
-    "X-KDE-ParentApp": "latte-dock"
+    "X-KDE-ParentApp": "syndock"
 }

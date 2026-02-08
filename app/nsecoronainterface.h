@@ -45,9 +45,9 @@ namespace KActivities {
 class Consumer;
 }
 
-/* NOTE: KWayland::Client is deprecated in KF6/Plasma 6
- * LayerShellQt is now the preferred method for panel surfaces.
- * This forward declaration is retained for compatibility during transition.
+/* NOTE: KWayland::Client is deprecated in KF6/Plasma 6.
+ * SynDock currently keeps this forward declaration because the window
+ * management backend still relies on PlasmaWindowManagement integration.
  */
 namespace KWayland {
 namespace Client {
@@ -210,7 +210,7 @@ public slots:
     void toggleHiddenState(QString layoutName, QString viewName, QString screenName, int screenEdge);
 
     //! Values separated with a "-" character
-    void windowColourScheme(QString windowIdAndScheme);
+    void windowColorScheme(QString windowIdAndScheme);
     void updateDockItemBadge(QString identifier, QString value);
 
     void unload();

@@ -17,7 +17,7 @@
 #include "../exporttemplatedialog/exporttemplatedialog.h"
 #include "../viewsdialog/viewsdialog.h"
 #include "../../apptypes.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../layout/centrallayout.h"
 #include "../../layouts/importer.h"
 #include "../../layouts/manager.h"

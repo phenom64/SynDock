@@ -12,7 +12,7 @@
 #include "../universalsettings.h"
 #include "../actionsdialog/actionsdialog.h"
 #include "../../apptypes.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../plasma/extended/theme.h"
 
 

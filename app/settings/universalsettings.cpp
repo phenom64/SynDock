@@ -25,7 +25,7 @@
 #include <KDirWatch>
 #include <KWindowSystem>
 
-#define KWINMETAFORWARDTOLATTESTRING "org.kde.lattedock,/Latte,org.kde.SynDock,activateLauncherMenu"
+#define KWINMETAFORWARDTOLATTESTRING "org.syndromatic.syndock,/SynDock,org.syndromatic.SynDock,activateLauncherMenu"
 #define KWINMETAFORWARDTOPLASMASTRING "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu"
 
 #define KWINCOLORSSCRIPT "kwin/scripts/lattewindowcolors"

@@ -5,8 +5,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#ifndef LATTEPACKAGE_H
-#define LATTEPACKAGE_H
+#ifndef SYNDOCKPACKAGE_H
+#define SYNDOCKPACKAGE_H
 
 // Qt
 #include <QObject>
@@ -28,4 +28,4 @@ public:
 };
 
 }
-#endif // LATTEPACKAGE_H
+#endif // SYNDOCKPACKAGE_H

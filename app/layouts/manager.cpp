@@ -205,7 +205,7 @@ NSE::Data::LayoutIcon Manager::iconForLayout(const Data::Layout &layout) const
 
     //! fallback icon: background image
     if (_icon.isEmpty()) {
-        QString colorPath = m_corona->kPackage().path() + "../../shells/org.kde.latte.shell/contents/images/canvas/";
+        QString colorPath = m_corona->kPackage().path() + "../../shells/org.kde.syndock.shell/contents/images/canvas/";
 
         if (layout.backgroundStyle == Layout::PatternBackgroundStyle && layout.background.isEmpty()) {
             colorPath += "defaultcustomprint.jpg";

@@ -12,7 +12,7 @@
 #include "../universalsettings.h"
 #include "../generic/generictools.h"
 #include "../screensdialog/screensdialog.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../screenpool.h"
 #include "../../data/layoutdata.h"
 #include "../../layout/centrallayout.h"
@@ -147,7 +147,7 @@ void SettingsDialog::initFileMenu()
     screensAction->setToolTip(i18n("Examine your screens and remove deprecated references"));
     connect(screensAction, &QAction::triggered, this, &SettingsDialog::showScreensDialog);
 
-    QAction *quitAction = m_fileMenu->addAction(i18n("&Quit Latte"));
+    QAction *quitAction = m_fileMenu->addAction(i18n("&Quit SynDock"));
     quitAction->setIcon(QIcon::fromTheme("application-exit"));
     quitAction->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_Q));
 

@@ -62,8 +62,8 @@
         "Description[zh_CN]": "Latte Plasma 风格指示器",
         "Description[zh_TW]": "Latte Plasma 樣式指示器",
         "EnabledByDefault": true,
-        "Icon": "latte-dock",
-        "Id": "org.kde.latte.plasma",
+        "Icon": "syndock",
+        "Id": "org.kde.syndock.plasma",
         "License": "GPL v2+",
         "Name": "Plasma",
         "Name[ar]": "بلازما",
@@ -102,7 +102,7 @@
         "Name[zh_CN]": "Plasma",
         "Name[zh_TW]": "Plasma",
         "ServiceTypes": [
-            "Latte/Indicator"
+            "SynDock/Indicator"
         ],
         "Version": "0.1"
     },

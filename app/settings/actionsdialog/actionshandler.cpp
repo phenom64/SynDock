@@ -65,14 +65,14 @@ void ActionsHandler::initItems()
     itemid = NSE::Data::ContextMenu::PREFERENCESACTION;
     itemindex = NSE::Data::ContextMenu::ACTIONSEDITORDER.indexOf(itemid);
     m_items[itemid] = new ActionsDialog::ActionListWidgetItem(QIcon::fromTheme("configure"),
-                                                              i18nc("global settings window", "Configure Latte..."),
+                                                              i18nc("global settings window", "Configure SynDock..."),
                                                               itemindex,
                                                               itemid);
 
-    itemid = NSE::Data::ContextMenu::QUITLATTEACTION;
+    itemid = NSE::Data::ContextMenu::QUITSYNDOCKACTION;
     itemindex = NSE::Data::ContextMenu::ACTIONSEDITORDER.indexOf(itemid);
     m_items[itemid] = new ActionsDialog::ActionListWidgetItem(QIcon::fromTheme("application-exit"),
-                                                              i18nc("quit application", "Quit Latte"),
+                                                              i18nc("quit application", "Quit SynDock"),
                                                               itemindex,
                                                               itemid);
 

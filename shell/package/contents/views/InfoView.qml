@@ -42,7 +42,7 @@ PlasmaCore.FrameSvgItem {
                 width: units.iconSizes.huge
                 height: width
 
-                source: "latte-dock"
+                source: "syndock"
             }
         }
 

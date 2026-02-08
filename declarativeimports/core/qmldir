@@ -1,2 +1,2 @@
-module org.kde.latte.core
-plugin lattecoreplugin
+module org.kde.syndock.core
+plugin syndockcoreplugin

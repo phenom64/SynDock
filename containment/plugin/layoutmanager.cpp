@@ -395,10 +395,10 @@ void LayoutManager::restore()
         }
     }
 
-    qDebug() << "org.kde.latte ::: applets found :: " << applets.count() << " : " << appletIdsOrder << " :: " << splitterPosition << " : " << splitterPosition2 << " | " << alignment;
-    qDebug() << "org.kde.latte ::: applets orphaned added in the end:: " << orphanedIds;
-    qDebug() << "org.kde.latte ::: applets recorded order :: " << appletIdsOrder;
-    qDebug() << "org.kde.latte ::: applets produced order ?? " << validateAppletsOrder;
+    qDebug() << "org.kde.syndock ::: applets found :: " << applets.count() << " : " << appletIdsOrder << " :: " << splitterPosition << " : " << splitterPosition2 << " | " << alignment;
+    qDebug() << "org.kde.syndock ::: applets orphaned added in the end:: " << orphanedIds;
+    qDebug() << "org.kde.syndock ::: applets recorded order :: " << appletIdsOrder;
+    qDebug() << "org.kde.syndock ::: applets produced order ?? " << validateAppletsOrder;
 
     if (alignment != Latte::Types::Justify) {
         for (int i=0; i<orderedApplets.count(); ++i) {

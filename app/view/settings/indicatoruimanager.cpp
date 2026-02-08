@@ -9,7 +9,7 @@
 #include "primaryconfigview.h"
 #include "../view.h"
 #include "../indicator/indicator.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../indicator/factory.h"
 
 // Qt

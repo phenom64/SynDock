@@ -7,7 +7,7 @@
 
 // local
 #include "view.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../layout/genericlayout.h"
 #include "../layouts/importer.h"
 #include "../layouts/storage.h"
@@ -205,7 +205,7 @@ bool ContainmentInterface::updateBadgeForLatteTask(const QString identifier, con
     for (auto *applet : applets) {
         KPluginMetaData meta = applet->kPackage().metadata();
 
-        if (meta.pluginId() == QLatin1String("org.kde.latte.plasmoid")) {
+            if (meta.pluginId() == QLatin1String("org.kde.syndock.plasmoid")) {
 
             if (QQuickItem *appletInterface = applet->property("_plasma_graphicObject").value<QQuickItem *>()) {
                 const auto &childItems = appletInterface->childItems();
@@ -996,7 +996,7 @@ void ContainmentInterface::onAppletAdded(Plasma::Applet *applet)
         KPluginMetaData meta = applet->kPackage().metadata();
         const auto &provides = KPluginMetaData::readStringList(meta.rawData(), QStringLiteral("X-Plasma-Provides"));
 
-        if (meta.pluginId() == QLatin1String("org.kde.latte.plasmoid")) {
+        if (meta.pluginId() == QLatin1String("org.kde.syndock.plasmoid")) {
             //! populate latte tasks applet
             m_latteTasksModel->addTask(ai);
         } else if (provides.contains(QLatin1String("org.kde.plasma.multitasking"))) {

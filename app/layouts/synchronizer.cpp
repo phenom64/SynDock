@@ -12,7 +12,7 @@
 #include "../apptypes.h"
 #include "../screenpool.h"
 #include "../data/layoutdata.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../layout/centrallayout.h"
 #include "../layout/genericlayout.h"
 #include "../settings/universalsettings.h"

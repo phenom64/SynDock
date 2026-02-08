@@ -11,7 +11,7 @@
 // local
 #include <coretypes.h>
 #include "../apptypes.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../data/preferencesdata.h"
 
 // Qt

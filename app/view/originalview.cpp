@@ -6,7 +6,7 @@
 #include "originalview.h"
 #include "clonedview.h"
 #include "positioner.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../screenpool.h"
 #include "../layouts/storage.h"
 

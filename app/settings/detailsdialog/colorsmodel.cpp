@@ -20,7 +20,7 @@ Colors::Colors(QObject *parent, NSE::Corona *corona)
       m_corona(corona)
 {
     //!find the available colors
-    m_colorsPath = m_corona->kPackage().path() + "../../shells/org.kde.latte.shell/contents/images/canvas/";
+    m_colorsPath = m_corona->kPackage().path() + "../../shells/org.kde.syndock.shell/contents/images/canvas/";
 
     init();
 }

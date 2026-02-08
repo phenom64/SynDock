@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <component type="addon">
-  <id>org.kde.latte-dock.desktop</id>
+  <id>org.syndromatic.syndock.desktop</id>
   <extends>org.kde.plasmashell</extends>
-  <name>Latte</name>
+  <name>SynDock</name>
   <name xml:lang="ar">لاتيه</name>
   <name xml:lang="az">Latte</name>
   <name xml:lang="ca">Latte</name>
@@ -189,7 +189,7 @@
   <developer_name xml:lang="uk">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
   <developer_name xml:lang="zh-CN">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
   <developer_name xml:lang="zh-TW">Michail Vourlakos, Johan Smith Agudelo Rodriguez</developer_name>
-  <icon type="stock">latte-dock</icon>
+  <icon type="stock">syndock</icon>
   <project_license>GPL-2.0+</project_license>
   <metadata_license>CC0-1.0</metadata_license>
   <screenshots>
@@ -211,10 +211,10 @@
   </screenshots>
   <project_group>KDE</project_group>
   <provides>
-    <binary>latte-dock</binary>
+    <binary>syndock</binary>
     <library>liblatte2plugin.so</library>
   </provides>
-  <launchable type="desktop-id">org.kde.latte-dock.desktop</launchable>
+  <launchable type="desktop-id">org.syndromatic.syndock.desktop</launchable>
   <releases>
     <release version="0.9.1" date="2019-08-04"/>
     <release version="0.9.0" date="2019-07-28"/>

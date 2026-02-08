@@ -11,7 +11,7 @@
 #include "originalview.h"
 #include "view.h"
 #include "visibilitymanager.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../screenpool.h"
 #include "../data/screendata.h"
 #include "../layout/centrallayout.h"
@@ -67,7 +67,7 @@ Positioner::Positioner(NSE::View *parent)
             });
         } else {
             connect(m_view, &QWindow::windowTitleChanged, this, &Positioner::updateWaylandId);
-            connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &Positioner::updateWaylandId);
+            connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::syndockWindowAdded, this, &Positioner::updateWaylandId);
         }
 
         connect(m_corona->layoutsManager(), &Layouts::Manager::currentLayoutIsSwitching, this, &Positioner::onCurrentLayoutIsSwitching);

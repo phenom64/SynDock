@@ -5,7 +5,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-#include "lattepackage.h"
+#include "syndockpackage.h"
 
 // Qt
 #include <QDebug>
@@ -30,18 +30,18 @@ void Package::initPackage(KPackage::Package *package)
 {
     auto fallback = KPackage::PackageLoader::self()->loadPackage("Plasma/Shell", "org.kde.plasma.desktop");
     package->setDefaultPackageRoot(QStringLiteral("plasma/shells/"));
-    package->setPath("org.kde.latte.shell");
-    package->addFileDefinition("defaults", QStringLiteral("defaults"), i18n("Latte Dock defaults"));
-    package->addFileDefinition("lattedockui", QStringLiteral("views/Panel.qml"), i18n("Latte Dock panel"));
+    package->setPath("org.kde.syndock.shell");
+    package->addFileDefinition("defaults", QStringLiteral("defaults"), i18n("SynDock defaults"));
+    package->addFileDefinition("syndockui", QStringLiteral("views/Panel.qml"), i18n("SynDock panel"));
     package->addFileDefinition("widgetexplorerui", QStringLiteral("views/WidgetExplorer.qml"), i18n("Widget Explorer"));
     //Configuration
-    package->addFileDefinition("lattedockconfigurationui", QStringLiteral("configuration/SynDockConfiguration.qml"), i18n("Dock configuration UI"));
-    package->addFileDefinition("lattedocksecondaryconfigurationui", QStringLiteral("configuration/SynDockSecondaryConfiguration.qml"), i18n("Dock secondary configuration UI"));
+    package->addFileDefinition("syndockconfigurationui", QStringLiteral("configuration/LatteDockConfiguration.qml"), i18n("Dock configuration UI"));
+    package->addFileDefinition("syndocksecondaryconfigurationui", QStringLiteral("configuration/LatteDockSecondaryConfiguration.qml"), i18n("Dock secondary configuration UI"));
     package->addFileDefinition("canvasconfigurationui", QStringLiteral("configuration/CanvasConfiguration.qml"), i18n("Dock canvas configuration UI"));
     package->addFileDefinition("configmodel", QStringLiteral("configuration/config.qml"), i18n("Config model"));
     package->addFileDefinition("splitter", QStringLiteral("images/splitter.svgz"), i18n("Splitter"));
-    package->addFileDefinition("trademark", QStringLiteral("images/trademark.svgz"), i18n("Latte Trademark"));
-    package->addFileDefinition("trademarkicon", QStringLiteral("images/trademarkicon.svgz"), i18n("Latte Trademark Icon"));
+    package->addFileDefinition("trademark", QStringLiteral("images/trademark.svgz"), i18n("SynDock Trademark"));
+    package->addFileDefinition("trademarkicon", QStringLiteral("images/trademarkicon.svgz"), i18n("SynDock Trademark Icon"));
     package->addFileDefinition("infoviewui", QStringLiteral("views/InfoView.qml"), i18n("Info View Window"));
 
     package->addFileDefinition("layout1", QStringLiteral("layouts/Default.latterc"), i18n("default layout file"));
@@ -71,10 +71,10 @@ void Package::pathChanged(KPackage::Package *package)
 
     const QString pluginName = package->metadata().pluginId();
 
-    if (!pluginName.isEmpty() && pluginName != "org.kde.latte.shell") {
-        auto fallback = KPackage::PackageLoader::self()->loadPackage("Plasma/Shell", "org.kde.latte.shell");
+    if (!pluginName.isEmpty() && pluginName != "org.kde.syndock.shell") {
+        auto fallback = KPackage::PackageLoader::self()->loadPackage("Plasma/Shell", "org.kde.syndock.shell");
         package->setFallbackPackage(fallback);
-    } else if (pluginName.isEmpty() || pluginName == QLatin1String("org.kde.latte.shell")) {
+    } else if (pluginName.isEmpty() || pluginName == QLatin1String("org.kde.syndock.shell")) {
         package->setFallbackPackage(KPackage::Package());
     }
 }

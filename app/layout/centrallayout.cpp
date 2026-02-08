@@ -10,7 +10,7 @@
 // local
 #include <coretypes.h>
 #include "../apptypes.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../screenpool.h"
 #include "../layouts/importer.h"
 #include "../layouts/manager.h"

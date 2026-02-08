@@ -15,7 +15,7 @@
 #include "../effects.h"
 #include "../panelshadows_p.h"
 #include "../view.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../layouts/manager.h"
 #include "../../layout/genericlayout.h"
 #include "../../settings/universalsettings.h"
@@ -106,7 +106,7 @@ void PrimaryConfigView::init()
 {
     SubConfigView::init();
 
-    QByteArray tempFilePath = "lattedockconfigurationui";
+    QByteArray tempFilePath = "syndockconfigurationui";
 
     auto source = QUrl::fromLocalFile(m_latteView->containment()->corona()->kPackage().filePath(tempFilePath));
     setSource(source);
@@ -673,4 +673,3 @@ void PrimaryConfigView::updateEffects()
 
 }
 }
-

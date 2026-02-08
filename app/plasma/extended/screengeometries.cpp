@@ -6,7 +6,7 @@
 #include "screengeometries.h"
 
 //!local
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../screenpool.h"
 #include "../../view/view.h"
 #include "../../layout/genericlayout.h"
@@ -18,7 +18,7 @@
 #include <QtDBus>
 
 
-#define LATTESERVICE "org.kde.lattedock"
+#define SYNDOCKSERVICE "org.syndromatic.syndock"
 #define PLASMASERVICE "org.kde.plasmashell"
 #define PLASMASTRUTNAMESPACE "org.kde.PlasmaShell.StrutManager"
 
@@ -122,7 +122,7 @@ void ScreenGeometries::setPlasmaAvailableScreenRect(const QString &screenName, c
                                                           "setAvailableScreenRect");
     QVariantList args;
 
-    args << LATTESERVICE
+    args << SYNDOCKSERVICE
          << screenName
          << rect;
 
@@ -142,7 +142,7 @@ void ScreenGeometries::setPlasmaAvailableScreenRegion(const QString &screenName,
     QList<QRect> rects;
     if (!region.isNull()) {
         //! transform QRegion to QList<QRect> in order to be sent through dbus
-        foreach (const QRect &rect, region) {
+        for (const QRect &rect : region) {
             rects << rect;
         }
     } else {
@@ -152,7 +152,7 @@ void ScreenGeometries::setPlasmaAvailableScreenRegion(const QString &screenName,
 
     QVariantList args;
 
-    args << LATTESERVICE
+    args << SYNDOCKSERVICE
          << screenName
          << regionvariant;
 

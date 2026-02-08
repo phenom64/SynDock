@@ -55,7 +55,7 @@ InfoView::InfoView(NSE::Corona *corona, QString message, QScreen *screen, QWindo
         m_trackedWindowId = winId();
         m_corona->wm()->registerIgnoredWindow(m_trackedWindowId);
     } else {
-        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::latteWindowAdded, this, &InfoView::updateWaylandId);
+        connect(m_corona->wm(), &WindowSystem::AbstractWindowInterface::syndockWindowAdded, this, &InfoView::updateWaylandId);
     }
 
     init();

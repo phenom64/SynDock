@@ -6,7 +6,7 @@
 #include "theme.h"
 
 // local
-#include "lattecorona.h"
+#include "nsecoronainterface.h"
 #include "panelbackground.h"
 #include "../../layouts/importer.h"
 #include "../../view/panelshadows_p.h"

@@ -9,7 +9,7 @@
 // local
 #include "abstractlayout.h"
 #include "../apptypes.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../screenpool.h"
 #include "../layouts/importer.h"
 #include "../layouts/manager.h"
@@ -169,7 +169,7 @@ void GenericLayout::setCorona(NSE::Corona *corona)
 
 QString GenericLayout::background() const
 {
-    QString colorsPath = m_corona->kPackage().path() + "../../shells/org.kde.latte.shell/contents/images/canvas/";
+    QString colorsPath = m_corona->kPackage().path() + "../../shells/org.kde.syndock.shell/contents/images/canvas/";
 
     if (backgroundStyle() == Layout::PatternBackgroundStyle) {
         if (customBackground().isEmpty()) {

@@ -250,7 +250,7 @@ Item {
         onIsReadyChanged: {
             if (appletAbilities.myView.isReady) {
                 plasmoid.action("configure").visible = false;
-                plasmoid.configuration.isInLatteDock = true;
+                plasmoid.configuration.isInSynDock = true;
             }
         }
     }
@@ -716,7 +716,7 @@ Item {
 
         indexer.updateIsBlocked: root.inDraggingPhase || root.inActivityChange || tasksExtendedManager.launchersInPausedStateCount>0
 
-        indicators.local.isEnabled: !plasmoid.configuration.isInLatteDock
+        indicators.local.isEnabled: !plasmoid.configuration.isInSynDock
 
         launchers.group: plasmoid.configuration.launchersGroup
         launchers.isStealingDroppedLaunchers: plasmoid.configuration.isPreferredForDroppedLaunchers

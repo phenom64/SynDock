@@ -12,7 +12,7 @@
 #include "appletsmodel.h"
 #include "delegates/normalcheckboxdelegate.h"
 #include "../settingsdialog/layoutscontroller.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../data/appletdata.h"
 #include "../../layout/genericlayout.h"
 #include "../../layouts/storage.h"

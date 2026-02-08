@@ -7,7 +7,7 @@ set(syndock-app_SRCS
     alternativeshelper.cpp
     apptypes.cpp
     infoview.cpp
-    lattecorona.cpp
+    nsecoronainterface.cpp
     screenpool.cpp
     primaryoutputwatcher.cpp
     main.cpp
@@ -45,9 +45,9 @@ add_subdirectory(view/windowstracker)
 add_subdirectory(wm)
 add_subdirectory(wm/tracker)
 
-# D-Bus interface
-set(syndock_dbusXML dbus/org.kde.LatteDock.xml)
-qt6_add_dbus_adaptor(syndock-app_SRCS ${syndock_dbusXML} lattecorona.h Latte::Corona lattedockadaptor)
+# D-Bus interface - SynDock uses org.syndromatic.SynDock
+set(syndock_dbusXML dbus/org.syndromatic.SynDock.xml)
+qt6_add_dbus_adaptor(syndock-app_SRCS ${syndock_dbusXML} nsecoronainterface.h NSE::Corona syndockadaptor)
 
 # UI files
 ki18n_wrap_ui(syndock-app_SRCS settings/actionsdialog/actionsdialog.ui)
@@ -66,6 +66,32 @@ qt6_generate_wayland_protocol_client_sources(syndock
 )
 
 include(FakeTarget.cmake)
+
+# Resolve the KWayland client target name across distro packaging variants.
+set(SYNDOCK_KWAYLAND_CLIENT_TARGET "")
+if(TARGET KWayland::Client)
+    set(SYNDOCK_KWAYLAND_CLIENT_TARGET KWayland::Client)
+elseif(TARGET KF6::WaylandClient)
+    set(SYNDOCK_KWAYLAND_CLIENT_TARGET KF6::WaylandClient)
+endif()
+
+if(SYNDOCK_KWAYLAND_CLIENT_TARGET STREQUAL "")
+    message(FATAL_ERROR "SynDock requires a KWayland client target (KWayland::Client or KF6::WaylandClient)")
+endif()
+
+# Resolve activities target across framework variants.
+set(SYNDOCK_ACTIVITIES_TARGET "")
+if(TARGET Plasma::Activities)
+    set(SYNDOCK_ACTIVITIES_TARGET Plasma::Activities)
+elseif(TARGET KF6::Activities)
+    set(SYNDOCK_ACTIVITIES_TARGET KF6::Activities)
+elseif(TARGET KActivities::KActivities)
+    set(SYNDOCK_ACTIVITIES_TARGET KActivities::KActivities)
+endif()
+
+if(SYNDOCK_ACTIVITIES_TARGET STREQUAL "")
+    message(FATAL_ERROR "SynDock requires an activities target (Plasma::Activities, KF6::Activities or KActivities::KActivities)")
+endif()
 
 # Qt 6 / KF6 libraries - Wayland only (no X11)
 target_link_libraries(syndock
@@ -95,10 +121,11 @@ target_link_libraries(syndock
     # Plasma 6
     Plasma::Plasma
     Plasma::PlasmaQuick
-    Plasma::Activities  # Moved from KF5::Activities to Plasma in KF6
+    ${SYNDOCK_ACTIVITIES_TARGET}
     
     # Wayland
     Wayland::Client
+    ${SYNDOCK_KWAYLAND_CLIENT_TARGET}
     LayerShellQt::Interface
 )
 
@@ -109,7 +136,7 @@ configure_file(org.kde.latte-dock.appdata.xml.cmake org.syndromatic.syndock.appd
 install(TARGETS syndock ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.syndromatic.syndock.desktop DESTINATION ${KDE_INSTALL_APPDIR})
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.syndromatic.syndock.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
-install(FILES dbus/org.kde.LatteDock.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
+install(FILES dbus/org.syndromatic.SynDock.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
 install(FILES lattedock.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
 install(FILES latte-layouts.knsrc DESTINATION ${KDE_INSTALL_DATADIR}/knsrcfiles)
 install(FILES latte-indicators.knsrc DESTINATION ${KDE_INSTALL_DATADIR}/knsrcfiles)

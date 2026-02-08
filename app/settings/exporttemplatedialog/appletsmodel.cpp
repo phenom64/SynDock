@@ -23,9 +23,9 @@ Applets::Applets(QObject *parent)
     : QAbstractTableModel(parent)
 {
     m_appletsWithNoPersonalData = {
-        "org.kde.latte.separator",
-        "org.kde.latte.spacer",
-        "org.kde.latte.plasmoid",
+        "org.kde.syndock.separator",
+        "org.kde.syndock.spacer",
+        "org.kde.syndock.plasmoid",
         "org.kde.windowtitle",
         "org.kde.windowbuttons",
         "org.kde.windowappmenu",

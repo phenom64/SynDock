@@ -71,7 +71,7 @@ Comment[tr]=Latte Rıhtım
 Comment[uk]=Панель Латте
 Comment[zh_CN]=Latte 停靠栏
 Comment[zh_TW]=Latte Dock
-IconName=latte-dock
+IconName=syndock
 
 [Event/import-done]
 Name=Imported successfully

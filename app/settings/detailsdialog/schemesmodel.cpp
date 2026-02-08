@@ -57,7 +57,7 @@ void Schemes::initSchemes()
         QDir directory(path);
         QStringList tempSchemes = directory.entryList(QStringList() << "*.colors" << "*.COLORS", QDir::Files);
 
-        foreach (QString filename, tempSchemes) {
+        for (const QString &filename : tempSchemes) {
             if (!registeredSchemes.contains(filename)) {
                 QString fullPath = path + "/" + filename;
                 insertSchemeInList(fullPath);
@@ -138,4 +138,3 @@ QVariant Schemes::data(const QModelIndex &index, int role) const
 }
 }
 }
-

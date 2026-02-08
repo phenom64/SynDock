@@ -7,7 +7,7 @@
 
 // local
 #include "../abstractwindowinterface.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../tools/commontools.h"
 
 // Qt

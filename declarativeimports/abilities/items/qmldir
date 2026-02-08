@@ -1,4 +1,4 @@
-module org.kde.latte.abilities.items
+module org.kde.syndock.abilities.items
 
 BasicItem 0.1 BasicItem.qml
 IndicatorLevel 0.1 IndicatorLevel.qml

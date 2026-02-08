@@ -142,7 +142,7 @@ private:
     bool m_pluginIsReady{false};
 
     QString m_pluginPath;
-    QString m_type{"org.kde.latte.default"};
+    QString m_type{"org.kde.syndock.default"};
     QString m_customType;
 
     QPointer<QQmlComponent> m_component;

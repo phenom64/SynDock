@@ -8,7 +8,6 @@ set(syndock-app_SRCS
     ${syndock-app_SRCS}
     ${CMAKE_CURRENT_SOURCE_DIR}/abstractwindowinterface.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/schemecolors.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/waylandinterface.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/nsewaylandinterface.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/nsewaylandinterface.h
     ${CMAKE_CURRENT_SOURCE_DIR}/windowinfowrap.cpp

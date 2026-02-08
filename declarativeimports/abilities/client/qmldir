@@ -1,4 +1,4 @@
-module org.kde.latte.abilities.client
+module org.kde.syndock.abilities.client
 
 Animations 0.1 Animations.qml
 AppletAbilities 0.1 AppletAbilities.qml

@@ -7,10 +7,10 @@ add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kde.syndock.containment
 kpackage_install_package(package org.kde.syndock.containment plasma plasmoids)
 
 set(containment_SRCS
-    plugin/lattetypes.h
+    plugin/types.h
     plugin/types.cpp
     plugin/layoutmanager.cpp
-    plugin/lattecontainmentplugin.cpp
+    plugin/syndockcontainmentplugin.cpp
 )
 
 add_library(syndockcontainmentplugin SHARED ${containment_SRCS})

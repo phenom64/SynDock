@@ -10,7 +10,7 @@
 #include "primaryconfigview.h"
 #include "../panelshadows_p.h"
 #include "../view.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../wm/abstractwindowinterface.h"
 
 // Qt
@@ -56,7 +56,7 @@ void SecondaryConfigView::init()
 {
     SubConfigView::init();
 
-    QByteArray tempFilePath = "lattedocksecondaryconfigurationui";
+    QByteArray tempFilePath = "syndocksecondaryconfigurationui";
 
     updateEnabledBorders();
 
@@ -307,4 +307,3 @@ void SecondaryConfigView::updateEnabledBorders()
 
 }
 }
-

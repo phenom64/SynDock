@@ -1,2 +1,2 @@
-module org.kde.latte.private.tasks
-plugin lattetasksplugin 
+module org.kde.syndock.private.tasks
+plugin syndocktasksplugin

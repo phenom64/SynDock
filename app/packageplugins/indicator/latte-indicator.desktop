@@ -1,6 +1,6 @@
 [Desktop Entry]
 Type=ServiceType
-X-KDE-ServiceType=Latte/Indicator
+X-KDE-ServiceType=SynDock/Indicator
 
 Comment=Latte indicator
 Comment[ar]=مؤشرات لاتيه

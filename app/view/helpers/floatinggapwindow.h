@@ -8,7 +8,7 @@
 
 // local
 #include "subwindow.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../wm/windowinfowrap.h"
 
 // Qt

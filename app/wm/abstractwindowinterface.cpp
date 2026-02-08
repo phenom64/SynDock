@@ -10,7 +10,7 @@
 // local
 #include "tracker/schemes.h"
 #include "tracker/windowstracker.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 
 // Qt
 #include <QDebug>
@@ -299,7 +299,7 @@ void AbstractWindowInterface::onVirtualDesktopNavigationWrappingAroundChanged(bo
     m_isVirtualDesktopNavigationWrappingAround = navigationWrappingAround;
 }
 
-//! Register Latte Ignored Windows in order to NOT be tracked
+//! Register SynDock ignored windows so they are not tracked
 void AbstractWindowInterface::registerIgnoredWindow(WindowId wid)
 {
     if (!wid.isNull() && !m_ignoredWindows.contains(wid)) {
@@ -428,4 +428,3 @@ void AbstractWindowInterface::considerWindowChanged(WindowId wid)
 
 }
 }
-

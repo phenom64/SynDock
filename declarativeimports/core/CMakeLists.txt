@@ -4,7 +4,7 @@
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-latte-lib.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-latte-lib.h)
 
 set(syndockcoreplugin_SRCS
-    lattecoreplugin.cpp
+    syndockcoreplugin.cpp
     dialog.cpp
     environment.cpp
     iconitem.cpp

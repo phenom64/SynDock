@@ -10,7 +10,7 @@
 #include <coretypes.h>
 #include "panelshadows_p.h"
 #include "view.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../wm/abstractwindowinterface.h"
 
 // Qt

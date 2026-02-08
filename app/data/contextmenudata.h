@@ -14,7 +14,7 @@ namespace Data {
 namespace ContextMenu {
 
 static const char ADDVIEWACTION[]= "_add_view";
-static const char ADDWIDGETSACTION[] = "_add_latte_widgets";
+static const char ADDWIDGETSACTION[] = "_add_widgets";
 static const char DUPLICATEVIEWACTION[] = "_duplicate_view"; /*used inside add view submenu*/
 static const char EDITVIEWACTION[] = "_edit_view";
 static const char EXPORTVIEWTEMPLATEACTION[] = "_export_view";
@@ -23,13 +23,13 @@ static const char MOVEVIEWACTION[] = "_move_view";
 static const char PRINTACTION[] = "_print";
 static const char PREFERENCESACTION[] = "_preferences";
 static const char REMOVEVIEWACTION[] = "_remove_view";
-static const char QUITLATTEACTION[] = "_quit_latte";
-static const char SECTIONACTION[]= "_latte_section";
+static const char QUITSYNDOCKACTION[] = "_quit_syndock";
+static const char SECTIONACTION[]= "_syndock_section";
 static const char SEPARATOR1ACTION[] = "_separator1";
 
 static QStringList ACTIONSEDITORDER = {LAYOUTSACTION,
                                        PREFERENCESACTION,
-                                       QUITLATTEACTION,
+                                       QUITSYNDOCKACTION,
                                        SEPARATOR1ACTION,
                                        ADDWIDGETSACTION,
                                        ADDVIEWACTION,
@@ -39,7 +39,7 @@ static QStringList ACTIONSEDITORDER = {LAYOUTSACTION,
 
 static QStringList ACTIONSALWAYSVISIBLE = {LAYOUTSACTION,
                                            PREFERENCESACTION,
-                                           QUITLATTEACTION,
+                                           QUITSYNDOCKACTION,
                                            SEPARATOR1ACTION,
                                            ADDWIDGETSACTION,
                                            ADDVIEWACTION};

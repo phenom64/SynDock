@@ -10,7 +10,7 @@
 #include "allscreenstracker.h"
 #include "../positioner.h"
 #include "../view.h"
-#include "../../lattecorona.h"
+#include "../../nsecoronainterface.h"
 #include "../../wm/tracker/windowstracker.h"
 
 

@@ -14,7 +14,7 @@
 #include "helpers/screenedgeghostwindow.h"
 #include "windowstracker/currentscreentracker.h"
 #include "../apptypes.h"
-#include "../lattecorona.h"
+#include "../nsecoronainterface.h"
 #include "../screenpool.h"
 #include "../layouts/manager.h"
 #include "../wm/abstractwindowinterface.h"
