@@ -1,5 +1,5 @@
-set(lattedock-app_SRCS
-    ${lattedock-app_SRCS}
+set(syndock-app_SRCS
+    ${syndock-app_SRCS}
     ${CMAKE_CURRENT_SOURCE_DIR}/canvasconfigview.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/indicatoruimanager.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/primaryconfigview.cpp

@@ -1,6 +1,9 @@
+# SynDock Core Plugin
+# Copyright (C) 2026 Syndromatic Ltd.
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-latte-lib.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-latte-lib.h)
 
-set(lattecoreplugin_SRCS
+set(syndockcoreplugin_SRCS
     lattecoreplugin.cpp
     dialog.cpp
     environment.cpp
@@ -10,9 +13,9 @@ set(lattecoreplugin_SRCS
     types.h
 )
 
-add_library(lattecoreplugin SHARED ${lattecoreplugin_SRCS})
+add_library(syndockcoreplugin SHARED ${syndockcoreplugin_SRCS})
 
-target_link_libraries(lattecoreplugin
+target_link_libraries(syndockcoreplugin
     Qt6::Quick
     Qt6::Qml
     KF6::CoreAddons
@@ -23,6 +26,5 @@ target_link_libraries(lattecoreplugin
     Plasma::PlasmaQuick
 )
 
-install(TARGETS lattecoreplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/core)
-
-install(FILES qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/core)
+install(TARGETS syndockcoreplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/syndock/core)
+install(FILES qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/syndock/core)

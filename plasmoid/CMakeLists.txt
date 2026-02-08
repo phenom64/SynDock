@@ -1,19 +1,24 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kde.latte.plasmoid\")
+# SynDock Plasmoid (Tasks Widget)
+# Copyright (C) 2026 Syndromatic Ltd.
 
-plasma_install_package(package org.kde.latte.plasmoid)
+add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kde.syndock.plasmoid\")
+
+# Install Plasma package using KF6 syntax
+kpackage_install_package(package org.kde.syndock.plasmoid plasma plasmoids)
 
 set(tasks_SRCS
     plugin/types.cpp
     plugin/lattetasksplugin.cpp
 )
 
-add_library(lattetasksplugin SHARED ${tasks_SRCS})
+add_library(syndocktasksplugin SHARED ${tasks_SRCS})
 
-target_link_libraries(lattetasksplugin
-                      Qt6::Core
-                      Qt6::Qml
-                      Plasma::Plasma
-                      Plasma::PlasmaQuick)
+target_link_libraries(syndocktasksplugin
+    Qt6::Core
+    Qt6::Qml
+    Plasma::Plasma
+    Plasma::PlasmaQuick
+)
                       
-install(TARGETS lattetasksplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/private/tasks)
-install(FILES plugin/qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/private/tasks)
+install(TARGETS syndocktasksplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/syndock/private/tasks)
+install(FILES plugin/qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/syndock/private/tasks)

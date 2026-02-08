@@ -57,12 +57,13 @@ ki18n_wrap_ui(syndock-app_SRCS settings/screensdialog/screensdialog.ui)
 ki18n_wrap_ui(syndock-app_SRCS settings/settingsdialog/settingsdialog.ui)
 ki18n_wrap_ui(syndock-app_SRCS settings/viewsdialog/viewsdialog.ui)
 
-# Wayland protocols
-qt6_generate_wayland_protocol_client_sources(syndock-app_SRCS
+# Create the executable first
+add_executable(syndock ${syndock-app_SRCS})
+
+# Wayland protocols (must be after add_executable in Qt 6)
+qt6_generate_wayland_protocol_client_sources(syndock
     FILES ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-primary-output-v1.xml
 )
-
-add_executable(syndock ${syndock-app_SRCS})
 
 include(FakeTarget.cmake)
 
@@ -110,7 +111,7 @@ install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.syndromatic.syndock.desktop DESTIN
 install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.syndromatic.syndock.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
 install(FILES dbus/org.kde.LatteDock.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
 install(FILES lattedock.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
-install(FILES latte-layouts.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
-install(FILES latte-indicators.knsrc DESTINATION ${KDE_INSTALL_KNSRCDIR})
+install(FILES latte-layouts.knsrc DESTINATION ${KDE_INSTALL_DATADIR}/knsrcfiles)
+install(FILES latte-indicators.knsrc DESTINATION ${KDE_INSTALL_DATADIR}/knsrcfiles)
 
 add_subdirectory(packageplugins)

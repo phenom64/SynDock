@@ -41,11 +41,12 @@ libkf6notifications-dev libkf6archive-dev libkf6iconthemes-dev
 libkf6kio-dev libkf6xmlgui-dev libkf6svg-dev libkf6package-dev
 libkf6declarative-dev
 
-# Plasma 6 (includes Activities, which moved from KF5 to Plasma in KF6)
+# Plasma 6 (includes Activities)
 libplasma-dev libplasmaactivities-dev plasma-wayland-protocols
+plasma-workspace-dev  # Provides LibTaskManager
 
-# Layer Shell
-layer-shell-qt-dev
+# Layer Shell (Wayland panel surfaces)
+liblayershellqtinterface-dev
 ```
 
 ---

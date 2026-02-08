@@ -1,6 +1,10 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kde.latte.containment\")
+# SynDock Containment
+# Copyright (C) 2026 Syndromatic Ltd.
 
-plasma_install_package(package org.kde.latte.containment)
+add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kde.syndock.containment\")
+
+# Install Plasma package using KF6 syntax
+kpackage_install_package(package org.kde.syndock.containment plasma plasmoids)
 
 set(containment_SRCS
     plugin/lattetypes.h
@@ -9,15 +13,16 @@ set(containment_SRCS
     plugin/lattecontainmentplugin.cpp
 )
 
-add_library(lattecontainmentplugin SHARED ${containment_SRCS})
+add_library(syndockcontainmentplugin SHARED ${containment_SRCS})
 
-target_link_libraries(lattecontainmentplugin
-                      Qt6::Core
-                      Qt6::Qml
-                      Qt6::Quick
-                      KF6::Declarative
-                      Plasma::Plasma
-                      Plasma::PlasmaQuick)
+target_link_libraries(syndockcontainmentplugin
+    Qt6::Core
+    Qt6::Qml
+    Qt6::Quick
+    KF6::Declarative
+    Plasma::Plasma
+    Plasma::PlasmaQuick
+)
 
-install(TARGETS lattecontainmentplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/private/containment)
-install(FILES plugin/qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/private/containment)
+install(TARGETS syndockcontainmentplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/syndock/private/containment)
+install(FILES plugin/qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/syndock/private/containment)
