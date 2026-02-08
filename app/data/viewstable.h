@@ -13,7 +13,7 @@
 // Qt
 #include <QList>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class ViewsTable : public GenericTable<View>
@@ -44,6 +44,6 @@ public:
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::ViewsTable)
+Q_DECLARE_METATYPE(NSE::Data::ViewsTable)
 
 #endif

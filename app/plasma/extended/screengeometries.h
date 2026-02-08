@@ -16,12 +16,12 @@
 #include <QTimer>
 
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace PlasmaExtended {
 
 class ScreenGeometries: public QObject
@@ -29,11 +29,11 @@ class ScreenGeometries: public QObject
     Q_OBJECT
 
 public:
-    ScreenGeometries(Latte::Corona *parent);
+    ScreenGeometries(NSE::Corona *parent);
     ~ScreenGeometries() override;
 
 private slots:
-    void availableScreenGeometryChangedFrom(Latte::View *origin);
+    void availableScreenGeometryChangedFrom(NSE::View *origin);
 
     void init();
     void updateGeometries();
@@ -55,12 +55,12 @@ private:
     //! this is needed in order to check if Plasma>=5.18 is running
     QTimer m_startupInitTimer;
 
-    Latte::Corona *m_corona{nullptr};
+    NSE::Corona *m_corona{nullptr};
 
-    QList<Latte::Types::Visibility> m_ignoreModes{
-        Latte::Types::AutoHide,
-        Latte::Types::SidebarOnDemand,
-        Latte::Types::SidebarAutoHide
+    QList<NSE::Types::Visibility> m_ignoreModes{
+        NSE::Types::AutoHide,
+        NSE::Types::SidebarOnDemand,
+        NSE::Types::SidebarAutoHide
     };
 
     QStringList m_lastScreenNames;

@@ -16,7 +16,7 @@
 #include <QString>
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Layout {
 namespace Delegate {
@@ -31,11 +31,11 @@ BackgroundDelegate::BackgroundDelegate(QObject *parent)
 void BackgroundDelegate::paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
     QStyleOptionViewItem myOptions = option;
-    Latte::Data::LayoutIcon icon = index.data(Qt::UserRole).value<Latte::Data::LayoutIcon>();
+    NSE::Data::LayoutIcon icon = index.data(Qt::UserRole).value<NSE::Data::LayoutIcon>();
 
     //! background
-    Latte::drawBackground(painter, option);
-    Latte::drawLayoutIcon(painter, option, icon.isBackgroundFile, icon.name, Qt::AlignHCenter, -1, 3);
+    NSE::drawBackground(painter, option);
+    NSE::drawLayoutIcon(painter, option, icon.isBackgroundFile, icon.name, Qt::AlignHCenter, -1, 3);
 }
 
 }

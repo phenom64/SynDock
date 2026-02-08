@@ -10,7 +10,7 @@
 #include "viewshandler.h"
 #include "../settingsdialog/layoutscontroller.h"
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Dialog {
 
@@ -65,7 +65,7 @@ Ui::ViewsDialog *ViewsDialog::ui() const
     return m_ui;
 }
 
-Latte::Corona *ViewsDialog::corona() const
+NSE::Corona *ViewsDialog::corona() const
 {
     return m_parentDlg->corona();
 }

@@ -4,10 +4,10 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.1
-import QtQuick.Window 2.2
-import QtQuick.Templates 2.2 as T
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import QtQuick.Window
+import QtQuick.Templates as T
+import org.kde.plasma.core as PlasmaCore
 
 T.Label {
     id: control

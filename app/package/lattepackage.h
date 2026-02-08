@@ -14,7 +14,7 @@
 // KDE
 #include <KPackage/PackageStructure>
 
-namespace Latte {
+namespace NSE {
 class Package : public KPackage::PackageStructure
 {
     Q_OBJECT

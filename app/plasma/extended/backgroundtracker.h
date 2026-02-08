@@ -12,7 +12,7 @@
 // Plasma
 #include <Plasma>
 
-namespace Latte{
+namespace NSE{
 
 class BackgroundTracker: public QObject
 {

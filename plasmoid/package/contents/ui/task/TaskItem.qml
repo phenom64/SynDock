@@ -4,20 +4,20 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.0
-import QtQuick.Layouts 1.1
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.plasmoid
 
-import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet
+import org.kde.plasma.private.taskmanager as TaskManagerApplet
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.tasks 0.1 as LatteTasks
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.private.tasks 0.1 as LatteTasks
 
-import org.kde.latte.abilities.items 0.1 as AbilityItem
+import org.kde.syndock.abilities.items 0.1 as AbilityItem
 
 import "animations" as TaskAnimations
 

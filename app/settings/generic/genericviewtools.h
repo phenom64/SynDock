@@ -16,9 +16,9 @@
 #include <QStyleOption>
 #include <QStyleOptionViewItem>
 
-namespace Latte {
+namespace NSE {
 
-void drawView(QPainter *painter, const QStyleOption &option, const Latte::Data::View &view, const QRect &availableScreenRect, const float brushOpacity = 1.0);
+void drawView(QPainter *painter, const QStyleOption &option, const NSE::Data::View &view, const QRect &availableScreenRect, const float brushOpacity = 1.0);
 
 }
 

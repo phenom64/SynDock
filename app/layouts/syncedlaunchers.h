@@ -18,13 +18,13 @@ namespace Plasma {
 class Applet;
 }
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 class Manager;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 
 //! in order to support property the launcher groups Layout and Global
@@ -54,7 +54,7 @@ public slots:
 
 private:
     QList<QQuickItem *> clients(QString layoutName, QString groupId);
-    QList<QQuickItem *> clients(QString layoutName, uint senderId, Latte::Types::LaunchersGroup launcherGroup, QString launcherGroupId);
+    QList<QQuickItem *> clients(QString layoutName, uint senderId, NSE::Types::LaunchersGroup launcherGroup, QString launcherGroupId);
     QQuickItem *client(const int &id);
 
 private slots:

@@ -8,7 +8,7 @@
 #include "primaryconfigview.h"
 
 // local
-#include <config-latte.h>
+#include <config-syndock.h>
 #include "canvasconfigview.h"
 #include "indicatoruimanager.h"
 #include "secondaryconfigview.h"
@@ -43,10 +43,10 @@
 #define SECONDARYWINDOWINTERVAL 200
 #define SLIDEOUTINTERVAL 400
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-PrimaryConfigView::PrimaryConfigView(Latte::View *view)
+PrimaryConfigView::PrimaryConfigView(NSE::View *view)
     : SubConfigView(view, QString("#primaryconfigview#")),
       m_indicatorUiManager(new Config::IndicatorUiManager(this))
 {
@@ -65,18 +65,18 @@ PrimaryConfigView::PrimaryConfigView(Latte::View *view)
     });
 
     if (m_corona) {
-        connections << connect(m_corona, &Latte::Corona::raiseViewsTemporaryChanged, this, &PrimaryConfigView::raiseDocksTemporaryChanged);
-        connections << connect(m_corona, &Latte::Corona::availableScreenRectChangedFrom, this, &PrimaryConfigView::updateAvailableScreenGeometry);
+        connections << connect(m_corona, &NSE::Corona::raiseViewsTemporaryChanged, this, &PrimaryConfigView::raiseDocksTemporaryChanged);
+        connections << connect(m_corona, &NSE::Corona::availableScreenRectChangedFrom, this, &PrimaryConfigView::updateAvailableScreenGeometry);
 
-        connections << connect(m_corona->layoutsManager(), &Latte::Layouts::Manager::currentLayoutIsSwitching, this, [this]() {
+        connections << connect(m_corona->layoutsManager(), &NSE::Layouts::Manager::currentLayoutIsSwitching, this, [this]() {
             if (isVisible()) {
                 hideConfigWindow();
             }
         });
 
-        connect(m_corona->universalSettings(), &Latte::UniversalSettings::inAdvancedModeForEditSettingsChanged,
+        connect(m_corona->universalSettings(), &NSE::UniversalSettings::inAdvancedModeForEditSettingsChanged,
                 this, &PrimaryConfigView::updateShowInlineProperties);
-        connect(m_corona->universalSettings(), &Latte::UniversalSettings::inAdvancedModeForEditSettingsChanged,
+        connect(m_corona->universalSettings(), &NSE::UniversalSettings::inAdvancedModeForEditSettingsChanged,
                 this, &PrimaryConfigView::syncGeometry);
     }
 
@@ -218,7 +218,7 @@ void PrimaryConfigView::hideSecondaryWindow()
     }
 }
 
-void PrimaryConfigView::setParentView(Latte::View *view, const bool &immediate)
+void PrimaryConfigView::setParentView(NSE::View *view, const bool &immediate)
 {
     if (m_latteView == view) {
         return;
@@ -238,35 +238,35 @@ void PrimaryConfigView::setParentView(Latte::View *view, const bool &immediate)
     }
 }
 
-void PrimaryConfigView::initParentView(Latte::View *view)
+void PrimaryConfigView::initParentView(NSE::View *view)
 {
     setIsReady(false);
 
     SubConfigView::initParentView(view);
 
-    viewconnections << connect(m_latteView, &Latte::View::layoutChanged, this, [this]() {
+    viewconnections << connect(m_latteView, &NSE::View::layoutChanged, this, [this]() {
         if (m_latteView->layout()) {
             updateAvailableScreenGeometry();
         }
     });
 
-    viewconnections << connect(m_latteView, &Latte::View::editThicknessChanged, this, [this]() {
+    viewconnections << connect(m_latteView, &NSE::View::editThicknessChanged, this, [this]() {
         updateAvailableScreenGeometry();
     });
 
-    viewconnections << connect(m_latteView, &Latte::View::maxNormalThicknessChanged, this, [this]() {
+    viewconnections << connect(m_latteView, &NSE::View::maxNormalThicknessChanged, this, [this]() {
         updateAvailableScreenGeometry();
     });
 
-    viewconnections << connect(m_latteView, &Latte::View::locationChanged, this, [this]() {
+    viewconnections << connect(m_latteView, &NSE::View::locationChanged, this, [this]() {
         updateAvailableScreenGeometry();
     });
 
-    viewconnections << connect(m_latteView->positioner(), &Latte::ViewPart::Positioner::currentScreenChanged, this, [this]() {
+    viewconnections << connect(m_latteView->positioner(), &NSE::ViewPart::Positioner::currentScreenChanged, this, [this]() {
         updateAvailableScreenGeometry();
     });
 
-    viewconnections << connect(m_corona->universalSettings(), &Latte::UniversalSettings::inAdvancedModeForEditSettingsChanged, m_latteView, &Latte::View::inSettingsAdvancedModeChanged);
+    viewconnections << connect(m_corona->universalSettings(), &NSE::UniversalSettings::inAdvancedModeForEditSettingsChanged, m_latteView, &NSE::View::inSettingsAdvancedModeChanged);
     viewconnections << connect(m_latteView->containment(), &Plasma::Containment::immutabilityChanged, this, &PrimaryConfigView::immutabilityChanged);   
 
     m_originalByPassWM = m_latteView->byPassWM();
@@ -298,11 +298,11 @@ void PrimaryConfigView::instantUpdateAvailableScreenGeometry()
 
     int currentScrId = m_latteView->positioner()->currentScreenId();
 
-    QList<Latte::Types::Visibility> ignoreModes{Latte::Types::SidebarOnDemand,Latte::Types::SidebarAutoHide};
+    QList<NSE::Types::Visibility> ignoreModes{NSE::Types::SidebarOnDemand,NSE::Types::SidebarAutoHide};
 
     if (m_latteView->visibility() && m_latteView->visibility()->isSidebar()) {
-        ignoreModes.removeAll(Latte::Types::SidebarOnDemand);
-        ignoreModes.removeAll(Latte::Types::SidebarAutoHide);
+        ignoreModes.removeAll(NSE::Types::SidebarOnDemand);
+        ignoreModes.removeAll(NSE::Types::SidebarAutoHide);
     }
 
     QString activityid = m_latteView->layout()->lastUsedActivity();
@@ -430,7 +430,7 @@ void PrimaryConfigView::showEvent(QShowEvent *ev)
     }
 
     setFlags(wFlags());
-    m_corona->wm()->setViewExtraFlags(this, false, Latte::Types::NormalWindow);
+    m_corona->wm()->setViewExtraFlags(this, false, NSE::Types::NormalWindow);
 
     syncGeometry();
 

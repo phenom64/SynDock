@@ -23,7 +23,7 @@
 
 class PrimaryOutputWatcher;
 
-namespace Latte {
+namespace NSE {
 
 class ScreenPool : public QObject
 {
@@ -45,7 +45,7 @@ public:
 
     void insertScreenMapping(const QString &connector);
     void reload(QString path);
-    void removeScreens(const Latte::Data::ScreensTable &obsoleteScreens);
+    void removeScreens(const NSE::Data::ScreensTable &obsoleteScreens);
 
     int id(const QString &connector) const;
 
@@ -54,7 +54,7 @@ public:
     QScreen *screenForId(int id);
     QScreen *primaryScreen() const;
 
-    Latte::Data::ScreensTable screensTable();
+    NSE::Data::ScreensTable screensTable();
 
 signals:
     void primaryScreenChanged(QScreen *screen);
@@ -74,7 +74,7 @@ private:
     void updateScreenGeometry(const int &screenId, const QRect &screenGeometry);
 
 private:
-    Latte::Data::ScreensTable m_screensTable;
+    NSE::Data::ScreensTable m_screensTable;
 
     KConfigGroup m_configGroup;
 

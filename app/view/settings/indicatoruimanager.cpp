@@ -22,7 +22,7 @@
 #include <KPluginMetaData>
 #include <KDeclarative/QmlObjectSharedEngine>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 namespace Config {
 
@@ -30,7 +30,7 @@ IndicatorUiManager::IndicatorUiManager(ViewPart::PrimaryConfigView *parent)
     : QObject(parent),
       m_primary(parent)
 {
-    qmlRegisterAnonymousType<Latte::ViewPart::Config::IndicatorUiManager>("latte-dock", 1);
+    qmlRegisterAnonymousType<NSE::ViewPart::Config::IndicatorUiManager>("syndock", 1);
 }
 
 IndicatorUiManager::~IndicatorUiManager()
@@ -91,7 +91,7 @@ void IndicatorUiManager::showNextIndicator()
     }
 }
 
-void IndicatorUiManager::ui(const QString &type, Latte::View *view)
+void IndicatorUiManager::ui(const QString &type, NSE::View *view)
 {
     if (!m_parentItem) {
         return;

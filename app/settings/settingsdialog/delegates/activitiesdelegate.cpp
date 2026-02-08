@@ -29,7 +29,7 @@
 
 #define OKPRESSED "OKPRESSED"
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Layout {
 namespace Delegate {
@@ -50,7 +50,7 @@ QWidget *Activities::createEditor(QWidget *parent, const QStyleOptionViewItem &o
     bool isLayoutActive = index.data(Model::Layouts::ISACTIVEROLE).toBool();
 
     QStringList allActivities = index.data(Model::Layouts::ALLACTIVITIESSORTEDROLE).toStringList();
-    Latte::Data::ActivitiesTable allActivitiesTable = index.data(Model::Layouts::ALLACTIVITIESDATAROLE).value<Latte::Data::ActivitiesTable>();
+    NSE::Data::ActivitiesTable allActivitiesTable = index.data(Model::Layouts::ALLACTIVITIESDATAROLE).value<NSE::Data::ActivitiesTable>();
 
     QStringList assignedActivities = index.data(Qt::UserRole).toStringList();
 
@@ -66,7 +66,7 @@ QWidget *Activities::createEditor(QWidget *parent, const QStyleOptionViewItem &o
     }
 
     for (int i=0; i<allActivities.count(); ++i) {
-        Latte::Data::Activity activitydata = allActivitiesTable[allActivities[i]];
+        NSE::Data::Activity activitydata = allActivitiesTable[allActivities[i]];
 
         if (!activitydata.isValid()) {
             continue;
@@ -236,7 +236,7 @@ void Activities::updateCurrentActivityAction(QMenu *menu) const
 
 void Activities::setEditorData(QWidget *editor, const QModelIndex &index) const
 {
-    Latte::Data::ActivitiesTable allActivitiesTable = index.data(Model::Layouts::ALLACTIVITIESDATAROLE).value<Latte::Data::ActivitiesTable>();
+    NSE::Data::ActivitiesTable allActivitiesTable = index.data(Model::Layouts::ALLACTIVITIESDATAROLE).value<NSE::Data::ActivitiesTable>();
 
     updateButton(editor, allActivitiesTable);
 }
@@ -301,11 +301,11 @@ void Activities::paint(QPainter *painter, const QStyleOptionViewItem &option, co
 
     bool isLayoutActive = index.data(Model::Layouts::ISACTIVEROLE).toBool();
 
-    QList<Latte::Data::Activity> assignedActivities;
+    QList<NSE::Data::Activity> assignedActivities;
     QStringList assignedIds = index.model()->data(index, Qt::UserRole).toStringList();
     QStringList assignedOriginalIds = index.model()->data(index, Model::Layouts::ORIGINALASSIGNEDACTIVITIESROLE).toStringList();
 
-    Latte::Data::ActivitiesTable allActivitiesTable = index.data(Model::Layouts::ALLACTIVITIESDATAROLE).value<Latte::Data::ActivitiesTable>();
+    NSE::Data::ActivitiesTable allActivitiesTable = index.data(Model::Layouts::ALLACTIVITIESDATAROLE).value<NSE::Data::ActivitiesTable>();
 
     for (int i=0; i<assignedIds.count(); ++i) {
         assignedActivities << allActivitiesTable[assignedIds[i]];
@@ -317,11 +317,11 @@ void Activities::paint(QPainter *painter, const QStyleOptionViewItem &option, co
         myOptions.text = "";
     }
 
-    Latte::drawBackground(painter, option);
-    Latte::drawFormattedText(painter, myOptions);
+    NSE::drawBackground(painter, option);
+    NSE::drawFormattedText(painter, myOptions);
 }
 
-QString Activities::joinedActivities(const QList<Latte::Data::Activity> &activities, const QStringList &originalIds, bool isActive, bool formatText) const
+QString Activities::joinedActivities(const QList<NSE::Data::Activity> &activities, const QStringList &originalIds, bool isActive, bool formatText) const
 {
     QString finalText;
 
@@ -357,14 +357,14 @@ QString Activities::joinedActivities(const QList<Latte::Data::Activity> &activit
     return finalText;
 }
 
-void Activities::updateButton(QWidget *editor, const Latte::Data::ActivitiesTable &allActivitiesTable) const
+void Activities::updateButton(QWidget *editor, const NSE::Data::ActivitiesTable &allActivitiesTable) const
 {
     if (!editor) {
         return;
     }
 
     QPushButton *button = static_cast<QPushButton *>(editor);
-    QList<Latte::Data::Activity> assignedActivities;
+    QList<NSE::Data::Activity> assignedActivities;
 
     foreach (QAction *action, button->menu()->actions()) {
         if (action->isChecked() && action->data().toString() != Data::Layout::CURRENTACTIVITYID) {

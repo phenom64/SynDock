@@ -23,13 +23,13 @@
 // X11
 #include <NETWM>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-SubWindow::SubWindow(Latte::View *view, QString debugType) :
+SubWindow::SubWindow(NSE::View *view, QString debugType) :
     m_latteView(view)
 {
-    m_corona = qobject_cast<Latte::Corona *>(view->corona());
+    m_corona = qobject_cast<NSE::Corona *>(view->corona());
 
     m_debugMode = (qApp->arguments().contains("-d") && qApp->arguments().contains("--kwinedges"));
     m_debugType = debugType;
@@ -57,9 +57,9 @@ SubWindow::SubWindow(Latte::View *view, QString debugType) :
 
     connect(this, &SubWindow::calculatedGeometryChanged, this, &SubWindow::fixGeometry);
 
-    connect(m_latteView, &Latte::View::absoluteGeometryChanged, this, &SubWindow::updateGeometry);
-    connect(m_latteView, &Latte::View::screenGeometryChanged, this, &SubWindow::updateGeometry);
-    connect(m_latteView, &Latte::View::locationChanged, this, &SubWindow::updateGeometry);
+    connect(m_latteView, &NSE::View::absoluteGeometryChanged, this, &SubWindow::updateGeometry);
+    connect(m_latteView, &NSE::View::screenGeometryChanged, this, &SubWindow::updateGeometry);
+    connect(m_latteView, &NSE::View::locationChanged, this, &SubWindow::updateGeometry);
     connect(m_latteView, &QQuickView::screenChanged, this, [this]() {
         setScreen(m_latteView->screen());
         updateGeometry();
@@ -165,12 +165,12 @@ QString SubWindow::validTitle() const
     return QString(validTitlePrefix() + QString::number(m_latteView->containment()->id()));
 }
 
-Latte::View *SubWindow::parentView()
+NSE::View *SubWindow::parentView()
 {
     return m_latteView;
 }
 
-Latte::WindowSystem::WindowId SubWindow::trackedWindowId()
+NSE::WindowSystem::WindowId SubWindow::trackedWindowId()
 {
     if (KWindowSystem::isPlatformWayland() && m_trackedWindowId.toInt() <= 0) {
         updateWaylandId();
@@ -202,7 +202,7 @@ void SubWindow::fixGeometry()
 
 void SubWindow::updateWaylandId()
 {
-    Latte::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("latte-dock", validTitle());
+    NSE::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("syndock", validTitle());
 
     if (m_trackedWindowId != newId) {
         if (!m_trackedWindowId.isNull()) {

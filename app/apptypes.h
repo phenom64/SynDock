@@ -12,7 +12,7 @@
 //! These are LatteApp::Types that will be used ONLY from Latte App c++ implementation.
 //! Such types are irrelevant and not used from plasma applets.
 
-namespace Latte {
+namespace NSE {
 namespace ImportExport {
 Q_NAMESPACE
 
@@ -27,7 +27,7 @@ Q_ENUM_NS(State);
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace MemoryUsage {
 
 enum LayoutsMemory
@@ -40,7 +40,7 @@ enum LayoutsMemory
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace MultipleLayouts {
 
 enum Status
@@ -56,7 +56,7 @@ enum Status
 //! These are LatteApp::Types that will be used from Latte App c++ implementation AND
 //! Latte containment qml. Such types are irrelevant and not used from plasma applets.
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 Q_NAMESPACE
 

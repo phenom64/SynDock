@@ -3,13 +3,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.1
+import QtQuick
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.plasmoid
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.private.containment 0.1 as LatteContainment
 
 Item {
     property bool updateIsEnabled: autosize.inCalculatedIconSize
@@ -19,33 +19,33 @@ Item {
 
     //! Latte::View Main Bindings 
     Binding{
-        target: latteView
+        target: dockView
         property:"maxThickness"
         //! prevents updating window geometry during closing window in wayland and such fixes a crash
-        when: latteView && !visibilityManager.inRelocationHiding && !visibilityManager.inClientSideScreenEdgeSliding //&& !inStartup
+        when: dockView && !visibilityManager.inRelocationHiding && !visibilityManager.inClientSideScreenEdgeSliding //&& !inStartup
         value: root.behaveAsPlasmaPanel ? visibilityManager.thicknessAsPanel : metrics.maxThicknessForView
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property:"normalThickness"
-        when: latteView && updateIsEnabled
+        when: dockView && updateIsEnabled
         value: root.behaveAsPlasmaPanel ? visibilityManager.thicknessAsPanel : metrics.mask.screenEdge + metrics.mask.thickness.maxNormalForItemsWithoutScreenEdge
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property:"maxNormalThickness"
-        when: latteView && updateIsEnabled
+        when: dockView && updateIsEnabled
         value: metrics.mask.thickness.maxNormal
     }
 
     Binding {
-        target: latteView
+        target: dockView
         property: "headThicknessGap"
-        when: latteView && updateIsEnabled && !visibilityManager.inClientSideScreenEdgeSliding
+        when: dockView && updateIsEnabled && !visibilityManager.inClientSideScreenEdgeSliding
         value: {
-            if (root.behaveAsPlasmaPanel || root.viewType === LatteCore.Types.PanelView || (latteView && latteView.byPassWM)) {
+            if (root.behaveAsPlasmaPanel || root.viewType === LatteCore.Types.PanelView || (dockView && dockView.byPassWM)) {
                 return 0;
             }
 
@@ -54,63 +54,63 @@ Item {
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property: "type"
-        when: latteView
+        when: dockView
         value: root.viewType
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property: "behaveAsPlasmaPanel"
-        when: latteView
+        when: dockView
         value: root.behaveAsPlasmaPanel
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property: "fontPixelSize"
         when: theme
         value: theme.defaultFont.pixelSize
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property: "maxLength"
-        when: latteView
+        when: dockView
         value: root.maxLengthPerCentage/100
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property: "offset"
-        when: latteView
+        when: dockView
         value: plasmoid.configuration.offset/100
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property: "screenEdgeMargin"
-        when: latteView
+        when: dockView
         value: Math.max(0, plasmoid.configuration.screenEdgeMargin)
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property: "screenEdgeMarginEnabled"
-        when: latteView
+        when: dockView
         value: root.screenEdgeMarginEnabled && !root.hideThickScreenGap
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property: "alignment"
-        when: latteView
+        when: dockView
         value: myView.alignment
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property: "isTouchingTopViewAndIsBusy"
         when: root.viewIsAvailable
         value: {
@@ -118,53 +118,53 @@ Item {
                 return false;
             }
 
-            var isTouchingTopScreenEdge = (latteView.y === latteView.screenGeometry.y);
+            var isTouchingTopScreenEdge = (dockView.y === dockView.screenGeometry.y);
             var isStickedOnTopBorder = (plasmoid.configuration.alignment === LatteCore.Types.Justify && plasmoid.configuration.maxLength===100)
                     || (plasmoid.configuration.alignment === LatteCore.Types.Top && plasmoid.configuration.offset===0);
 
-            return root.isVertical && !latteView.visibility.isHidden && !isTouchingTopScreenEdge && isStickedOnTopBorder && background.isShown;
+            return root.isVertical && !dockView.visibility.isHidden && !isTouchingTopScreenEdge && isStickedOnTopBorder && background.isShown;
         }
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property: "isTouchingBottomViewAndIsBusy"
-        when: latteView
+        when: dockView
         value: {
             if (!root.viewIsAvailable) {
                 return false;
             }
 
-            var latteBottom = latteView.y + latteView.height;
-            var screenBottom = latteView.screenGeometry.y + latteView.screenGeometry.height;
+            var latteBottom = dockView.y + dockView.height;
+            var screenBottom = dockView.screenGeometry.y + dockView.screenGeometry.height;
             var isTouchingBottomScreenEdge = (latteBottom === screenBottom);
 
             var isStickedOnBottomBorder = (plasmoid.configuration.alignment === LatteCore.Types.Justify && plasmoid.configuration.maxLength===100)
                     || (plasmoid.configuration.alignment === LatteCore.Types.Bottom && plasmoid.configuration.offset===0);
 
-            return root.isVertical && !latteView.visibility.isHidden && !isTouchingBottomScreenEdge && isStickedOnBottomBorder && background.isShown;
+            return root.isVertical && !dockView.visibility.isHidden && !isTouchingBottomScreenEdge && isStickedOnBottomBorder && background.isShown;
         }
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property: "colorizer"
-        when: latteView
+        when: dockView
         value: colorizerManager
     }
 
     Binding{
-        target: latteView
+        target: dockView
         property: "metrics"
-        when: latteView
+        when: dockView
         value: metrics
     }
 
     //! View::Effects bindings
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: dockView && dockView.effects ? dockView.effects : null
         property: "backgroundAllCorners"
-        when: latteView && latteView.effects
+        when: dockView && dockView.effects
         value: plasmoid.configuration.backgroundAllCorners
                && (!root.screenEdgeMarginEnabled /*no-floating*/
                    || (root.screenEdgeMarginEnabled /*floating with justify alignment and 100% maxlength*/
@@ -174,67 +174,67 @@ Item {
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: dockView && dockView.effects ? dockView.effects : null
         property: "backgroundRadius"
-        when: latteView && latteView.effects
+        when: dockView && dockView.effects
         value: background.customRadius
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: dockView && dockView.effects ? dockView.effects : null
         property: "backgroundRadiusEnabled"
-        when: latteView && latteView.effects
+        when: dockView && dockView.effects
         value: background.customRadiusIsEnabled
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: dockView && dockView.effects ? dockView.effects : null
         property: "backgroundOpacity"
-        when: latteView && latteView.effects
+        when: dockView && dockView.effects
         value: plasmoid.configuration.panelTransparency===-1 /*Default option*/ ? -1 : background.currentOpacity
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: dockView && dockView.effects ? dockView.effects : null
         property: "drawEffects"
-        when: latteView && latteView.effects && !root.inStartup
+        when: dockView && dockView.effects && !root.inStartup
         value: LatteCore.WindowSystem.compositingActive
                && (((root.blurEnabled && root.useThemePanel) || (root.blurEnabled && root.forceSolidPanel))
                    && (!root.inStartup || visibilityManager.inRelocationHiding))
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: dockView && dockView.effects ? dockView.effects : null
         property: "drawShadows"
-        when: latteView && latteView.effects
-        value: root.drawShadowsExternal && (!root.inStartup || visibilityManager.inRelocationHiding) && !(latteView && latteView.visibility.isHidden)
+        when: dockView && dockView.effects
+        value: root.drawShadowsExternal && (!root.inStartup || visibilityManager.inRelocationHiding) && !(dockView && dockView.visibility.isHidden)
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: dockView && dockView.effects ? dockView.effects : null
         property:"editShadow"
-        when: latteView && latteView.effects
+        when: dockView && dockView.effects
         value: root.editShadow
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: dockView && dockView.effects ? dockView.effects : null
         property:"innerShadow"
-        when: latteView && latteView.effects
+        when: dockView && dockView.effects
         value: background.shadows.headThickness
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: dockView && dockView.effects ? dockView.effects : null
         property: "panelBackgroundSvg"
-        when: latteView && latteView.effects
+        when: dockView && dockView.effects
         value: background.panelBackgroundSvg
     }
 
     Binding{
-        target: latteView && latteView.effects ? latteView.effects : null
+        target: dockView && dockView.effects ? dockView.effects : null
         property:"appletsLayoutGeometry"
-        when: latteView && latteView.effects && visibilityManager.inNormalState
+        when: dockView && dockView.effects && visibilityManager.inNormalState
         value: {
             if (root.behaveAsPlasmaPanel
                     || !LatteCore.WindowSystem.compositingActive
@@ -243,15 +243,15 @@ Item {
                 var paddinghead = background.headRoundness + background.headRoundnessMargin;
 
                 if (root.isHorizontal) {
-                    return Qt.rect(latteView.localGeometry.x + paddingtail,
-                                   latteView.localGeometry.y,
-                                   latteView.localGeometry.width - paddingtail - paddinghead,
-                                   latteView.localGeometry.height);
+                    return Qt.rect(dockView.localGeometry.x + paddingtail,
+                                   dockView.localGeometry.y,
+                                   dockView.localGeometry.width - paddingtail - paddinghead,
+                                   dockView.localGeometry.height);
                 } else {
-                    return Qt.rect(latteView.localGeometry.x,
-                                   latteView.localGeometry.y + paddingtail,
-                                   latteView.localGeometry.width,
-                                   latteView.localGeometry.height - paddingtail - paddinghead);
+                    return Qt.rect(dockView.localGeometry.x,
+                                   dockView.localGeometry.y + paddingtail,
+                                   dockView.localGeometry.width,
+                                   dockView.localGeometry.height - paddingtail - paddinghead);
                 }
             }
 
@@ -261,31 +261,31 @@ Item {
 
     //! View::Positioner bindings
     Binding{
-        target: latteView && latteView.positioner ? latteView.positioner : null
+        target: dockView && dockView.positioner ? dockView.positioner : null
         property: "isStickedOnTopEdge"
-        when: latteView && latteView.positioner
+        when: dockView && dockView.positioner
         value: plasmoid.configuration.isStickedOnTopEdge
     }
 
     Binding{
-        target: latteView && latteView.positioner ? latteView.positioner : null
+        target: dockView && dockView.positioner ? dockView.positioner : null
         property: "isStickedOnBottomEdge"
-        when: latteView && latteView.positioner
+        when: dockView && dockView.positioner
         value: plasmoid.configuration.isStickedOnBottomEdge
     }
 
     //! View::VisibilityManager
     Binding{
-        target: latteView && latteView.visibility ? latteView.visibility : null
+        target: dockView && dockView.visibility ? dockView.visibility : null
         property: "isShownFully"
-        when: latteView && latteView.visibility
+        when: dockView && dockView.visibility
         value: myView.isShownFully
     }
 
     Binding{
-        target: latteView && latteView.visibility ? latteView.visibility : null
+        target: dockView && dockView.visibility ? dockView.visibility : null
         property: "strutsThickness"
-        when: latteView && latteView.visibility
+        when: dockView && dockView.visibility
         value: {
             var isCapableToHideScreenGap = root.screenEdgeMarginEnabled && plasmoid.configuration.hideFloatingGapForMaximized
             var mirrorGapFactor = root.mirrorScreenGap ? 2 : 1;
@@ -311,29 +311,29 @@ Item {
     }
 
     Binding {
-        target: latteView && latteView.visibility ? latteView.visibility : null
+        target: dockView && dockView.visibility ? dockView.visibility : null
         property: "isFloatingGapWindowEnabled"
-        when: latteView && latteView.visibility
+        when: dockView && dockView.visibility
         value: root.hasFloatingGapInputEventsDisabled
-               && (latteView.visibility.mode === LatteCore.Types.AutoHide
-                   || latteView.visibility.mode === LatteCore.Types.DodgeActive
-                   || latteView.visibility.mode === LatteCore.Types.DodgeAllWindows
-                   || latteView.visibility.mode === LatteCore.Types.DodgeMaximized
-                   || latteView.visibility.mode === LatteCore.Types.SidebarAutoHide)
+               && (dockView.visibility.mode === LatteCore.Types.AutoHide
+                   || dockView.visibility.mode === LatteCore.Types.DodgeActive
+                   || dockView.visibility.mode === LatteCore.Types.DodgeAllWindows
+                   || dockView.visibility.mode === LatteCore.Types.DodgeMaximized
+                   || dockView.visibility.mode === LatteCore.Types.SidebarAutoHide)
     }
 
     //! View::WindowsTracker bindings
     Binding{
-        target: latteView && latteView.windowsTracker ? latteView.windowsTracker : null
+        target: dockView && dockView.windowsTracker ? dockView.windowsTracker : null
         property: "enabled"
         //! During startup phase windows tracking is not enabled and does not
         //! influence startup sequence at all. At the same time no windows tracking
         //! takes place during startup and as such startup time is reduced
-        when: latteView && latteView.windowsTracker && latteView.visibility && !root.inStartup
-        value: (latteView && latteView.visibility
-                && !(latteView.visibility.mode === LatteCore.Types.AlwaysVisible /* Visibility */
-                     || latteView.visibility.mode === LatteCore.Types.WindowsGoBelow
-                     || latteView.visibility.mode === LatteCore.Types.AutoHide))
+        when: dockView && dockView.windowsTracker && dockView.visibility && !root.inStartup
+        value: (dockView && dockView.visibility
+                && !(dockView.visibility.mode === LatteCore.Types.AlwaysVisible /* Visibility */
+                     || dockView.visibility.mode === LatteCore.Types.WindowsGoBelow
+                     || dockView.visibility.mode === LatteCore.Types.AutoHide))
                || indexer.clientsTrackingWindowsCount  > 0                   /*Applets Need Windows Tracking */
                || root.dragActiveWindowEnabled                               /*Dragging Active Window(Empty Areas)*/
                || ((root.backgroundOnlyOnMaximized                           /*Dynamic Background */
@@ -346,16 +346,16 @@ Item {
 
     //! View::ExtendedInterface bindings
     Binding{
-        target: latteView && latteView.extendedInterface ? latteView.extendedInterface : null
+        target: dockView && dockView.extendedInterface ? dockView.extendedInterface : null
         property: "plasmoid"
-        when: latteView && latteView.extendedInterface
+        when: dockView && dockView.extendedInterface
         value: plasmoid
     }
 
     Binding{
-        target: latteView && latteView.extendedInterface ? latteView.extendedInterface : null
+        target: dockView && dockView.extendedInterface ? dockView.extendedInterface : null
         property: "layoutManager"
-        when: latteView && latteView.extendedInterface
+        when: dockView && dockView.extendedInterface
         value: fastLayoutManager
     }
 }

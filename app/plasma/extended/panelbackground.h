@@ -13,13 +13,13 @@
 #include <Plasma>
 #include <Plasma/FrameSvg>
 
-namespace Latte {
+namespace NSE {
 namespace PlasmaExtended {
 class Theme;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace PlasmaExtended {
 
 class PanelBackground: public QObject

@@ -13,7 +13,7 @@
 #include <KService>
 #include <KSharedConfig>
 
-namespace Latte
+namespace NSE
 {
 namespace WindowSystem
 {

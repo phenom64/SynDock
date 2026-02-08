@@ -20,7 +20,7 @@
 #include <QStandardItemModel>
 #include <QStyleOptionButton>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Screens{
 namespace Delegate {
@@ -41,7 +41,7 @@ bool CheckBox::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyl
         QStyleOptionButton checkopt;
         checkopt.text = "";
         checkopt.rect = option.rect;
-        QRect remained = Latte::remainedFromCheckBox(checkopt);
+        QRect remained = NSE::remainedFromCheckBox(checkopt);
         QRegion checkregion = QRegion(option.rect).subtracted(remained);
 
         if (!(checkregion.boundingRect().contains(static_cast<QMouseEvent *>(event)->pos()))) {
@@ -60,7 +60,7 @@ bool CheckBox::editorEvent(QEvent *event, QAbstractItemModel *model, const QStyl
         return false;
     }
 
-    Latte::Data::Screen screen = index.data(Model::Screens::SCREENDATAROLE).value<Latte::Data::Screen>();
+    NSE::Data::Screen screen = index.data(Model::Screens::SCREENDATAROLE).value<NSE::Data::Screen>();
 
     if (!screen.isRemovable) {
         return false;
@@ -82,7 +82,7 @@ void CheckBox::paint(QPainter *painter, const QStyleOptionViewItem &option, cons
     bool currentChecked = index.data(Qt::UserRole).toBool();
 
     QString screendisplay = index.data(Qt::DisplayRole).toString();
-    Latte::Data::Screen screen = index.data(Model::Screens::SCREENDATAROLE).value<Latte::Data::Screen>();
+    NSE::Data::Screen screen = index.data(Model::Screens::SCREENDATAROLE).value<NSE::Data::Screen>();
 
     bool isActive = index.data(Model::Screens::ISSCREENACTIVEROLE).toBool();
     bool isSelected = index.data(Model::Screens::ISSELECTEDROLE).toBool();
@@ -94,7 +94,7 @@ void CheckBox::paint(QPainter *painter, const QStyleOptionViewItem &option, cons
     }
 
     //! background
-    Latte::drawBackground(painter, adjustedOption);
+    NSE::drawBackground(painter, adjustedOption);
 
     //! checkbox
     QStyleOptionButton checkopt;
@@ -103,16 +103,16 @@ void CheckBox::paint(QPainter *painter, const QStyleOptionViewItem &option, cons
     checkopt.text = "";
     checkopt.rect = option.rect;
 
-    QRect remainedrect = Latte::remainedFromCheckBox(checkopt);
+    QRect remainedrect = NSE::remainedFromCheckBox(checkopt);
     if (screen.isRemovable) {
-        Latte::drawCheckBox(painter, checkopt, Qt::AlignLeft, option.widget);
+        NSE::drawCheckBox(painter, checkopt, Qt::AlignLeft, option.widget);
     }
     adjustedOption.rect = remainedrect;
 
     //! screen
     int maxiconsize = -1; //disabled
-    remainedrect = Latte::remainedFromScreenDrawing(adjustedOption, false, maxiconsize);
-    Latte::drawScreen(painter, adjustedOption, false, screen.geometry, maxiconsize);
+    remainedrect = NSE::remainedFromScreenDrawing(adjustedOption, false, maxiconsize);
+    NSE::drawScreen(painter, adjustedOption, false, screen.geometry, maxiconsize);
     adjustedOption.rect = remainedrect;
 
     //! screen id
@@ -124,7 +124,7 @@ void CheckBox::paint(QPainter *painter, const QStyleOptionViewItem &option, cons
 
     adjustedOption.displayAlignment = Qt::AlignRight;
     remainedrect = remainedFromFormattedText(adjustedOption, adjustedOption.text, Qt::AlignRight);
-    Latte::drawFormattedText(painter, adjustedOption);
+    NSE::drawFormattedText(painter, adjustedOption);
     adjustedOption.rect = remainedrect;
 
     //! screen name
@@ -135,7 +135,7 @@ void CheckBox::paint(QPainter *painter, const QStyleOptionViewItem &option, cons
     }
 
     adjustedOption.displayAlignment = Qt::AlignLeft;
-    Latte::drawFormattedText(painter, adjustedOption);
+    NSE::drawFormattedText(painter, adjustedOption);
 }
 
 

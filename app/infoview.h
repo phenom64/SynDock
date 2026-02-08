@@ -23,7 +23,7 @@ class PlasmaShellSurface;
 }
 }
 
-namespace Latte {
+namespace NSE {
 
 class InfoView : public QQuickView
 {
@@ -32,7 +32,7 @@ class InfoView : public QQuickView
     Q_PROPERTY(Plasma::FrameSvg::EnabledBorders enabledBorders READ enabledBorders NOTIFY enabledBordersChanged)
 
 public:
-    InfoView(Latte::Corona *corona, QString message, QScreen *screen, QWindow *parent = nullptr);
+    InfoView(NSE::Corona *corona, QString message, QScreen *screen, QWindow *parent = nullptr);
     ~InfoView() override;
 
     QString validTitle() const;
@@ -67,10 +67,10 @@ private:
 
     Plasma::FrameSvg::EnabledBorders m_borders{Plasma::FrameSvg::TopBorder | Plasma::FrameSvg::BottomBorder};
 
-    Latte::WindowSystem::WindowId m_trackedWindowId;
+    NSE::WindowSystem::WindowId m_trackedWindowId;
     KWayland::Client::PlasmaShellSurface *m_shellSurface{nullptr};
 
-    Latte::Corona *m_corona{nullptr};
+    NSE::Corona *m_corona{nullptr};
 };
 
 }

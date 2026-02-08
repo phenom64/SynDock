@@ -39,7 +39,7 @@
 #include <KNewStuff3/KNS3/DownloadDialog>
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 
@@ -140,7 +140,7 @@ void TabLayouts::initLayoutMenu()
     m_newLayoutAction->setMenu(m_layoutTemplatesSubMenu);
     m_ui->newButton->setMenu(m_layoutTemplatesSubMenu);
 
-    connect(m_corona->templatesManager(), &Latte::Templates::Manager::layoutTemplatesChanged, this, &TabLayouts::initLayoutTemplatesSubMenu);
+    connect(m_corona->templatesManager(), &NSE::Templates::Manager::layoutTemplatesChanged, this, &TabLayouts::initLayoutTemplatesSubMenu);
 
     m_duplicateLayoutAction = m_layoutMenu->addAction(i18nc("duplicate layout", "&Duplicate"));
     m_duplicateLayoutAction->setToolTip(i18n("Duplicate selected layout"));
@@ -292,12 +292,12 @@ void TabLayouts::initLayoutTemplatesSubMenu()
         openTemplatesDirectory->setIcon(QIcon::fromTheme("edit"));
 
         connect(openTemplatesDirectory, &QAction::triggered, this, [&]() {
-            KIO::highlightInFileManager({QString(Latte::configPath() + "/latte/templates/Dock.layout.latte")});
+            KIO::highlightInFileManager({QString(NSE::configPath() + "/latte/templates/Dock.layout.latte")});
         });
     }
 }
 
-Latte::Corona *TabLayouts::corona() const
+NSE::Corona *TabLayouts::corona() const
 {
     return m_corona;
 }
@@ -359,8 +359,8 @@ void TabLayouts::switchLayout()
         return;
     }
 
-    Latte::Data::Layout selectedLayoutCurrent = m_layoutsController->selectedLayoutCurrentData();
-    Latte::Data::Layout selectedLayoutOriginal = m_layoutsController->selectedLayoutOriginalData();
+    NSE::Data::Layout selectedLayoutCurrent = m_layoutsController->selectedLayoutCurrentData();
+    NSE::Data::Layout selectedLayoutOriginal = m_layoutsController->selectedLayoutOriginalData();
     selectedLayoutOriginal = selectedLayoutOriginal.isEmpty() ? selectedLayoutCurrent : selectedLayoutOriginal;
 
     if (m_layoutsController->layoutsAreChanged()) {
@@ -410,7 +410,7 @@ void TabLayouts::updatePerLayoutButtonsState()
         return;
     }
 
-    Latte::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
+    NSE::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
 
     //! Switch Button
     setTwinProperty(m_switchLayoutAction, TWINENABLED, true);
@@ -473,10 +473,10 @@ void TabLayouts::downloadLayout()
     if (!dialog.changedEntries().isEmpty() && !dialog.installedEntries().isEmpty()) {
         for (const auto &entry : dialog.installedEntries()) {
             for (const auto &entryFile : entry.installedFiles()) {
-                Latte::Layouts::Importer::LatteFileVersion version = Latte::Layouts::Importer::fileVersion(entryFile);
+                NSE::Layouts::Importer::LatteFileVersion version = NSE::Layouts::Importer::fileVersion(entryFile);
 
-                if (version == Latte::Layouts::Importer::LayoutVersion2) {
-                    Latte::Data::Layout downloaded = m_layoutsController->addLayoutForFile(entryFile);
+                if (version == NSE::Layouts::Importer::LayoutVersion2) {
+                    NSE::Data::Layout downloaded = m_layoutsController->addLayoutForFile(entryFile);
                     showInlineMessage(i18nc("settings:layout downloaded successfully","Layout <b>%1</b> downloaded successfully...", downloaded.name),
                                       KMessageWidget::Positive);
                     break;
@@ -500,7 +500,7 @@ void TabLayouts::removeLayout()
         return;
     }
 
-    Latte::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
+    NSE::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
 
     if (selectedLayout.isActive) {
         showInlineMessage(i18nc("settings: active layout remove","<b>Active</b> layouts can not be removed..."),
@@ -554,14 +554,14 @@ void TabLayouts::importLayout()
     connect(importFileDialog, &QFileDialog::finished, importFileDialog, &QFileDialog::deleteLater);
 
     connect(importFileDialog, &QFileDialog::fileSelected, this, [&](const QString & file) {
-        Latte::Layouts::Importer::LatteFileVersion version = Latte::Layouts::Importer::fileVersion(file);
+        NSE::Layouts::Importer::LatteFileVersion version = NSE::Layouts::Importer::fileVersion(file);
         qDebug() << "VERSION :::: " << version;
 
-        if (version == Latte::Layouts::Importer::LayoutVersion2) {
-            Latte::Data::Layout importedlayout = m_layoutsController->addLayoutForFile(file);
+        if (version == NSE::Layouts::Importer::LayoutVersion2) {
+            NSE::Data::Layout importedlayout = m_layoutsController->addLayoutForFile(file);
             showInlineMessage(i18nc("settings:layout imported successfully","Layout <b>%1</b> imported successfully...", importedlayout.name),
                               KMessageWidget::Positive);
-        } else if (version == Latte::Layouts::Importer::ConfigVersion1) {
+        } else if (version == NSE::Layouts::Importer::ConfigVersion1) {
             if (!m_layoutsController->importLayoutsFromV1ConfigFile(file)) {
                 showInlineMessage(i18nc("settings:deprecated layouts import failed","Import layouts from deprecated version <b>failed</b>..."),
                                   KMessageWidget::Error,
@@ -613,7 +613,7 @@ void TabLayouts::exportLayoutForBackup()
         return;
     }
 
-    Latte::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
+    NSE::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
 
     //! Update ALL active original layouts before exporting,
     m_corona->layoutsManager()->synchronizer()->syncActiveLayoutsToOriginalFiles();
@@ -636,7 +636,7 @@ void TabLayouts::exportLayoutForBackup()
     connect(exportFileDialog, &QFileDialog::finished, exportFileDialog, &QFileDialog::deleteLater);
 
     connect(exportFileDialog, &QFileDialog::fileSelected, this, [ &, selectedLayout](const QString & file) {
-        auto showExportLayoutError = [this](const Latte::Data::Layout &layout) {
+        auto showExportLayoutError = [this](const NSE::Data::Layout &layout) {
             showInlineMessage(i18nc("settings:layout export fail","Layout <b>%1</b> export <b>failed</b>...", layout.name),
                               KMessageWidget::Error,
                               true);
@@ -660,7 +660,7 @@ void TabLayouts::exportLayoutForBackup()
             }
 
             // cleanup clones from exported file
-            Latte::Layouts::Storage::self()->removeAllClonedViews(file);
+            NSE::Layouts::Storage::self()->removeAllClonedViews(file);
 
             CentralLayout layoutS(this, file);
             layoutS.setActivities(QStringList());
@@ -731,7 +731,7 @@ void TabLayouts::showDetailsDialog()
         return;
     }
 
-    Latte::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
+    NSE::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
     auto detailsDlg = new Settings::Dialog::DetailsDialog(m_parentDialog, m_layoutsController);
 
     detailsDlg->exec();
@@ -749,7 +749,7 @@ void TabLayouts::showViewsDialog()
         return;
     }
 
-    Latte::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
+    NSE::Data::Layout selectedLayout = m_layoutsController->selectedLayoutCurrentData();
     auto viewsDlg = new Settings::Dialog::ViewsDialog(m_parentDialog, m_layoutsController);
 
     m_isViewsDialogVisible = true;
@@ -763,7 +763,7 @@ void TabLayouts::onLayoutFilesDropped(const QStringList &paths)
 
     for (int i=0; i<paths.count(); ++i) {
         if (paths[i].endsWith(".layout.latte")) {
-            Latte::Data::Layout importedlayout = m_layoutsController->addLayoutForFile(paths[i]);
+            NSE::Data::Layout importedlayout = m_layoutsController->addLayoutForFile(paths[i]);
             layoutNames << importedlayout.name;
         }
     }
@@ -780,7 +780,7 @@ void TabLayouts::onLayoutFilesDropped(const QStringList &paths)
 
 void TabLayouts::onRawLayoutDropped(const QString &rawLayout)
 {
-    Latte::Data::Layout importedlayout = m_layoutsController->addLayoutByText(rawLayout);
+    NSE::Data::Layout importedlayout = m_layoutsController->addLayoutByText(rawLayout);
     showInlineMessage(i18nc("settings:layout imported successfully","Layout <b>%1</b> imported successfully...", importedlayout.name),
                       KMessageWidget::Positive);
 }

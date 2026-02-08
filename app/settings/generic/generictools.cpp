@@ -11,7 +11,7 @@
 #include <QStyle>
 #include <QTextDocument>
 
-namespace Latte {
+namespace NSE {
 
 const int ICONMARGIN = 1;
 const int INDICATORCHANGESLENGTH = 6;
@@ -155,8 +155,8 @@ void drawFormattedText(QPainter *painter, const QStyleOption &option, const QStr
 {
     painter->save();
 
-    QPalette::ColorRole applyColor = Latte::isSelected(option) ? QPalette::HighlightedText : QPalette::Text;
-    QBrush nBrush = option.palette.brush(Latte::colorGroup(option), applyColor);
+    QPalette::ColorRole applyColor = NSE::isSelected(option) ? QPalette::HighlightedText : QPalette::Text;
+    QBrush nBrush = option.palette.brush(NSE::colorGroup(option), applyColor);
 
     QColor brushColor = nBrush.color();
     brushColor.setAlphaF(textOpacity);
@@ -227,9 +227,9 @@ QRect remainedFromLayoutIcon(const QStyleOption &option, Qt::AlignmentFlag align
 
 void drawLayoutIcon(QPainter *painter, const QStyleOption &option, const bool &isBackgroundFile, const QString &iconName, Qt::AlignmentFlag alignment, int lengthMargin, int thickMargin)
 {
-    bool active = Latte::isActive(option);
-    bool selected = Latte::isSelected(option);
-    bool focused = Latte::isFocused(option);
+    bool active = NSE::isActive(option);
+    bool selected = NSE::isSelected(option);
+    bool focused = NSE::isFocused(option);
 
     int lenmargin = (lengthMargin == -1 ? ICONMARGIN + MARGIN : lengthMargin);
     int thickmargin = (thickMargin == -1 ? ICONMARGIN : thickMargin);
@@ -270,7 +270,7 @@ void drawLayoutIcon(QPainter *painter, const QStyleOption &option, const bool &i
 
         QBrush imageBrush(backImage);
         QPen pen; pen.setWidth(1);
-        pen.setColor(option.palette.color(Latte::colorGroup(option), textColorRole));
+        pen.setColor(option.palette.color(NSE::colorGroup(option), textColorRole));
 
         painter->setBrush(imageBrush);
         painter->setPen(pen);
@@ -296,9 +296,9 @@ QRect remainedFromColorSchemeIcon(const QStyleOption &option, Qt::AlignmentFlag 
 
 void drawColorSchemeIcon(QPainter *painter, const QStyleOption &option, const QColor &textColor, const QColor &backgroundColor, Qt::AlignmentFlag alignment, int lengthMargin, int thickMargin)
 {
-    bool active = Latte::isActive(option);
-    bool selected = Latte::isSelected(option);
-    bool focused = Latte::isFocused(option);
+    bool active = NSE::isActive(option);
+    bool selected = NSE::isSelected(option);
+    bool focused = NSE::isFocused(option);
 
     int lenmargin = (lengthMargin == -1 ? ICONMARGIN + MARGIN : lengthMargin);
     int thickmargin = (thickMargin == -1 ? ICONMARGIN : thickMargin);
@@ -335,7 +335,7 @@ void drawColorSchemeIcon(QPainter *painter, const QStyleOption &option, const QC
 
     QBrush colorbrush(backgroundColor);
     QPen pen; pen.setWidth(1);
-    pen.setColor(option.palette.color(Latte::colorGroup(option), textColorRole));
+    pen.setColor(option.palette.color(NSE::colorGroup(option), textColorRole));
 
     painter->setBrush(colorbrush);
     painter->setPen(pen);
@@ -383,9 +383,9 @@ void drawIcon(QPainter *painter, const QStyleOption &option, const QString &icon
     int iconsize = option.rect.height() - 2*thickMargin;
     int total = iconsize + 2*lenmargin;
 
-    bool active = Latte::isActive(option);
-    bool selected = Latte::isSelected(option);
-    bool focused = Latte::isFocused(option);
+    bool active = NSE::isActive(option);
+    bool selected = NSE::isSelected(option);
+    bool focused = NSE::isFocused(option);
 
     QIcon::Mode mode = ((active && (selected || focused)) ? QIcon::Selected : QIcon::Normal);
 
@@ -554,11 +554,11 @@ QRect drawScreen(QPainter *painter, const QStyleOption &option, bool drawMultipl
 
     QRect screenAvailableRect(screenRect.x() + pen_width - 1, screenRect.y() + pen_width - 1, screenRect.width() - pen_width - 1, screenRect.height() - pen_width - 1);
 
-    bool selected = Latte::isSelected(option);
+    bool selected = NSE::isSelected(option);
     QPalette::ColorRole textColorRole = selected ? QPalette::HighlightedText : QPalette::Text;
 
     QPen pen; pen.setWidth(pen_width);
-    QColor pencolor = option.palette.color(Latte::colorGroup(option), textColorRole);
+    QColor pencolor = option.palette.color(NSE::colorGroup(option), textColorRole);
     pencolor.setAlphaF(brushOpacity);
     pen.setColor(pencolor);
 

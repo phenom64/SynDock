@@ -5,7 +5,7 @@
 
 #include "errorinformationdata.h"
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 ErrorInformation::ErrorInformation()

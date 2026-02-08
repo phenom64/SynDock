@@ -18,7 +18,7 @@
 #include <QTimer>
 
 
-namespace Latte {
+namespace NSE {
 class View;
 namespace Layout {
 class GenericLayout;
@@ -34,7 +34,7 @@ class TrackedViewInfo;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 namespace Tracker {
 
@@ -45,32 +45,32 @@ public:
     Windows(AbstractWindowInterface *parent);
     ~Windows() override;
 
-    void addView(Latte::View *view);
-    void removeView(Latte::View *view);
+    void addView(NSE::View *view);
+    void removeView(NSE::View *view);
 
     //! Views Tracking (current screen specific)
-    bool enabled(Latte::View *view);
-    void setEnabled(Latte::View *view, const bool enabled);
+    bool enabled(NSE::View *view);
+    void setEnabled(NSE::View *view, const bool enabled);
 
-    bool activeWindowMaximized(Latte::View *view) const;
-    bool activeWindowTouching(Latte::View *view) const;
-    bool activeWindowTouchingEdge(Latte::View *view) const;
-    bool existsWindowActive(Latte::View *view) const;
-    bool existsWindowMaximized(Latte::View *view) const;
-    bool existsWindowTouching(Latte::View *view) const;
-    bool existsWindowTouchingEdge(Latte::View *view) const;
-    bool isTouchingBusyVerticalView(Latte::View *view) const;
-    SchemeColors *activeWindowScheme(Latte::View *view) const;
-    SchemeColors *touchingWindowScheme(Latte::View *view) const;
-    LastActiveWindow *lastActiveWindow(Latte::View *view);
+    bool activeWindowMaximized(NSE::View *view) const;
+    bool activeWindowTouching(NSE::View *view) const;
+    bool activeWindowTouchingEdge(NSE::View *view) const;
+    bool existsWindowActive(NSE::View *view) const;
+    bool existsWindowMaximized(NSE::View *view) const;
+    bool existsWindowTouching(NSE::View *view) const;
+    bool existsWindowTouchingEdge(NSE::View *view) const;
+    bool isTouchingBusyVerticalView(NSE::View *view) const;
+    SchemeColors *activeWindowScheme(NSE::View *view) const;
+    SchemeColors *touchingWindowScheme(NSE::View *view) const;
+    LastActiveWindow *lastActiveWindow(NSE::View *view);
 
     //! Layouts Tracking (all screens)
-    bool enabled(Latte::Layout::GenericLayout *layout);
-    bool activeWindowMaximized(Latte::Layout::GenericLayout *layout) const;
-    bool existsWindowActive(Latte::Layout::GenericLayout *layout) const;
-    bool existsWindowMaximized(Latte::Layout::GenericLayout *layout) const;
-    SchemeColors *activeWindowScheme(Latte::Layout::GenericLayout *layout) const;
-    LastActiveWindow *lastActiveWindow(Latte::Layout::GenericLayout *layout);
+    bool enabled(NSE::Layout::GenericLayout *layout);
+    bool activeWindowMaximized(NSE::Layout::GenericLayout *layout) const;
+    bool existsWindowActive(NSE::Layout::GenericLayout *layout) const;
+    bool existsWindowMaximized(NSE::Layout::GenericLayout *layout) const;
+    SchemeColors *activeWindowScheme(NSE::Layout::GenericLayout *layout) const;
+    LastActiveWindow *lastActiveWindow(NSE::Layout::GenericLayout *layout);
 
     //! Windows management
     bool isValidFor(const WindowId &wid) const;
@@ -82,26 +82,26 @@ public:
 
 signals:
     //! Views
-    void enabledChanged(const Latte::View *view);
-    void activeWindowMaximizedChanged(const Latte::View *view);
-    void activeWindowTouchingChanged(const Latte::View *view);
-    void activeWindowTouchingEdgeChanged(const Latte::View *view);
-    void existsWindowActiveChanged(const Latte::View *view);
-    void existsWindowMaximizedChanged(const Latte::View *view);
-    void existsWindowTouchingChanged(const Latte::View *view);
-    void existsWindowTouchingEdgeChanged(const Latte::View *view);
-    void isTouchingBusyVerticalViewChanged(const Latte::View *view);
-    void activeWindowSchemeChanged(const Latte::View *view);
-    void touchingWindowSchemeChanged(const Latte::View *view);
-    void informationAnnounced(const Latte::View *view);
+    void enabledChanged(const NSE::View *view);
+    void activeWindowMaximizedChanged(const NSE::View *view);
+    void activeWindowTouchingChanged(const NSE::View *view);
+    void activeWindowTouchingEdgeChanged(const NSE::View *view);
+    void existsWindowActiveChanged(const NSE::View *view);
+    void existsWindowMaximizedChanged(const NSE::View *view);
+    void existsWindowTouchingChanged(const NSE::View *view);
+    void existsWindowTouchingEdgeChanged(const NSE::View *view);
+    void isTouchingBusyVerticalViewChanged(const NSE::View *view);
+    void activeWindowSchemeChanged(const NSE::View *view);
+    void touchingWindowSchemeChanged(const NSE::View *view);
+    void informationAnnounced(const NSE::View *view);
 
     //! Layouts
-    void enabledChangedForLayout(const Latte::Layout::GenericLayout *layout);
-    void activeWindowMaximizedChangedForLayout(const Latte::Layout::GenericLayout *layout);
-    void existsWindowActiveChangedForLayout(const Latte::Layout::GenericLayout *layout);
-    void existsWindowMaximizedChangedForLayout(const Latte::Layout::GenericLayout *layout);
-    void activeWindowSchemeChangedForLayout(const Latte::Layout::GenericLayout *layout);
-    void informationAnnouncedForLayout(const Latte::Layout::GenericLayout *layout);
+    void enabledChangedForLayout(const NSE::Layout::GenericLayout *layout);
+    void activeWindowMaximizedChangedForLayout(const NSE::Layout::GenericLayout *layout);
+    void existsWindowActiveChangedForLayout(const NSE::Layout::GenericLayout *layout);
+    void existsWindowMaximizedChangedForLayout(const NSE::Layout::GenericLayout *layout);
+    void activeWindowSchemeChangedForLayout(const NSE::Layout::GenericLayout *layout);
+    void informationAnnouncedForLayout(const NSE::Layout::GenericLayout *layout);
 
     //! overloading WM signals in order to update first m_windows and afterwards
     //! inform consumers for window changes
@@ -114,7 +114,7 @@ signals:
 private slots:
     void updateScreenGeometries();
 
-    void addRelevantLayout(Latte::View *view);
+    void addRelevantLayout(NSE::View *view);
 
     void updateApplicationData();
     void updateRelevantLayouts();
@@ -122,42 +122,42 @@ private slots:
 
 private:
     void init();
-    void initLayoutHints(Latte::Layout::GenericLayout *layout);
-    void initViewHints(Latte::View *view);
+    void initLayoutHints(NSE::Layout::GenericLayout *layout);
+    void initViewHints(NSE::View *view);
     void cleanupFaultyWindows();
 
     void updateAllHints();
     void updateAllHintsAfterTimer();
 
     //! Views
-    void updateHints(Latte::View *view);
-    void updateHints(Latte::Layout::GenericLayout *layout);
+    void updateHints(NSE::View *view);
+    void updateHints(NSE::Layout::GenericLayout *layout);
 
-    void setActiveWindowMaximized(Latte::View *view, bool activeMaximized);
-    void setActiveWindowTouching(Latte::View *view, bool activeTouching);
-    void setActiveWindowTouchingEdge(Latte::View *view, bool activeTouchingEdge);
-    void setExistsWindowActive(Latte::View *view, bool windowActive);
-    void setExistsWindowMaximized(Latte::View *view, bool windowMaximized);
-    void setExistsWindowTouching(Latte::View *view, bool windowTouching);
-    void setExistsWindowTouchingEdge(Latte::View *view, bool windowTouchingEdge);
-    void setIsTouchingBusyVerticalView(Latte::View *view, bool viewTouching);
-    void setActiveWindowScheme(Latte::View *view, WindowSystem::SchemeColors *scheme);
-    void setTouchingWindowScheme(Latte::View *view, WindowSystem::SchemeColors *scheme);
+    void setActiveWindowMaximized(NSE::View *view, bool activeMaximized);
+    void setActiveWindowTouching(NSE::View *view, bool activeTouching);
+    void setActiveWindowTouchingEdge(NSE::View *view, bool activeTouchingEdge);
+    void setExistsWindowActive(NSE::View *view, bool windowActive);
+    void setExistsWindowMaximized(NSE::View *view, bool windowMaximized);
+    void setExistsWindowTouching(NSE::View *view, bool windowTouching);
+    void setExistsWindowTouchingEdge(NSE::View *view, bool windowTouchingEdge);
+    void setIsTouchingBusyVerticalView(NSE::View *view, bool viewTouching);
+    void setActiveWindowScheme(NSE::View *view, WindowSystem::SchemeColors *scheme);
+    void setTouchingWindowScheme(NSE::View *view, WindowSystem::SchemeColors *scheme);
 
     //! Layouts
-    void setActiveWindowMaximized(Latte::Layout::GenericLayout *layout, bool activeMaximized);
-    void setExistsWindowActive(Latte::Layout::GenericLayout *layout, bool windowActive);
-    void setExistsWindowMaximized(Latte::Layout::GenericLayout *layout, bool windowMaximized);
-    void setActiveWindowScheme(Latte::Layout::GenericLayout *layout, WindowSystem::SchemeColors *scheme);
+    void setActiveWindowMaximized(NSE::Layout::GenericLayout *layout, bool activeMaximized);
+    void setExistsWindowActive(NSE::Layout::GenericLayout *layout, bool windowActive);
+    void setExistsWindowMaximized(NSE::Layout::GenericLayout *layout, bool windowMaximized);
+    void setActiveWindowScheme(NSE::Layout::GenericLayout *layout, WindowSystem::SchemeColors *scheme);
 
     //! Windows
-    bool intersects(Latte::View *view, const WindowInfoWrap &winfo);
+    bool intersects(NSE::View *view, const WindowInfoWrap &winfo);
     bool isActive(const WindowInfoWrap &winfo);
-    bool isActiveInViewScreen(Latte::View *view, const WindowInfoWrap &winfo);
-    bool isMaximizedInViewScreen(Latte::View *view, const WindowInfoWrap &winfo);
-    bool isTouchingView(Latte::View *view, const WindowSystem::WindowInfoWrap &winfo);
-    bool isTouchingViewEdge(Latte::View *view, const WindowInfoWrap &winfo);
-    bool isTouchingViewEdge(Latte::View *view, const QRect &windowgeometry);
+    bool isActiveInViewScreen(NSE::View *view, const WindowInfoWrap &winfo);
+    bool isMaximizedInViewScreen(NSE::View *view, const WindowInfoWrap &winfo);
+    bool isTouchingView(NSE::View *view, const WindowSystem::WindowInfoWrap &winfo);
+    bool isTouchingViewEdge(NSE::View *view, const WindowInfoWrap &winfo);
+    bool isTouchingViewEdge(NSE::View *view, const QRect &windowgeometry);
 
 private:
     //! a timer in order to not overload the views extra hints checking because it is not
@@ -165,20 +165,20 @@ private:
     QTimer m_extraViewHintsTimer;
 
     AbstractWindowInterface *m_wm;
-    QHash<Latte::View *, TrackedViewInfo *> m_views;
-    QHash<Latte::Layout::GenericLayout *, TrackedLayoutInfo *> m_layouts;
+    QHash<NSE::View *, TrackedViewInfo *> m_views;
+    QHash<NSE::Layout::GenericLayout *, TrackedLayoutInfo *> m_layouts;
 
     //! Accept only ALWAYSVISIBLE visibility mode
-    QList<Latte::Types::Visibility> m_ignoreModes{
-        Latte::Types::AutoHide,
-        Latte::Types::DodgeActive,
-        Latte::Types::DodgeMaximized,
-        Latte::Types::DodgeAllWindows,
-        Latte::Types::WindowsGoBelow,
-        Latte::Types::WindowsCanCover,
-        Latte::Types::WindowsAlwaysCover,
-        Latte::Types::SidebarOnDemand,
-        Latte::Types::SidebarAutoHide
+    QList<NSE::Types::Visibility> m_ignoreModes{
+        NSE::Types::AutoHide,
+        NSE::Types::DodgeActive,
+        NSE::Types::DodgeMaximized,
+        NSE::Types::DodgeAllWindows,
+        NSE::Types::WindowsGoBelow,
+        NSE::Types::WindowsCanCover,
+        NSE::Types::WindowsAlwaysCover,
+        NSE::Types::SidebarOnDemand,
+        NSE::Types::SidebarAutoHide
     };
 
     QMap<WindowId, WindowInfoWrap> m_windows;

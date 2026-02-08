@@ -3,10 +3,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.2
-import QtQuick.Controls.Styles 1.2 as QtQuickControlStyle
-import QtQuick.Controls 1.2
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import QtQuick.Controls.Styles as QtQuickControlStyle
+import QtQuick.Controls
+import org.kde.plasma.core as PlasmaCore
 
 QtQuickControlStyle.SwitchStyle {
     id: styleRoot

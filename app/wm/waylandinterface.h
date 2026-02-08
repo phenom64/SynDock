@@ -8,7 +8,7 @@
 #define WAYLANDINTERFACE_H
 
 // local
-#include <config-latte.h>
+#include <config-syndock.h>
 #include "abstractwindowinterface.h"
 #include "windowinfowrap.h"
 
@@ -26,7 +26,7 @@
 #include <KWindowEffects>
 
 
-namespace Latte {
+namespace NSE {
 class Corona;
 namespace Private {
 //! this class is used to create the struts inside wayland
@@ -34,7 +34,7 @@ class GhostWindow;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 
 class WaylandInterface : public AbstractWindowInterface
@@ -45,7 +45,7 @@ public:
     explicit WaylandInterface(QObject *parent = nullptr);
     ~WaylandInterface() override;
 
-    void setViewExtraFlags(QObject *view, bool isPanelWindow = true, Latte::Types::Visibility mode = Latte::Types::WindowsGoBelow) override;
+    void setViewExtraFlags(QObject *view, bool isPanelWindow = true, NSE::Types::Visibility mode = NSE::Types::WindowsGoBelow) override;
     void setViewStruts(QWindow &view, const QRect &rect
                        , Plasma::Types::Location location) override;
     void setWindowOnActivities(const WindowId &wid, const QStringList &nextactivities) override;
@@ -130,7 +130,7 @@ private:
     QStringList m_desktops;
 
 
-    Latte::Corona *m_corona{nullptr};
+    NSE::Corona *m_corona{nullptr};
 };
 
 }

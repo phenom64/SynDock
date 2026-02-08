@@ -12,7 +12,7 @@
 #include <QWidget>
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Widget {
 

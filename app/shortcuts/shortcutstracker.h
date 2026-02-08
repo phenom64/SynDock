@@ -12,7 +12,7 @@
 // KDE
 #include <KSharedConfig>
 
-namespace Latte {
+namespace NSE {
 namespace ShortcutsPart {
 
 class ShortcutsTracker: public QObject {

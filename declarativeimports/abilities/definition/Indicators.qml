@@ -3,7 +3,7 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
 import "./indicators" as IndicatorTypes
 
@@ -12,7 +12,7 @@ Item{
 
     readonly property real padding: Math.max(info.minLengthPadding, info.lengthPadding)
 
-    property string type: "org.kde.latte.default"
+    property string type: "org.kde.syndock.default"
 
     property QtObject configuration: null
     property QtObject resources: null   

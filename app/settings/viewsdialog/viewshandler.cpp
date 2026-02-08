@@ -34,7 +34,7 @@
 #include <KStandardGuiItem>
 #include <KIO/OpenFileManagerWindowJob>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 
@@ -77,7 +77,7 @@ void ViewsHandler::init()
     m_newViewAction->setMenu(m_viewTemplatesSubMenu);
     m_ui->newBtn->setMenu(m_viewTemplatesSubMenu);
 
-    connect(corona()->templatesManager(), &Latte::Templates::Manager::viewTemplatesChanged, this, &ViewsHandler::initViewTemplatesSubMenu);
+    connect(corona()->templatesManager(), &NSE::Templates::Manager::viewTemplatesChanged, this, &ViewsHandler::initViewTemplatesSubMenu);
 
     //! Duplicate Button
     m_duplicateViewAction = new QAction(i18nc("duplicate dock or panel", "&Duplicate"), this);
@@ -171,7 +171,7 @@ void ViewsHandler::initViewTemplatesSubMenu()
         openTemplatesDirectory->setIcon(QIcon::fromTheme("edit"));
 
         connect(openTemplatesDirectory, &QAction::triggered, this, [&]() {
-            KIO::highlightInFileManager({QString(Latte::configPath() + "/latte/templates/Dock.view.latte")});
+            KIO::highlightInFileManager({QString(NSE::configPath() + "/latte/templates/Dock.view.latte")});
         });
     }
 }
@@ -201,7 +201,7 @@ void ViewsHandler::reload()
     o_data = m_dialog->layoutsController()->selectedLayoutCurrentData();
     o_data.views = m_dialog->layoutsController()->selectedLayoutViews();
 
-    Latte::Data::LayoutIcon icon = m_dialog->layoutsController()->selectedLayoutIcon();
+    NSE::Data::LayoutIcon icon = m_dialog->layoutsController()->selectedLayoutIcon();
 
     m_ui->layoutsCmb->setCurrentText(o_data.name);
     m_ui->layoutsCmb->setLayoutIcon(icon);
@@ -209,7 +209,7 @@ void ViewsHandler::reload()
     loadLayout(o_data);
 }
 
-Latte::Corona *ViewsHandler::corona() const
+NSE::Corona *ViewsHandler::corona() const
 {
     return m_dialog->corona();
 }
@@ -224,17 +224,17 @@ Settings::Controller::Layouts *ViewsHandler::layoutsController() const
     return m_dialog->layoutsController();
 }
 
-void ViewsHandler::loadLayout(const Latte::Data::Layout &data)
+void ViewsHandler::loadLayout(const NSE::Data::Layout &data)
 {
     updateWindowTitle();
 }
 
-Latte::Data::Layout ViewsHandler::currentData() const
+NSE::Data::Layout ViewsHandler::currentData() const
 {
     return o_data;
 }
 
-Latte::Data::Layout ViewsHandler::originalData() const
+NSE::Data::Layout ViewsHandler::originalData() const
 {
     return m_dialog->layoutsController()->selectedLayoutOriginalData();
 }
@@ -276,7 +276,7 @@ void ViewsHandler::save()
 
 QString ViewsHandler::storedView(const QString &viewId)
 {
-    Latte::Data::View viewdata = m_viewsController->currentData(viewId);
+    NSE::Data::View viewdata = m_viewsController->currentData(viewId);
 
     if (!viewdata.isValid()) {
         return QString();
@@ -294,7 +294,7 @@ QString ViewsHandler::storedView(const QString &viewId)
 
 void ViewsHandler::newView(const Data::Generic &templateData)
 {
-    Data::ViewsTable views = Latte::Layouts::Storage::self()->views(templateData.id);
+    Data::ViewsTable views = NSE::Layouts::Storage::self()->views(templateData.id);
 
     if (views.rowCount() > 0) {
         Data::View viewfromtemplate = views[0];

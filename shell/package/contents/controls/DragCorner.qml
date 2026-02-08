@@ -3,8 +3,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import org.kde.plasma.core as PlasmaCore
 
 Rectangle {
     id: _corner
@@ -104,7 +104,7 @@ Rectangle {
                     newScaleHeight = Math.max(0.5, initScaleHeight + (percentY*initScaleHeight)).toFixed(3);
                 }
 
-                universalSettings.setScreenScales(latteView.positioner.currentScreenName, newScaleWidth, newScaleHeight);
+                universalSettings.setScreenScales(dockView.positioner.currentScreenName, newScaleWidth, newScaleHeight);
                 dialog.userScaleWidth = newScaleWidth;
                 dialog.userScaleHeight = newScaleHeight;
                 viewConfig.syncGeometry();
@@ -120,7 +120,7 @@ Rectangle {
         onDoubleClicked: {
             dialog.userScaleWidth = 1;
             dialog.userScaleHeight = 1;
-            universalSettings.setScreenScales(latteView.positioner.currentScreenName, 1, 1);
+            universalSettings.setScreenScales(dockView.positioner.currentScreenName, 1, 1);
             viewConfig.syncGeometry();
         }
     }

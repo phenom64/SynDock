@@ -27,12 +27,12 @@ class ConfigPropertyMap;
 class QmlObjectSharedEngine;
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 class Indicator: public QObject
@@ -63,16 +63,16 @@ class Indicator: public QObject
     /**
       * Information provided from the indicator itself
       */
-    Q_PROPERTY(Latte::ViewPart::IndicatorPart::Info *info READ info NOTIFY infoChanged)
+    Q_PROPERTY(NSE::ViewPart::IndicatorPart::Info *info READ info NOTIFY infoChanged)
 
     /**
       * Resources provided from the indicator itself
       */
-    Q_PROPERTY(Latte::ViewPart::IndicatorPart::Resources *resources READ resources NOTIFY resourcesChanged)
+    Q_PROPERTY(NSE::ViewPart::IndicatorPart::Resources *resources READ resources NOTIFY resourcesChanged)
 
 
 public:
-    Indicator(Latte::View *parent);
+    Indicator(NSE::View *parent);
     virtual ~Indicator();
 
     bool enabled() const;
@@ -149,8 +149,8 @@ private:
     QPointer<QQmlComponent> m_plasmaComponent;
     QPointer<QQmlComponent> m_configUi;
     QPointer<KConfigLoader> m_configLoader;
-    QPointer<Latte::Corona> m_corona;
-    QPointer<Latte::View> m_view;
+    QPointer<NSE::Corona> m_corona;
+    QPointer<NSE::View> m_view;
 
     KPluginMetaData m_metadata;
 

@@ -14,22 +14,22 @@
 #include <QStyle>
 #include <QTextDocument>
 
-namespace Latte {
+namespace NSE {
 
 const int ICONMARGIN = 1;
 const int INDICATORCHANGESLENGTH = 6;
 const int INDICATORCHANGESMARGIN = 5;
 const int MARGIN = 2;
 
-void drawView(QPainter *painter, const QStyleOption &option, const Latte::Data::View &view, const QRect &availableScreenRect, const float brushOpacity)
+void drawView(QPainter *painter, const QStyleOption &option, const NSE::Data::View &view, const QRect &availableScreenRect, const float brushOpacity)
 {
     int thick = 4;
     painter->save();
 
-    bool selected = Latte::isSelected(option);
+    bool selected = NSE::isSelected(option);
     QPalette::ColorRole viewColorRole = !selected ? QPalette::Highlight : QPalette::Text;
     QPen pen; pen.setWidth(thick);
-    QColor pencolor = option.palette.color(Latte::colorGroup(option), viewColorRole);
+    QColor pencolor = option.palette.color(NSE::colorGroup(option), viewColorRole);
     pencolor.setAlphaF(brushOpacity);
     pen.setColor(pencolor);
     painter->setPen(pen);
@@ -40,7 +40,7 @@ void drawView(QPainter *painter, const QStyleOption &option, const Latte::Data::
     int length = view.isVertical() ? availableScreenRect.height() - thick + 1 : availableScreenRect.width() - thick + 1;
     int max_length = length;
 
-    if (view.alignment != Latte::Types::Justify) {
+    if (view.alignment != NSE::Types::Justify) {
         length = 0.5 * length;
     }
 
@@ -62,25 +62,25 @@ void drawView(QPainter *painter, const QStyleOption &option, const Latte::Data::
     }
 
     if (view.isHorizontal()) {
-        if (view.alignment == Latte::Types::Left) {
+        if (view.alignment == NSE::Types::Left) {
             x = availableScreenRect.x() + thick / 2;
-        } else if (view.alignment == Latte::Types::Right) {
+        } else if (view.alignment == NSE::Types::Right) {
             x = availableScreenRect.x() + availableScreenRect.width() - length - 1;
-        } else if (view.alignment == Latte::Types::Center) {
+        } else if (view.alignment == NSE::Types::Center) {
             int leftmargin = (availableScreenRect.width()/2) - (length/2);
             x = availableScreenRect.x() + leftmargin + 1;
-        } else if (view.alignment == Latte::Types::Justify) {
+        } else if (view.alignment == NSE::Types::Justify) {
             x = availableScreenRect.x() + thick / 2;
         }
     } else if (view.isVertical()) {
-        if (view.alignment == Latte::Types::Top) {
+        if (view.alignment == NSE::Types::Top) {
             y = availableScreenRect.y() + thick / 2;
-        } else if (view.alignment == Latte::Types::Bottom) {
+        } else if (view.alignment == NSE::Types::Bottom) {
             y = availableScreenRect.y() + availableScreenRect.height() - length - 1;
-        } else if (view.alignment == Latte::Types::Center) {
+        } else if (view.alignment == NSE::Types::Center) {
             int topmargin = (availableScreenRect.height()/2) - (length/2);
             y = availableScreenRect.y() + topmargin + 1;
-        } else if (view.alignment == Latte::Types::Justify) {
+        } else if (view.alignment == NSE::Types::Justify) {
             y = availableScreenRect.y() + thick / 2;
         }
     }

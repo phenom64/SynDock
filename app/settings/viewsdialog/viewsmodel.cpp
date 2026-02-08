@@ -16,11 +16,11 @@
 
 #define TEMPIDDISPLAY "#"
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Model {
 
-Views::Views(QObject *parent, Latte::Corona *corona)
+Views::Views(QObject *parent, NSE::Corona *corona)
     : QAbstractTableModel(parent),
       m_corona(corona)
 {
@@ -65,36 +65,36 @@ int Views::rowForId(const QString &id) const
     return m_viewsTable.indexOf(id);
 }
 
-const Latte::Data::View &Views::at(const int &row)
+const NSE::Data::View &Views::at(const int &row)
 {
     return m_viewsTable[row];
 }
 
-const Latte::Data::View Views::currentData(const QString &id)
+const NSE::Data::View Views::currentData(const QString &id)
 {
     if (!m_viewsTable.containsId(id)) {
-        return Latte::Data::View();
+        return NSE::Data::View();
     }
 
     return m_viewsTable[id];
 }
 
 
-const Latte::Data::View Views::originalData(const QString &id)
+const NSE::Data::View Views::originalData(const QString &id)
 {
     if (o_viewsTable.containsId(id)){
         return o_viewsTable[id];
     }
 
-    return Latte::Data::View();
+    return NSE::Data::View();
 }
 
-const Latte::Data::ViewsTable &Views::currentViewsData()
+const NSE::Data::ViewsTable &Views::currentViewsData()
 {
     return m_viewsTable;
 }
 
-const Latte::Data::ViewsTable &Views::originalViewsData()
+const NSE::Data::ViewsTable &Views::originalViewsData()
 {
     return o_viewsTable;
 }
@@ -137,11 +137,11 @@ int Views::sortingFactorForEdge(const Data::View &view) const
 
 int Views::sortingFactorForAlignment(const Data::View &view) const
 {
-    if (view.alignment == Latte::Types::Top || view.alignment == Latte::Types::Left) {
+    if (view.alignment == NSE::Types::Top || view.alignment == NSE::Types::Left) {
         return 1;
-    } else if (view.alignment == Latte::Types::Center) {
+    } else if (view.alignment == NSE::Types::Center) {
         return 2;
-    } else if (view.alignment == Latte::Types::Bottom || view.alignment == Latte::Types::Right) {
+    } else if (view.alignment == NSE::Types::Bottom || view.alignment == NSE::Types::Right) {
         return 3;
     }
 
@@ -188,22 +188,22 @@ void Views::initEdges()
 
     int i=0;
     s_edges << Data::View(QString::number(Plasma::Types::TopEdge), i18nc("top edge", "Top"));
-    s_edges[i].edge = Plasma::Types::TopEdge; s_edges[i].alignment = Latte::Types::Center;
+    s_edges[i].edge = Plasma::Types::TopEdge; s_edges[i].alignment = NSE::Types::Center;
     s_edges[i].setState(Data::View::IsCreated);
 
     i++;
     s_edges << Data::View(QString::number(Plasma::Types::LeftEdge), i18nc("left edge", "Left"));
-    s_edges[i].edge = Plasma::Types::LeftEdge; s_edges[i].alignment = Latte::Types::Center;
+    s_edges[i].edge = Plasma::Types::LeftEdge; s_edges[i].alignment = NSE::Types::Center;
     s_edges[i].setState(Data::View::IsCreated);
 
     i++;
     s_edges << Data::View(QString::number(Plasma::Types::BottomEdge), i18nc("bottom edge", "Bottom"));
-    s_edges[i].edge = Plasma::Types::BottomEdge; s_edges[i].alignment = Latte::Types::Center;
+    s_edges[i].edge = Plasma::Types::BottomEdge; s_edges[i].alignment = NSE::Types::Center;
     s_edges[i].setState(Data::View::IsCreated);
 
     i++;
     s_edges << Data::View(QString::number(Plasma::Types::RightEdge), i18nc("right edge", "Right"));
-    s_edges[i].edge = Plasma::Types::RightEdge; s_edges[i].alignment = Latte::Types::Center;
+    s_edges[i].edge = Plasma::Types::RightEdge; s_edges[i].alignment = NSE::Types::Center;
     s_edges[i].setState(Data::View::IsCreated);
 }
 
@@ -213,17 +213,17 @@ void Views::initAlignments()
     s_verticalAlignments.clear();
 
     int i=0; // Left / Top
-    s_horizontalAlignments << Data::View(QString::number(Latte::Types::Left), i18nc("left alignment", "Left"));
-    s_horizontalAlignments[i].edge = Plasma::Types::BottomEdge; s_horizontalAlignments[i].alignment = Latte::Types::Left;
+    s_horizontalAlignments << Data::View(QString::number(NSE::Types::Left), i18nc("left alignment", "Left"));
+    s_horizontalAlignments[i].edge = Plasma::Types::BottomEdge; s_horizontalAlignments[i].alignment = NSE::Types::Left;
     s_horizontalAlignments[i].setState(Data::View::IsCreated);
 
-    s_verticalAlignments << Data::View(QString::number(Latte::Types::Top), i18nc("top alignment", "Top"));
-    s_verticalAlignments[i].edge = Plasma::Types::LeftEdge; s_verticalAlignments[i].alignment = Latte::Types::Top;
+    s_verticalAlignments << Data::View(QString::number(NSE::Types::Top), i18nc("top alignment", "Top"));
+    s_verticalAlignments[i].edge = Plasma::Types::LeftEdge; s_verticalAlignments[i].alignment = NSE::Types::Top;
     s_verticalAlignments[i].setState(Data::View::IsCreated);
 
     i++; // Center
-    s_horizontalAlignments << Data::View(QString::number(Latte::Types::Center), i18nc("center alignment", "Center"));
-    s_horizontalAlignments[i].edge = Plasma::Types::BottomEdge; s_horizontalAlignments[i].alignment = Latte::Types::Center;
+    s_horizontalAlignments << Data::View(QString::number(NSE::Types::Center), i18nc("center alignment", "Center"));
+    s_horizontalAlignments[i].edge = Plasma::Types::BottomEdge; s_horizontalAlignments[i].alignment = NSE::Types::Center;
     s_horizontalAlignments[i].setState(Data::View::IsCreated);
 
     s_verticalAlignments << s_horizontalAlignments[1];
@@ -231,17 +231,17 @@ void Views::initAlignments()
     s_verticalAlignments[i].setState(Data::View::IsCreated);
 
     i++; // Right / Bottom
-    s_horizontalAlignments << Data::View(QString::number(Latte::Types::Right), i18nc("right alignment", "Right"));
-    s_horizontalAlignments[i].edge = Plasma::Types::BottomEdge; s_horizontalAlignments[i].alignment = Latte::Types::Right;
+    s_horizontalAlignments << Data::View(QString::number(NSE::Types::Right), i18nc("right alignment", "Right"));
+    s_horizontalAlignments[i].edge = Plasma::Types::BottomEdge; s_horizontalAlignments[i].alignment = NSE::Types::Right;
     s_horizontalAlignments[i].setState(Data::View::IsCreated);
 
-    s_verticalAlignments << Data::View(QString::number(Latte::Types::Bottom), i18nc("bottom alignment", "Bottom"));
-    s_verticalAlignments[i].edge = Plasma::Types::LeftEdge; s_verticalAlignments[i].alignment = Latte::Types::Bottom;
+    s_verticalAlignments << Data::View(QString::number(NSE::Types::Bottom), i18nc("bottom alignment", "Bottom"));
+    s_verticalAlignments[i].edge = Plasma::Types::LeftEdge; s_verticalAlignments[i].alignment = NSE::Types::Bottom;
     s_verticalAlignments[i].setState(Data::View::IsCreated);
 
     i++; // Justify
-    s_horizontalAlignments << Data::View(QString::number(Latte::Types::Justify), i18nc("justify alignment", "Justify"));
-    s_horizontalAlignments[i].edge = Plasma::Types::BottomEdge; s_horizontalAlignments[i].alignment = Latte::Types::Justify;
+    s_horizontalAlignments << Data::View(QString::number(NSE::Types::Justify), i18nc("justify alignment", "Justify"));
+    s_horizontalAlignments[i].edge = Plasma::Types::BottomEdge; s_horizontalAlignments[i].alignment = NSE::Types::Justify;
     s_horizontalAlignments[i].setState(Data::View::IsCreated);
 
     s_verticalAlignments << s_horizontalAlignments[3];
@@ -253,31 +253,31 @@ Data::ViewsTable Views::edgesChoices(const Data::View &view) const
 {
     Data::ViewsTable t_edges = s_edges;
 
-    if (view.alignment == Latte::Types::Left) {
+    if (view.alignment == NSE::Types::Left) {
         t_edges[0].alignment = view.alignment;
-        t_edges[1].alignment = Latte::Types::Top;
+        t_edges[1].alignment = NSE::Types::Top;
         t_edges[2].alignment = view.alignment;
-        t_edges[3].alignment = Latte::Types::Top;
-    } else if (view.alignment == Latte::Types::Top) {
-        t_edges[0].alignment = Latte::Types::Left;
+        t_edges[3].alignment = NSE::Types::Top;
+    } else if (view.alignment == NSE::Types::Top) {
+        t_edges[0].alignment = NSE::Types::Left;
         t_edges[1].alignment = view.alignment;
-        t_edges[2].alignment = Latte::Types::Left;
+        t_edges[2].alignment = NSE::Types::Left;
         t_edges[3].alignment = view.alignment;
-    } else if (view.alignment == Latte::Types::Center
-               || view.alignment == Latte::Types::Justify) {
+    } else if (view.alignment == NSE::Types::Center
+               || view.alignment == NSE::Types::Justify) {
         t_edges[0].alignment = view.alignment;
         t_edges[1].alignment = view.alignment;
         t_edges[2].alignment = view.alignment;
         t_edges[3].alignment = view.alignment;
-    } else if (view.alignment == Latte::Types::Right) {
+    } else if (view.alignment == NSE::Types::Right) {
         t_edges[0].alignment = view.alignment;
-        t_edges[1].alignment = Latte::Types::Bottom;
+        t_edges[1].alignment = NSE::Types::Bottom;
         t_edges[2].alignment = view.alignment;
-        t_edges[3].alignment = Latte::Types::Bottom;
-    } else if (view.alignment == Latte::Types::Bottom) {
-        t_edges[0].alignment = Latte::Types::Right;
+        t_edges[3].alignment = NSE::Types::Bottom;
+    } else if (view.alignment == NSE::Types::Bottom) {
+        t_edges[0].alignment = NSE::Types::Right;
         t_edges[1].alignment = view.alignment;
-        t_edges[2].alignment = Latte::Types::Right;
+        t_edges[2].alignment = NSE::Types::Right;
         t_edges[3].alignment = view.alignment;
     }
 
@@ -334,7 +334,7 @@ void Views::resetData()
     setOriginalData(o_viewsTable);
 }
 
-void Views::appendTemporaryView(const Latte::Data::View &view)
+void Views::appendTemporaryView(const NSE::Data::View &view)
 {
     //int newRow = m_layoutsTable.sortedPosForName(layout.name);
 
@@ -416,12 +416,12 @@ void Views::updateActiveStatesBasedOn(const CentralLayout *layout)
     }
 }
 
-Latte::Data::Screen Views::screenData(const QString &viewId) const
+NSE::Data::Screen Views::screenData(const QString &viewId) const
 {
     int row = rowForId(viewId);
 
     if (row < 0) {
-        return Latte::Data::Screen();
+        return NSE::Data::Screen();
     }
 
    // QString primaryid = QString::number(m_corona->screenPool()->primaryScreenId());
@@ -429,26 +429,26 @@ Latte::Data::Screen Views::screenData(const QString &viewId) const
 
     Data::Screen scrData = s_screens[0]; //default
 
-    if (m_viewsTable[row].onPrimary || (m_viewsTable[row].screensGroup == Latte::Types::AllScreensGroup)) {
+    if (m_viewsTable[row].onPrimary || (m_viewsTable[row].screensGroup == NSE::Types::AllScreensGroup)) {
         scrData = s_screens[0]; //primary, allscreens
-    } else if (m_viewsTable[row].screensGroup == Latte::Types::AllSecondaryScreensGroup) {
+    } else if (m_viewsTable[row].screensGroup == NSE::Types::AllSecondaryScreensGroup) {
         scrData = s_screens[2]; //allsecondaryscreens
     } else if (!m_viewsTable[row].onPrimary && s_screens.containsId(explicitid)) {
         scrData = s_screens[explicitid]; //explicit
     }
 
-    if (m_viewsTable[row].screensGroup == Latte::Types::AllScreensGroup) {
+    if (m_viewsTable[row].screensGroup == NSE::Types::AllScreensGroup) {
         scrData.id = QString::number(Data::Screen::ONALLSCREENSID);
-    } else if (m_viewsTable[row].screensGroup == Latte::Types::AllSecondaryScreensGroup) {
+    } else if (m_viewsTable[row].screensGroup == NSE::Types::AllSecondaryScreensGroup) {
         scrData.id = QString::number(Data::Screen::ONALLSECONDARYSCREENSID);
     }
 
     return scrData;
 }
 
-Latte::Data::ViewsTable Views::alteredViews() const
+NSE::Data::ViewsTable Views::alteredViews() const
 {
-    Latte::Data::ViewsTable views;
+    NSE::Data::ViewsTable views;
 
     for(int i=0; i<rowCount(); ++i) {
         QString currentId = m_viewsTable[i].id;
@@ -462,9 +462,9 @@ Latte::Data::ViewsTable Views::alteredViews() const
     return views;
 }
 
-Latte::Data::ViewsTable Views::newViews() const
+NSE::Data::ViewsTable Views::newViews() const
 {
-    Latte::Data::ViewsTable views;
+    NSE::Data::ViewsTable views;
 
     for(int i=0; i<rowCount(); ++i) {
         QString currentId = m_viewsTable[i].id;
@@ -515,7 +515,7 @@ void Views::populateScreens()
     }
 }
 
-void Views::updateCurrentView(QString currentViewId, Latte::Data::View &view)
+void Views::updateCurrentView(QString currentViewId, NSE::Data::View &view)
 {
     if (!m_viewsTable.containsId(currentViewId)) {
         return;
@@ -537,7 +537,7 @@ void Views::updateCurrentView(QString currentViewId, Latte::Data::View &view)
     emit dataChanged(this->index(currentrow, IDCOLUMN), this->index(currentrow, SUBCONTAINMENTSCOLUMN), roles);
 }
 
-void Views::setOriginalView(QString currentViewId, Latte::Data::View &view)
+void Views::setOriginalView(QString currentViewId, NSE::Data::View &view)
 {
     if (!m_viewsTable.containsId(currentViewId)) {
         return;
@@ -557,7 +557,7 @@ void Views::setOriginalView(QString currentViewId, Latte::Data::View &view)
     emit dataChanged(this->index(currentrow, IDCOLUMN), this->index(currentrow, SUBCONTAINMENTSCOLUMN), roles);
 }
 
-void Views::setOriginalData(Latte::Data::ViewsTable &data)
+void Views::setOriginalData(NSE::Data::ViewsTable &data)
 {
     clear();
 
@@ -678,22 +678,22 @@ bool Views::setData(const QModelIndex &index, const QVariant &value, int role)
     case SCREENCOLUMN:
         if (role == Qt::UserRole) {
             int screen = value.toString().toInt();
-            bool onprimary = (screen == Latte::Data::Screen::ONPRIMARYID);
-            bool onallscreens = (screen == Latte::Data::Screen::ONALLSCREENSID);
-            bool onallsecscreens = (screen == Latte::Data::Screen::ONALLSECONDARYSCREENSID);
+            bool onprimary = (screen == NSE::Data::Screen::ONPRIMARYID);
+            bool onallscreens = (screen == NSE::Data::Screen::ONALLSCREENSID);
+            bool onallsecscreens = (screen == NSE::Data::Screen::ONALLSECONDARYSCREENSID);
 
             if (onprimary) {
                 m_viewsTable[row].onPrimary = true;
-                m_viewsTable[row].screensGroup = Latte::Types::SingleScreenGroup;
+                m_viewsTable[row].screensGroup = NSE::Types::SingleScreenGroup;
             } else if (onallscreens) {
                 m_viewsTable[row].onPrimary = true;
-                m_viewsTable[row].screensGroup = Latte::Types::AllScreensGroup;
+                m_viewsTable[row].screensGroup = NSE::Types::AllScreensGroup;
             } else if (onallsecscreens) {
                 m_viewsTable[row].onPrimary = false;
-                m_viewsTable[row].screensGroup = Latte::Types::AllSecondaryScreensGroup;
+                m_viewsTable[row].screensGroup = NSE::Types::AllSecondaryScreensGroup;
             } else {
                 m_viewsTable[row].onPrimary = false;
-                m_viewsTable[row].screensGroup = Latte::Types::SingleScreenGroup;
+                m_viewsTable[row].screensGroup = NSE::Types::SingleScreenGroup;
                 m_viewsTable[row].screen = screen;
             }
 
@@ -724,14 +724,14 @@ bool Views::setData(const QModelIndex &index, const QVariant &value, int role)
             bool currentFactor = isVertical(edge);
 
             if (previousFactor != currentFactor) {
-                if (m_viewsTable[row].alignment == Latte::Types::Left) {
-                    m_viewsTable[row].alignment = Latte::Types::Top;
-                } else if (m_viewsTable[row].alignment == Latte::Types::Right) {
-                    m_viewsTable[row].alignment = Latte::Types::Bottom;
-                } else if (m_viewsTable[row].alignment == Latte::Types::Top) {
-                    m_viewsTable[row].alignment = Latte::Types::Left;
-                } else if (m_viewsTable[row].alignment == Latte::Types::Bottom) {
-                    m_viewsTable[row].alignment = Latte::Types::Right;
+                if (m_viewsTable[row].alignment == NSE::Types::Left) {
+                    m_viewsTable[row].alignment = NSE::Types::Top;
+                } else if (m_viewsTable[row].alignment == NSE::Types::Right) {
+                    m_viewsTable[row].alignment = NSE::Types::Bottom;
+                } else if (m_viewsTable[row].alignment == NSE::Types::Top) {
+                    m_viewsTable[row].alignment = NSE::Types::Left;
+                } else if (m_viewsTable[row].alignment == NSE::Types::Bottom) {
+                    m_viewsTable[row].alignment = NSE::Types::Right;
                 }
 
                 emit dataChanged(this->index(row, NAMECOLUMN), this->index(row, ALIGNMENTCOLUMN), roles);
@@ -748,7 +748,7 @@ bool Views::setData(const QModelIndex &index, const QVariant &value, int role)
                 return false;
             }
 
-            m_viewsTable[row].alignment = static_cast<Latte::Types::Alignment>(alignment);
+            m_viewsTable[row].alignment = static_cast<NSE::Types::Alignment>(alignment);
             emit dataChanged(this->index(row, NAMECOLUMN), this->index(row, ALIGNMENTCOLUMN), roles);
             return true;
         }
@@ -780,7 +780,7 @@ QVariant Views::data(const QModelIndex &index, int role) const
         if (column == SCREENCOLUMN) {
             QVariant screensVariant;
 
-            Latte::Data::ScreensTable currentScreens = s_screens;
+            NSE::Data::ScreensTable currentScreens = s_screens;
 
             if (!m_viewsTable[row].onPrimary && !currentScreens.containsId(QString::number(m_viewsTable[row].screen))) {
                 Data::Screen explicitScr(QString::number(m_viewsTable[row].screen),
@@ -788,19 +788,19 @@ QVariant Views::data(const QModelIndex &index, int role) const
                 currentScreens.insertBasedOnId(explicitScr);
             }
 
-            screensVariant.setValue<Latte::Data::ScreensTable>(currentScreens);
+            screensVariant.setValue<NSE::Data::ScreensTable>(currentScreens);
             return screensVariant;
         } else if (column == EDGECOLUMN) {
             QVariant edgesVariant;
-            edgesVariant.setValue<Latte::Data::ViewsTable>(edgesChoices(m_viewsTable[row]));
+            edgesVariant.setValue<NSE::Data::ViewsTable>(edgesChoices(m_viewsTable[row]));
             return edgesVariant;
         } else if (column == ALIGNMENTCOLUMN) {
             QVariant alignmentsVariant;
 
             if (isVertical(m_viewsTable[row].edge)) {
-                alignmentsVariant.setValue<Latte::Data::ViewsTable>(verticalAlignmentChoices(m_viewsTable[row]));
+                alignmentsVariant.setValue<NSE::Data::ViewsTable>(verticalAlignmentChoices(m_viewsTable[row]));
             } else {
-                alignmentsVariant.setValue<Latte::Data::ViewsTable>(horizontalAlignmentChoices(m_viewsTable[row]));
+                alignmentsVariant.setValue<NSE::Data::ViewsTable>(horizontalAlignmentChoices(m_viewsTable[row]));
             }
 
             return alignmentsVariant;
@@ -809,12 +809,12 @@ QVariant Views::data(const QModelIndex &index, int role) const
         return (isNewView || (m_viewsTable[row] != o_viewsTable[origviewid]));
     } else if (role == SCREENROLE) {
         QVariant scrVariant;
-        Latte::Data::Screen scrdata = screenData(m_viewsTable[row].id);
-        scrVariant.setValue<Latte::Data::Screen>(scrdata);
+        NSE::Data::Screen scrdata = screenData(m_viewsTable[row].id);
+        scrVariant.setValue<NSE::Data::Screen>(scrdata);
         return scrVariant;
     } else if (role == VIEWROLE) {
         QVariant viewVariant;
-        viewVariant.setValue<Latte::Data::View>(m_viewsTable[row]);
+        viewVariant.setValue<NSE::Data::View>(m_viewsTable[row]);
         return viewVariant;
     } else if (role == ISMOVEORIGINROLE) {
         return m_viewsTable[row].isMoveOrigin;
@@ -863,11 +863,11 @@ QVariant Views::data(const QModelIndex &index, int role) const
         break;
     case SCREENCOLUMN:
         if (role == Qt::DisplayRole){
-            if (m_viewsTable[row].screensGroup == Latte::Types::SingleScreenGroup &&  m_viewsTable[row].onPrimary) {
+            if (m_viewsTable[row].screensGroup == NSE::Types::SingleScreenGroup &&  m_viewsTable[row].onPrimary) {
                 return i18nc("primary screen", "Primary");
-            } else if (m_viewsTable[row].screensGroup == Latte::Types::AllScreensGroup) {
+            } else if (m_viewsTable[row].screensGroup == NSE::Types::AllScreensGroup) {
                 return i18n("All Screens");
-            } else if (m_viewsTable[row].screensGroup == Latte::Types::AllSecondaryScreensGroup) {
+            } else if (m_viewsTable[row].screensGroup == NSE::Types::AllSecondaryScreensGroup) {
                 return i18n("Secondary Screens");
             } else {
                 QString scrId = QString::number(m_viewsTable[row].screen);
@@ -878,11 +878,11 @@ QVariant Views::data(const QModelIndex &index, int role) const
                 }
             }
         } else if (role == Qt::UserRole) {
-            if (m_viewsTable[row].screensGroup == Latte::Types::SingleScreenGroup &&  m_viewsTable[row].onPrimary) {
+            if (m_viewsTable[row].screensGroup == NSE::Types::SingleScreenGroup &&  m_viewsTable[row].onPrimary) {
                 return QString::number(Data::Screen::ONPRIMARYID);
-            } else if (m_viewsTable[row].screensGroup == Latte::Types::AllScreensGroup) {
+            } else if (m_viewsTable[row].screensGroup == NSE::Types::AllScreensGroup) {
                 return QString::number(Data::Screen::ONALLSCREENSID);
-            } else if (m_viewsTable[row].screensGroup == Latte::Types::AllSecondaryScreensGroup) {
+            } else if (m_viewsTable[row].screensGroup == NSE::Types::AllSecondaryScreensGroup) {
                 return QString::number(Data::Screen::ONALLSECONDARYSCREENSID);
             } else {
                 return QString::number(m_viewsTable[row].screen);
@@ -930,17 +930,17 @@ QVariant Views::data(const QModelIndex &index, int role) const
         break;
     case ALIGNMENTCOLUMN:
         if (role == Qt::DisplayRole){
-            if (m_viewsTable[row].alignment == Latte::Types::Center) {
+            if (m_viewsTable[row].alignment == NSE::Types::Center) {
                 return i18nc("center alignment", "Center");
-            } else if (m_viewsTable[row].alignment == Latte::Types::Left) {
+            } else if (m_viewsTable[row].alignment == NSE::Types::Left) {
                 return i18nc("left alignment", "Left");
-            } else if (m_viewsTable[row].alignment == Latte::Types::Right) {
+            } else if (m_viewsTable[row].alignment == NSE::Types::Right) {
                 return i18nc("right alignment", "Right");
-            } else if (m_viewsTable[row].alignment == Latte::Types::Top) {
+            } else if (m_viewsTable[row].alignment == NSE::Types::Top) {
                 return i18nc("top alignment", "Top");
-            } else if (m_viewsTable[row].alignment == Latte::Types::Bottom) {
+            } else if (m_viewsTable[row].alignment == NSE::Types::Bottom) {
                 return i18nc("bottom alignment", "Bottom");
-            } else if (m_viewsTable[row].alignment == Latte::Types::Justify) {
+            } else if (m_viewsTable[row].alignment == NSE::Types::Justify) {
                 return i18nc("justify alignment", "Justify");
             }
 

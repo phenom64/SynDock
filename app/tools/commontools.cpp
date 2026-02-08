@@ -13,7 +13,7 @@
 #include <QStringList>
 #include <QtMath>
 
-namespace Latte {
+namespace NSE {
 
 float colorBrightness(QColor color)
 {

@@ -3,16 +3,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.plasmoid
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.syndock.core 0.2 as LatteCore
 
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.syndock.private.containment 0.1 as LatteContainment
 
-import org.kde.latte.abilities.items 0.1 as AbilityItem
+import org.kde.syndock.abilities.items 0.1 as AbilityItem
 
 import "loaders" as Loaders
 
@@ -126,9 +126,9 @@ Loader {
             if (angle>10) {
                 //! upwards
                 if (root.scrollAction === LatteContainment.Types.ScrollDesktops) {
-                    latteView.windowsTracker.switchToPreviousVirtualDesktop();
+                    dockView.windowsTracker.switchToPreviousVirtualDesktop();
                 } else if (root.scrollAction === LatteContainment.Types.ScrollActivities) {
-                    latteView.windowsTracker.switchToPreviousActivity();
+                    dockView.windowsTracker.switchToPreviousActivity();
                 } else if (root.scrollAction === LatteContainment.Types.ScrollToggleMinimized) {
                     if (!ctrlPressed) {
                         tasksLoader.item.activateNextPrevTask(true);
@@ -141,9 +141,9 @@ Loader {
             } else if (angle<-10) {
                 //! downwards
                 if (root.scrollAction === LatteContainment.Types.ScrollDesktops) {
-                    latteView.windowsTracker.switchToNextVirtualDesktop();
+                    dockView.windowsTracker.switchToNextVirtualDesktop();
                 } else if (root.scrollAction === LatteContainment.Types.ScrollActivities) {
-                    latteView.windowsTracker.switchToNextActivity();
+                    dockView.windowsTracker.switchToNextActivity();
                 } else if (root.scrollAction === LatteContainment.Types.ScrollToggleMinimized) {
                     if (!ctrlPressed) {
                         if (selectedWindowsTracker.lastActiveWindow.isValid

@@ -14,7 +14,7 @@
 #include <QObject>
 #include <QRect>
 
-namespace Latte {
+namespace NSE {
 class View;
 namespace WindowSystem {
 class AbstractWindowInterface;
@@ -25,7 +25,7 @@ class Windows;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 namespace Tracker {
 
@@ -114,7 +114,7 @@ public slots:
 
     Q_INVOKABLE bool canBeDragged();
 
-    void requestMove(Latte::View *fromView, int localX, int localY);
+    void requestMove(NSE::View *fromView, int localX, int localY);
 
     //! Debug
     void printHistory();

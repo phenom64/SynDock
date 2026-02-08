@@ -13,7 +13,7 @@
 // KDE
 #include <KLocalizedString>
 
-namespace Latte {
+namespace NSE {
 OriginalView::OriginalView(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
     : View(corona, targetScreen, byPassX11WM)
 {
@@ -38,7 +38,7 @@ OriginalView::~OriginalView()
 
 bool OriginalView::isSingle() const
 {
-    return m_screensGroup == Latte::Types::SingleScreenGroup;
+    return m_screensGroup == NSE::Types::SingleScreenGroup;
 }
 
 bool OriginalView::isOriginal() const
@@ -56,19 +56,19 @@ int OriginalView::clonesCount() const
     return m_clones.count();
 }
 
-int OriginalView::expectedScreenIdFromScreenGroup(const Latte::Types::ScreensGroup &nextScreensGroup) const
+int OriginalView::expectedScreenIdFromScreenGroup(const NSE::Types::ScreensGroup &nextScreensGroup) const
 {
     Data::View view = data();
     view.screensGroup = nextScreensGroup;
-    return Latte::Layouts::Storage::self()->expectedViewScreenId(m_corona, view);
+    return NSE::Layouts::Storage::self()->expectedViewScreenId(m_corona, view);
 }
 
-Latte::Types::ScreensGroup OriginalView::screensGroup() const
+NSE::Types::ScreensGroup OriginalView::screensGroup() const
 {
     return m_screensGroup;
 }
 
-void OriginalView::setScreensGroup(const Latte::Types::ScreensGroup &group)
+void OriginalView::setScreensGroup(const NSE::Types::ScreensGroup &group)
 {
     if (m_screensGroup == group) {
         return;
@@ -78,7 +78,7 @@ void OriginalView::setScreensGroup(const Latte::Types::ScreensGroup &group)
     emit screensGroupChanged();
 }
 
-void OriginalView::addClone(Latte::ClonedView *view)
+void OriginalView::addClone(NSE::ClonedView *view)
 {
     if (m_clones.contains(view)) {
         return;
@@ -88,7 +88,7 @@ void OriginalView::addClone(Latte::ClonedView *view)
     m_waitingCreation.removeAll(view->positioner()->currentScreenId());
 }
 
-void OriginalView::removeClone(Latte::ClonedView *view)
+void OriginalView::removeClone(NSE::ClonedView *view)
 {
     if (!m_clones.contains(view)) {
         return;
@@ -125,7 +125,7 @@ void OriginalView::createClone(int screenId)
     Data::View nextdata = templateviews[0];
     nextdata.name = i18nc("clone of original dock panel, name","Clone of %1", name());
     nextdata.onPrimary = false;
-    nextdata.screensGroup = Latte::Types::SingleScreenGroup;
+    nextdata.screensGroup = NSE::Types::SingleScreenGroup;
     nextdata.isClonedFrom = containment()->id();
     nextdata.screen = screenId;
 
@@ -161,7 +161,7 @@ void OriginalView::setNextLocationForClones(const QString layoutName, int edge, 
     }
 
     for (const auto clone : m_clones) {
-        clone->positioner()->setNextLocation(layoutName, Latte::Types::SingleScreenGroup, "", edge, alignment);
+        clone->positioner()->setNextLocation(layoutName, NSE::Types::SingleScreenGroup, "", edge, alignment);
     }
 }
 
@@ -220,12 +220,12 @@ void OriginalView::syncClonesToScreens()
         }
     }
 
-    if (m_screensGroup == Latte::Types::AllSecondaryScreensGroup) {
+    if (m_screensGroup == NSE::Types::AllSecondaryScreensGroup) {
         //! occupied screen from original view in "allsecondaryscreensgroup" must be ignored
         secondaryscreens.removeAll(expectedScreenIdFromScreenGroup(m_screensGroup));
     }
 
-    QList<Latte::ClonedView *> removable;
+    QList<NSE::ClonedView *> removable;
 
     for (const auto clone : m_clones) {
         if (secondaryscreens.contains(clone->positioner()->currentScreenId())) {
@@ -272,7 +272,7 @@ void OriginalView::restoreConfig()
     }
 
     auto config = this->containment()->config();
-    m_screensGroup = static_cast<Latte::Types::ScreensGroup>(config.readEntry("screensGroup", (int)Latte::Types::SingleScreenGroup));
+    m_screensGroup = static_cast<NSE::Types::ScreensGroup>(config.readEntry("screensGroup", (int)NSE::Types::SingleScreenGroup));
 
     //! Send changed signals at the end in order to be sure that saveConfig
     //! wont rewrite default/invalid values

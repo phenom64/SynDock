@@ -22,12 +22,12 @@ class PlasmaShellSurface;
 }
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 //! What is the importance of this class?
@@ -41,7 +41,7 @@ namespace ViewPart {
 //! that aren't relevant any more.
 //!
 //! In order to workaround the above behaviour Latte is using a
-//! fake window to communicate with KWin and the MAIN Latte::View window
+//! fake window to communicate with KWin and the MAIN NSE::View window
 //! continues to use only mask technique to hide
 //!
 //! KDE BUGS: https://bugs.kde.org/show_bug.cgi?id=382219
@@ -52,7 +52,7 @@ class ScreenEdgeGhostWindow : public SubWindow
     Q_OBJECT
 
 public:
-    ScreenEdgeGhostWindow(Latte::View *view);
+    ScreenEdgeGhostWindow(NSE::View *view);
     ~ScreenEdgeGhostWindow() override;
 
     bool containsMouse() const;

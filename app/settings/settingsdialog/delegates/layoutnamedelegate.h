@@ -9,7 +9,7 @@
 // Qt
 #include <QStyledItemDelegate>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Layout {
 namespace Delegate {

@@ -33,12 +33,12 @@ class PlasmaShellSurface;
 }
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 class WidgetExplorerView : public SubConfigView
@@ -47,7 +47,7 @@ class WidgetExplorerView : public SubConfigView
     Q_PROPERTY(bool hideOnWindowDeactivate READ hideOnWindowDeactivate WRITE setHideOnWindowDeactivate NOTIFY hideOnWindowDeactivateChanged)
 
 public:
-    WidgetExplorerView(Latte::View *view);
+    WidgetExplorerView(NSE::View *view);
 
     bool hideOnWindowDeactivate() const;
     void setHideOnWindowDeactivate(bool hide);
@@ -69,7 +69,7 @@ protected:
     void focusOutEvent(QFocusEvent *ev) override;
 
     void init() override;
-    void initParentView(Latte::View *view) override;
+    void initParentView(NSE::View *view) override;
     void updateEnabledBorders() override;
 
     Qt::WindowFlags wFlags() const override;

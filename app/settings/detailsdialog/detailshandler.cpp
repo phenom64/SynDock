@@ -27,7 +27,7 @@
 // KDE
 #include <KIconDialog>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 
@@ -64,8 +64,8 @@ void DetailsHandler::init()
 
     //! Background Pattern
     m_backButtonsGroup = new QButtonGroup(this);
-    m_backButtonsGroup->addButton(m_ui->colorRadioBtn, Latte::Layout::ColorBackgroundStyle);
-    m_backButtonsGroup->addButton(m_ui->backRadioBtn, Latte::Layout::PatternBackgroundStyle);
+    m_backButtonsGroup->addButton(m_ui->colorRadioBtn, NSE::Layout::ColorBackgroundStyle);
+    m_backButtonsGroup->addButton(m_ui->backRadioBtn, NSE::Layout::PatternBackgroundStyle);
     m_backButtonsGroup->setExclusive(true);
 
     m_ui->colorsCmb->setItemDelegate(new Details::Delegate::ColorCmbBoxItem(this));
@@ -77,7 +77,7 @@ void DetailsHandler::init()
             [ = ](int id, bool checked) {
 
         if (checked) {
-            setBackgroundStyle(static_cast<Latte::Layout::BackgroundStyle>(id));
+            setBackgroundStyle(static_cast<NSE::Layout::BackgroundStyle>(id));
         }
     });
 
@@ -117,10 +117,10 @@ void DetailsHandler::init()
 
     //! pattern widgets
     connect(m_ui->backPatternWidget, &Widget::PatternWidget::mouseReleased, this, [&]() {
-        setBackgroundStyle(Latte::Layout::PatternBackgroundStyle);
+        setBackgroundStyle(NSE::Layout::PatternBackgroundStyle);
     });
     connect(m_ui->colorPatternWidget, &Widget::PatternWidget::mouseReleased, this, [&]() {
-        setBackgroundStyle(Latte::Layout::ColorBackgroundStyle);
+        setBackgroundStyle(NSE::Layout::ColorBackgroundStyle);
     });
 
 
@@ -135,7 +135,7 @@ void DetailsHandler::reload()
     o_data = m_dialog->layoutsController()->selectedLayoutCurrentData();
     c_data = o_data;
 
-    Latte::Data::LayoutIcon icon = m_dialog->layoutsController()->selectedLayoutIcon();
+    NSE::Data::LayoutIcon icon = m_dialog->layoutsController()->selectedLayoutIcon();
 
     m_ui->layoutsCmb->setCurrentText(o_data.name);
     m_ui->layoutsCmb->setLayoutIcon(icon);
@@ -143,7 +143,7 @@ void DetailsHandler::reload()
     loadLayout(c_data);
 }
 
-void DetailsHandler::loadLayout(const Latte::Data::Layout &data)
+void DetailsHandler::loadLayout(const NSE::Data::Layout &data)
 {
     if (data.icon.isEmpty()) {
         m_ui->iconBtn->setIcon(QIcon::fromTheme("add"));
@@ -153,7 +153,7 @@ void DetailsHandler::loadLayout(const Latte::Data::Layout &data)
         m_ui->iconClearBtn->setVisible(true);
     }
 
-    if (data.backgroundStyle == Latte::Layout::ColorBackgroundStyle) {
+    if (data.backgroundStyle == NSE::Layout::ColorBackgroundStyle) {
         m_ui->colorRadioBtn->setChecked(true);
         m_ui->backRadioBtn->setChecked(false);
 
@@ -176,18 +176,18 @@ void DetailsHandler::loadLayout(const Latte::Data::Layout &data)
     updateCustomSchemeCmb(schind);
 
     m_ui->colorPatternWidget->setBackground(m_colorsModel->colorPath(data.color));
-    m_ui->colorPatternWidget->setTextColor(Latte::Layout::AbstractLayout::defaultTextColor(data.color));
+    m_ui->colorPatternWidget->setTextColor(NSE::Layout::AbstractLayout::defaultTextColor(data.color));
 
     m_ui->colorsCmb->setCurrentIndex(m_colorsModel->row(data.color));
 
     if (data.background.isEmpty()) {
-        m_ui->backPatternWidget->setBackground(m_colorsModel->colorPath(Latte::Layout::AbstractLayout::defaultCustomBackground()));
+        m_ui->backPatternWidget->setBackground(m_colorsModel->colorPath(NSE::Layout::AbstractLayout::defaultCustomBackground()));
     } else {
         m_ui->backPatternWidget->setBackground(data.background);
     }
 
     if (data.background.isEmpty() && data.textColor.isEmpty()) {
-        m_ui->backPatternWidget->setTextColor(Latte::Layout::AbstractLayout::defaultCustomTextColor());
+        m_ui->backPatternWidget->setTextColor(NSE::Layout::AbstractLayout::defaultCustomTextColor());
     } else {
         m_ui->backPatternWidget->setTextColor(data.textColor);
     }
@@ -206,7 +206,7 @@ void DetailsHandler::loadLayout(const Latte::Data::Layout &data)
     updateWindowTitle();
 }
 
-Latte::Data::Layout DetailsHandler::currentData() const
+NSE::Data::Layout DetailsHandler::currentData() const
 {
     return c_data;
 }
@@ -376,7 +376,7 @@ void DetailsHandler::setHasDisabledBorders(bool disabled)
     emit dataChanged();
 }
 
-void DetailsHandler::setBackgroundStyle(const Latte::Layout::BackgroundStyle &style)
+void DetailsHandler::setBackgroundStyle(const NSE::Layout::BackgroundStyle &style)
 {
     if (c_data.backgroundStyle == style) {
         return;

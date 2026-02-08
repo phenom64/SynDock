@@ -11,7 +11,7 @@
 #include <QRect>
 #include <QString>
 
-namespace Latte {
+namespace NSE {
 
 float colorBrightness(QColor color);
 float colorBrightness(QRgb rgb);

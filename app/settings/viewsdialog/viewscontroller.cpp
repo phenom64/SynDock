@@ -6,7 +6,7 @@
 #include "viewscontroller.h"
 
 // local
-#include <config-latte.h>
+#include <config-syndock.h>
 #include "ui_viewsdialog.h"
 #include "viewsdialog.h"
 #include "viewshandler.h"
@@ -34,7 +34,7 @@
 #include <KIO/OpenUrlJob>
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Controller {
 
@@ -186,7 +186,7 @@ const Data::ViewsTable Views::selectedViewsCurrentData() const
     return selectedviews;
 }
 
-const Latte::Data::View Views::appendViewFromViewTemplate(const Data::View &view)
+const NSE::Data::View Views::appendViewFromViewTemplate(const Data::View &view)
 {
     Data::View newview = view;
     newview.name = uniqueViewName(view.name);
@@ -194,7 +194,7 @@ const Latte::Data::View Views::appendViewFromViewTemplate(const Data::View &view
     return newview;
 }
 
-const Latte::Data::View Views::currentData(const QString &id)
+const NSE::Data::View Views::currentData(const QString &id)
 {
     return m_model->currentData(id);
 }
@@ -207,14 +207,14 @@ Data::ViewsTable Views::selectedViewsForClipboard()
     }
 
     Data::ViewsTable selectedviews = selectedViewsCurrentData();
-    Latte::Data::Layout currentlayout = m_handler->currentData();
+    NSE::Data::Layout currentlayout = m_handler->currentData();
 
     for(int i=0; i<selectedviews.rowCount(); ++i) {
         if (selectedviews[i].state() == Data::View::IsInvalid) {
             continue;
         }
 
-        Latte::Data::View copiedview = selectedviews[i];
+        NSE::Data::View copiedview = selectedviews[i];
 
         if (selectedviews[i].state() == Data::View::IsCreated) {
             QString storedviewpath = m_handler->layoutsController()->templatesKeeper()->storedView(currentlayout.id, selectedviews[i].id);
@@ -296,7 +296,7 @@ void Views::cutSelectedViews()
 void Views::pasteSelectedViews()
 {
     Data::ViewsTable clipboardviews = m_handler->layoutsController()->templatesKeeper()->clipboardContents();
-    Latte::Data::Layout currentlayout = m_handler->currentData();
+    NSE::Data::Layout currentlayout = m_handler->currentData();
 
     bool hascurrentlayoutcuttedviews{false};
 
@@ -330,18 +330,18 @@ void Views::duplicateSelectedViews()
     }
 
     Data::ViewsTable selectedviews = selectedViewsCurrentData();
-    Latte::Data::Layout currentlayout = m_handler->currentData();
+    NSE::Data::Layout currentlayout = m_handler->currentData();
 
     for(int i=0; i<selectedviews.rowCount(); ++i) {
         if (selectedviews[i].state() == Data::View::IsCreated) {
             QString storedviewpath = m_handler->layoutsController()->templatesKeeper()->storedView(currentlayout.id, selectedviews[i].id);
-            Latte::Data::View duplicatedview = selectedviews[i];
+            NSE::Data::View duplicatedview = selectedviews[i];
             duplicatedview.setState(Data::View::OriginFromLayout, storedviewpath, currentlayout.id, selectedviews[i].id);
             duplicatedview.isActive = false;
             appendViewFromViewTemplate(duplicatedview);
         } else if (selectedviews[i].state() == Data::View::OriginFromViewTemplate
                    || selectedviews[i].state() == Data::View::OriginFromLayout) {
-            Latte::Data::View duplicatedview = selectedviews[i];
+            NSE::Data::View duplicatedview = selectedviews[i];
             duplicatedview.isActive = false;
             appendViewFromViewTemplate(duplicatedview);
         }
@@ -398,7 +398,7 @@ void Views::onCurrentLayoutChanged()
         QObject::disconnect(var);
     }
 
-    Latte::CentralLayout *currentlayout = m_handler->layoutsController()->centralLayout(currentlayoutdata.id);
+    NSE::CentralLayout *currentlayout = m_handler->layoutsController()->centralLayout(currentlayoutdata.id);
 
     if (currentlayout && currentlayout->isActive()) {
         m_currentLayoutConnections << connect(currentlayout, &Layout::GenericLayout::viewsCountChanged, this, [&, currentlayout](){
@@ -425,9 +425,9 @@ int Views::viewsForRemovalCount() const
         return 0;
     }
 
-    Latte::Data::ViewsTable originalViews = m_model->originalViewsData();
-    Latte::Data::ViewsTable currentViews = m_model->currentViewsData();
-    Latte::Data::ViewsTable removedViews = originalViews.subtracted(currentViews);
+    NSE::Data::ViewsTable originalViews = m_model->originalViewsData();
+    NSE::Data::ViewsTable currentViews = m_model->currentViewsData();
+    NSE::Data::ViewsTable removedViews = originalViews.subtracted(currentViews);
 
     return removedViews.rowCount();
 }
@@ -450,7 +450,7 @@ CentralLayout *Views::originLayout(const Data::View &view)
     QString origincurrentid = view.originLayout();
     Data::Layout originlayoutdata = m_handler->layoutsController()->originalData(origincurrentid);
 
-    Latte::CentralLayout *originactive = m_handler->layoutsController()->isLayoutOriginal(origincurrentid) ?
+    NSE::CentralLayout *originactive = m_handler->layoutsController()->isLayoutOriginal(origincurrentid) ?
                 m_handler->corona()->layoutsManager()->synchronizer()->centralLayout(originlayoutdata.name) : nullptr;
 
     return originactive;
@@ -486,7 +486,7 @@ void Views::updateDoubledMoveDestinationRows() {
     }
 }
 
-void Views::messagesForErrorsWarnings(const Latte::CentralLayout *centralLayout, const bool &showNoErrorsMessage)
+void Views::messagesForErrorsWarnings(const NSE::CentralLayout *centralLayout, const bool &showNoErrorsMessage)
 {
     if (!centralLayout) {
         return;
@@ -835,7 +835,7 @@ void Views::messageForWarningOrphanedSubContainments(const Data::Warning &warnin
     QList<QAction *> extraactions;
     extraactions << repairlayoutaction;
 
-    Latte::Data::Layout currentlayout = m_handler->currentData();
+    NSE::Data::Layout currentlayout = m_handler->currentData();
 
     connect(repairlayoutaction, &QAction::triggered, this, [&, currentlayout, orphaned]() {
         auto centrallayout = m_handler->layoutsController()->centralLayout(currentlayout.id);
@@ -858,15 +858,15 @@ void Views::save()
     //! when this function is called we consider that removal has already been approved
     updateDoubledMoveDestinationRows();
 
-    Latte::Data::Layout originallayout = m_handler->originalData();
-    Latte::Data::Layout currentlayout = m_handler->currentData();
-    Latte::CentralLayout *central = m_handler->layoutsController()->centralLayout(currentlayout.id);
+    NSE::Data::Layout originallayout = m_handler->originalData();
+    NSE::Data::Layout currentlayout = m_handler->currentData();
+    NSE::CentralLayout *central = m_handler->layoutsController()->centralLayout(currentlayout.id);
 
     //! views in model
-    Latte::Data::ViewsTable originalViews = m_model->originalViewsData();
-    Latte::Data::ViewsTable currentViews = m_model->currentViewsData();
-    Latte::Data::ViewsTable alteredViews = m_model->alteredViews();
-    Latte::Data::ViewsTable newViews = m_model->newViews();
+    NSE::Data::ViewsTable originalViews = m_model->originalViewsData();
+    NSE::Data::ViewsTable currentViews = m_model->currentViewsData();
+    NSE::Data::ViewsTable alteredViews = m_model->alteredViews();
+    NSE::Data::ViewsTable newViews = m_model->newViews();
 
     QHash<QString, Data::View> newviewsresponses;
     QHash<QString, Data::View> cuttedpastedviews;
@@ -911,7 +911,7 @@ void Views::save()
     }
 
     //! remove deprecated views that have been removed from user
-    Latte::Data::ViewsTable removedViews = originalViews.subtracted(currentViews);
+    NSE::Data::ViewsTable removedViews = originalViews.subtracted(currentViews);
 
     for (int i=0; i<removedViews.rowCount(); ++i) {
         qDebug() << "org.kde.latte ViewsDialog::save() real removing view :: " << removedViews[i];
@@ -934,9 +934,9 @@ void Views::save()
         //! Be Careful: Remove deprecated views from Cut->Paste Action
         QString origincurrentid = cuttedpastedviews[vid].originLayout();
         Data::Layout originlayout = m_handler->layoutsController()->originalData(origincurrentid);
-        Latte::CentralLayout *origin = m_handler->layoutsController()->centralLayout(originlayout.id);
+        NSE::CentralLayout *origin = m_handler->layoutsController()->centralLayout(originlayout.id);
 
-        Data::ViewsTable originviews = Latte::Layouts::Storage::self()->views(origin);
+        Data::ViewsTable originviews = NSE::Layouts::Storage::self()->views(origin);
 
         if (originviews.containsId(vid_str)) {
             origin->removeView(originviews[vid_str]);

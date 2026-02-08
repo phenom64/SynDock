@@ -17,7 +17,7 @@
 
 class PrimaryOutputWatcher;
 
-namespace Latte {
+namespace NSE {
 namespace PlasmaExtended {
 
 class ScreenPool: public QObject

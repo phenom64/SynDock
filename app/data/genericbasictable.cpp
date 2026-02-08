@@ -5,7 +5,7 @@
 
 #include "genericbasictable.h"
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 GenericBasicTable::GenericBasicTable()

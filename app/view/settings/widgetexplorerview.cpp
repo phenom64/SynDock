@@ -23,10 +23,10 @@
 // Plasma
 #include <Plasma/Package>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-WidgetExplorerView::WidgetExplorerView(Latte::View *view)
+WidgetExplorerView::WidgetExplorerView(NSE::View *view)
     : SubConfigView(view, QString("#widgetexplorerview#"), true)
 {
     setResizeMode(QQuickView::SizeRootObjectToView);
@@ -84,7 +84,7 @@ QRect WidgetExplorerView::geometryWhenVisible() const
     return m_geometryWhenVisible;
 }
 
-void WidgetExplorerView::initParentView(Latte::View *view)
+void WidgetExplorerView::initParentView(NSE::View *view)
 {
     SubConfigView::initParentView(view);
 
@@ -99,11 +99,11 @@ QRect WidgetExplorerView::availableScreenGeometry() const
 {
     int currentScrId = m_latteView->positioner()->currentScreenId();
 
-    QList<Latte::Types::Visibility> ignoreModes{Latte::Types::SidebarOnDemand,Latte::Types::SidebarAutoHide};
+    QList<NSE::Types::Visibility> ignoreModes{NSE::Types::SidebarOnDemand,NSE::Types::SidebarAutoHide};
 
     if (m_latteView->visibility() && m_latteView->visibility()->isSidebar()) {
-        ignoreModes.removeAll(Latte::Types::SidebarOnDemand);
-        ignoreModes.removeAll(Latte::Types::SidebarAutoHide);
+        ignoreModes.removeAll(NSE::Types::SidebarOnDemand);
+        ignoreModes.removeAll(NSE::Types::SidebarAutoHide);
     }
 
     QString activityid = m_latteView->layout()->lastUsedActivity();

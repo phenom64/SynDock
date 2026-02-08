@@ -22,10 +22,10 @@
 // X11
 #include <NETWM>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-FloatingGapWindow::FloatingGapWindow(Latte::View *view) :
+FloatingGapWindow::FloatingGapWindow(NSE::View *view) :
     SubWindow(view, QString("Floating Gap Window"))
 {
     if (m_debugMode) {

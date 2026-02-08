@@ -1,25 +1,30 @@
 /*
-    SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
-    SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
-    SPDX-License-Identifier: GPL-2.0-or-later
-*/
+ * This file is a part of the Atmo desktop experience's SynDock project for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * Based on Latte Dock:
+ * SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
+ * SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
-import QtQuick 2.8
-import QtQuick.Layouts 1.1
-import QtQuick.Window 2.2
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.kquickcontrolsaddons 2.0
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kquickcontrolsaddons
+import org.kde.plasma.plasmoid
 
-import org.kde.latte.abilities.host 0.1 as AbilityHost
+import org.kde.syndock.abilities.host 0.1 as AbilityHost
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
-import org.kde.latte.private.app 0.1 as LatteApp
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.components 1.0 as LatteComponents
+import org.kde.syndock.private.app 0.1 as LatteApp
+import org.kde.syndock.private.containment 0.1 as LatteContainment
 
 import "abilities" as Ability
 import "applet" as Applet
@@ -54,10 +59,10 @@ Item {
     readonly property bool behaveAsPlasmaPanel: viewType === LatteCore.Types.PanelView
     readonly property bool behaveAsDockWithMask: !behaveAsPlasmaPanel
 
-    readonly property bool viewIsAvailable: latteView && latteView.visibility && latteView.effects
+    readonly property bool viewIsAvailable: dockView && dockView.visibility && dockView.effects
 
     property int viewType: {
-        if (!latteView || !latteView.visibility) {
+        if (!dockView || !dockView.visibility) {
             return LatteCore.Types.DockView;
         }
 
@@ -72,7 +77,7 @@ Item {
     property int viewTypeInQuestion: {
         //! viewType as chosen before considering other options such as floating internal gap enforcement.
         //! It helps with binding loops
-        if (!latteView || !latteView.visibility) {
+        if (!dockView || !dockView.visibility) {
             return LatteCore.Types.DockView;
         }
 
@@ -93,7 +98,7 @@ Item {
 
     property bool blurEnabled: plasmoid.configuration.blurEnabled && (!forceTransparentPanel || forcePanelForBusyBackground)
 
-    readonly property bool inDraggingOverAppletOrOutOfContainment: latteView && latteView.containsDrag && !backDropArea.containsDrag
+    readonly property bool inDraggingOverAppletOrOutOfContainment: dockView && dockView.containsDrag && !backDropArea.containsDrag
 
     readonly property Item dragInfo: Item {
         property bool entered: backDropArea.dragInfo.entered
@@ -104,44 +109,44 @@ Item {
         property bool onlyLaunchers: backDropArea.dragInfo.onlyLaunchers
     }
 
-    property bool containsOnlyPlasmaTasks: latteView ? latteView.extendedInterface.hasPlasmaTasks && !latteView.extendedInterface.hasLatteTasks : false
-    property bool dockContainsMouse: latteView && latteView.visibility ? latteView.visibility.containsMouse : false
+    property bool containsOnlyPlasmaTasks: dockView ? dockView.extendedInterface.hasPlasmaTasks && !dockView.extendedInterface.hasLatteTasks : false
+    property bool dockContainsMouse: dockView && dockView.visibility ? dockView.visibility.containsMouse : false
 
     property bool disablePanelShadowMaximized: plasmoid.configuration.disablePanelShadowForMaximized && LatteCore.WindowSystem.compositingActive
     property bool drawShadowsExternal: panelShadowsActive && behaveAsPlasmaPanel
 
     property bool editMode: plasmoid.userConfiguring
-    property bool windowIsTouching: latteView && latteView.windowsTracker
-                                    && (latteView.windowsTracker.currentScreen.activeWindowTouching
-                                        || latteView.windowsTracker.currentScreen.activeWindowTouchingEdge
+    property bool windowIsTouching: dockView && dockView.windowsTracker
+                                    && (dockView.windowsTracker.currentScreen.activeWindowTouching
+                                        || dockView.windowsTracker.currentScreen.activeWindowTouchingEdge
                                         || hasExpandedApplet)
 
     property bool floatingInternalGapIsForced: plasmoid.configuration.floatingInternalGapIsForced
 
     property bool hasFloatingGapInputEventsDisabled: root.screenEdgeMarginEnabled
-                                                     && !latteView.byPassWM
+                                                     && !dockView.byPassWM
                                                      && !root.inConfigureAppletsMode
                                                      && !parabolic.isEnabled
                                                      && (root.behaveAsPlasmaPanel || (root.behaveAsDockWithMask && !root.floatingInternalGapIsForced))
 
-    property bool forceSolidPanel: (latteView && latteView.visibility
+    property bool forceSolidPanel: (dockView && dockView.visibility
                                     && LatteCore.WindowSystem.compositingActive
                                     && !inConfigureAppletsMode
                                     && userShowPanelBackground
                                     && ( (plasmoid.configuration.solidBackgroundForMaximized
                                           && !(hasExpandedApplet && !plasmaBackgroundForPopups)
-                                          && (latteView.windowsTracker.currentScreen.existsWindowTouching
-                                              || latteView.windowsTracker.currentScreen.existsWindowTouchingEdge))
+                                          && (dockView.windowsTracker.currentScreen.existsWindowTouching
+                                              || dockView.windowsTracker.currentScreen.existsWindowTouchingEdge))
                                         || (hasExpandedApplet && plasmaBackgroundForPopups) ))
                                    || !LatteCore.WindowSystem.compositingActive
 
     property bool forceTransparentPanel: root.backgroundOnlyOnMaximized
-                                         && latteView && latteView.visibility
+                                         && dockView && dockView.visibility
                                          && LatteCore.WindowSystem.compositingActive
                                          && !inConfigureAppletsMode
                                          && !forceSolidPanel
-                                         && !(latteView.windowsTracker.currentScreen.existsWindowTouching
-                                              || latteView.windowsTracker.currentScreen.existsWindowTouchingEdge)
+                                         && !(dockView.windowsTracker.currentScreen.existsWindowTouching
+                                              || dockView.windowsTracker.currentScreen.existsWindowTouchingEdge)
                                          && !(windowColors === LatteContainment.Types.ActiveWindowColors && selectedWindowsTracker.existsWindowActive)
 
     property bool forcePanelForBusyBackground: userShowPanelBackground && (normalBusyForTouchingBusyVerticalView
@@ -149,8 +154,8 @@ Item {
                                                                                && colorizerManager.backgroundIsBusy
                                                                                && root.themeColors === LatteContainment.Types.SmartThemeColors))
 
-    property bool normalBusyForTouchingBusyVerticalView: (latteView && latteView.windowsTracker /*is touching a vertical view that is in busy state and the user prefers isBusy transparency*/
-                                                          && latteView.windowsTracker.currentScreen.isTouchingBusyVerticalView
+    property bool normalBusyForTouchingBusyVerticalView: (dockView && dockView.windowsTracker /*is touching a vertical view that is in busy state and the user prefers isBusy transparency*/
+                                                          && dockView.windowsTracker.currentScreen.isTouchingBusyVerticalView
                                                           && plasmoid.configuration.backgroundOnlyOnMaximized)
 
     property bool appletIsDragged: root.dragOverlay && root.dragOverlay.pressed
@@ -159,7 +164,7 @@ Item {
 
     property bool mirrorScreenGap: screenEdgeMarginEnabled
                                    && plasmoid.configuration.floatingGapIsMirrored
-                                   && latteView.visibility.mode === LatteCore.Types.AlwaysVisible
+                                   && dockView.visibility.mode === LatteCore.Types.AlwaysVisible
 
 
 
@@ -170,8 +175,8 @@ Item {
 
     property bool plasmaBackgroundForPopups: plasmoid.configuration.plasmaBackgroundForPopups
 
-    readonly property bool hasExpandedApplet: latteView && latteView.extendedInterface.hasExpandedApplet;
-    readonly property bool hasUserSpecifiedBackground: (latteView && latteView.layout && latteView.layout.background.startsWith("/")) ?
+    readonly property bool hasExpandedApplet: dockView && dockView.extendedInterface.hasExpandedApplet;
+    readonly property bool hasUserSpecifiedBackground: (dockView && dockView.layout && dockView.layout.background.startsWith("/")) ?
                                                            true : false
 
     readonly property bool inConfigureAppletsMode: root.editMode && universalSettings && universalSettings.inConfigureAppletsMode
@@ -221,7 +226,7 @@ Item {
 
     property int maxLength: {
         const maximize = behaveAsPlasmaPanel
-          || (maximizeWhenMaximized && latteView.windowsTracker.currentScreen.existsWindowMaximized);
+          || (maximizeWhenMaximized && dockView.windowsTracker.currentScreen.existsWindowMaximized);
         if (root.isHorizontal) {
             return maximize ? width : width * (maxLengthPerCentage/100)
         } else {
@@ -248,7 +253,7 @@ Item {
         }
 
         var forcedNoShadows = (plasmoid.configuration.panelShadows && disablePanelShadowMaximized
-                               && latteView && latteView.windowsTracker && latteView.windowsTracker.currentScreen.activeWindowMaximized);
+                               && dockView && dockView.windowsTracker && dockView.windowsTracker.currentScreen.activeWindowMaximized);
 
         if (forcedNoShadows) {
             return false;
@@ -289,8 +294,8 @@ Item {
     property int editShadow: {
         if (!LatteCore.WindowSystem.compositingActive) {
             return 0;
-        } else if (latteView && latteView.screenGeometry) {
-            return latteView.screenGeometry.height/90;
+        } else if (dockView && dockView.screenGeometry) {
+            return dockView.screenGeometry.height/90;
         } else {
             return 7;
         }
@@ -324,19 +329,19 @@ Item {
     readonly property alias maskManager: visibilityManager
     readonly property alias layoutsContainerItem: layoutsContainer
 
-    readonly property alias latteView: _interfaces.view
+    readonly property alias dockView: _interfaces.view
     readonly property alias layoutsManager: _interfaces.layoutsManager
     readonly property alias shortcutsEngine: _interfaces.globalShortcuts
     readonly property alias themeExtended: _interfaces.themeExtended
     readonly property alias universalSettings: _interfaces.universalSettings
 
     readonly property QtObject selectedWindowsTracker: {
-        if (latteView && latteView.windowsTracker) {
+        if (dockView && dockView.windowsTracker) {
             switch(plasmoid.configuration.activeWindowFilter) {
             case LatteContainment.Types.ActiveInCurrentScreen:
-                return latteView.windowsTracker.currentScreen;
+                return dockView.windowsTracker.currentScreen;
             case LatteContainment.Types.ActiveFromAllScreens:
-                return latteView.windowsTracker.allScreens;
+                return dockView.windowsTracker.allScreens;
             }
         }
 
@@ -394,8 +399,8 @@ Item {
         when: !(plasmoid.configuration.floatingGapHidingWaitsMouse && dockContainsMouse)
         value: screenEdgeMarginEnabled
                && plasmoid.configuration.hideFloatingGapForMaximized
-               && latteView && latteView.windowsTracker
-               && latteView.windowsTracker.currentScreen.existsWindowMaximized
+               && dockView && dockView.windowsTracker
+               && dockView.windowsTracker.currentScreen.existsWindowMaximized
     }
 
     //! Binding is needed in order for hideLengthScreenGaps to be activated or not only after
@@ -403,13 +408,13 @@ Item {
     Binding{
         target: root
         property: "hideLengthScreenGaps"
-        when: latteView && latteView.positioner && latteView.visibility
-              && ((root.behaveAsPlasmaPanel && latteView.positioner.slideOffset === 0)
+        when: dockView && dockView.positioner && dockView.visibility
+              && ((root.behaveAsPlasmaPanel && dockView.positioner.slideOffset === 0)
                   || root.behaveAsDockWithMask)
               && !(plasmoid.configuration.floatingGapHidingWaitsMouse && dockContainsMouse)
         value: (hideThickScreenGap
-                && (latteView.visibility.mode === LatteCore.Types.AlwaysVisible
-                    || latteView.visibility.mode === LatteCore.Types.WindowsGoBelow)
+                && (dockView.visibility.mode === LatteCore.Types.AlwaysVisible
+                    || dockView.visibility.mode === LatteCore.Types.WindowsGoBelow)
                 && (plasmoid.configuration.alignment === LatteCore.Types.Justify)
                 && plasmoid.configuration.maxLength>85)
     }
@@ -432,9 +437,9 @@ Item {
 
         //Block Hiding events
         if (editMode) {
-            latteView.visibility.addBlockHidingEvent("main[qml]::inEditMode()");
+            dockView.visibility.addBlockHidingEvent("main[qml]::inEditMode()");
         } else {
-            latteView.visibility.removeBlockHidingEvent("main[qml]::inEditMode()");
+            dockView.visibility.removeBlockHidingEvent("main[qml]::inEditMode()");
         }
     }
 
@@ -444,21 +449,21 @@ Item {
 
     //! It is used only when the user chooses different alignment types and not during startup
     Connections {
-        target: latteView ? latteView : null
+        target: dockView ? dockView : null
         onAlignmentChanged: {
-            if (latteView.alignment === LatteCore.Types.NoneAlignment) {
+            if (dockView.alignment === LatteCore.Types.NoneAlignment) {
                 return;
             }
 
             var previousalignment = plasmoid.configuration.alignment;
 
-            if (latteView.alignment===LatteCore.Types.Justify && previousalignment!==LatteCore.Types.Justify) { // main -> justify
+            if (dockView.alignment===LatteCore.Types.Justify && previousalignment!==LatteCore.Types.Justify) { // main -> justify
                 layouter.appletsInParentChange = true;
                 fastLayoutManager.addJustifySplittersInMainLayout();
                 console.log("LAYOUTS: Moving applets from MAIN to THREE Layouts mode...");
                 fastLayoutManager.moveAppletsBasedOnJustifyAlignment();
                 layouter.appletsInParentChange = false;
-            } else if (latteView.alignment!==LatteCore.Types.Justify && previousalignment===LatteCore.Types.Justify ) { // justify ->main
+            } else if (dockView.alignment!==LatteCore.Types.Justify && previousalignment===LatteCore.Types.Justify ) { // justify ->main
                 layouter.appletsInParentChange = true;
                 console.log("LAYOUTS: Moving applets from THREE to MAIN Layout mode...");
                 fastLayoutManager.joinLayoutsToMainLayout();
@@ -466,40 +471,40 @@ Item {
             }
 
             root.updateIndexes();
-            plasmoid.configuration.alignment = latteView.alignment;
+            plasmoid.configuration.alignment = dockView.alignment;
             fastLayoutManager.save();
         }
     }
 
     onLatteViewChanged: {
-        if (latteView) {
-            if (latteView.positioner) {
-                latteView.positioner.hidingForRelocationStarted.connect(visibilityManager.slotHideDockDuringLocationChange);
-                latteView.positioner.showingAfterRelocationFinished.connect(visibilityManager.slotShowDockAfterLocationChange);
+        if (dockView) {
+            if (dockView.positioner) {
+                dockView.positioner.hidingForRelocationStarted.connect(visibilityManager.slotHideDockDuringLocationChange);
+                dockView.positioner.showingAfterRelocationFinished.connect(visibilityManager.slotShowDockAfterLocationChange);
             }
 
-            if (latteView.visibility) {
-                latteView.visibility.onContainsMouseChanged.connect(visibilityManager.slotContainsMouseChanged);
-                latteView.visibility.onMustBeHide.connect(visibilityManager.slotMustBeHide);
-                latteView.visibility.onMustBeShown.connect(visibilityManager.slotMustBeShown);
+            if (dockView.visibility) {
+                dockView.visibility.onContainsMouseChanged.connect(visibilityManager.slotContainsMouseChanged);
+                dockView.visibility.onMustBeHide.connect(visibilityManager.slotMustBeHide);
+                dockView.visibility.onMustBeShown.connect(visibilityManager.slotMustBeShown);
             }
         }
     }
 
     Connections {
-        target: latteView
+        target: dockView
         onPositionerChanged: {
-            if (latteView.positioner) {
-                latteView.positioner.hidingForRelocationStarted.connect(visibilityManager.slotHideDockDuringLocationChange);
-                latteView.positioner.showingAfterRelocationFinished.connect(visibilityManager.slotShowDockAfterLocationChange);
+            if (dockView.positioner) {
+                dockView.positioner.hidingForRelocationStarted.connect(visibilityManager.slotHideDockDuringLocationChange);
+                dockView.positioner.showingAfterRelocationFinished.connect(visibilityManager.slotShowDockAfterLocationChange);
             }
         }
 
         onVisibilityChanged: {
-            if (latteView.visibility) {
-                latteView.visibility.onContainsMouseChanged.connect(visibilityManager.slotContainsMouseChanged);
-                latteView.visibility.onMustBeHide.connect(visibilityManager.slotMustBeHide);
-                latteView.visibility.onMustBeShown.connect(visibilityManager.slotMustBeShown);
+            if (dockView.visibility) {
+                dockView.visibility.onContainsMouseChanged.connect(visibilityManager.slotContainsMouseChanged);
+                dockView.visibility.onMustBeHide.connect(visibilityManager.slotMustBeHide);
+                dockView.visibility.onMustBeShown.connect(visibilityManager.slotMustBeShown);
             }
         }
     }
@@ -543,16 +548,16 @@ Item {
         layouter.appletsInParentChange = true;
         fastLayoutManager.save();
 
-        if (latteView) {
-            if (latteView.positioner) {
-                latteView.positioner.hidingForRelocationStarted.disconnect(visibilityManager.slotHideDockDuringLocationChange);
-                latteView.positioner.showingAfterRelocationFinished.disconnect(visibilityManager.slotShowDockAfterLocationChange);
+        if (dockView) {
+            if (dockView.positioner) {
+                dockView.positioner.hidingForRelocationStarted.disconnect(visibilityManager.slotHideDockDuringLocationChange);
+                dockView.positioner.showingAfterRelocationFinished.disconnect(visibilityManager.slotShowDockAfterLocationChange);
             }
 
-            if (latteView.visibility) {
-                latteView.visibility.onContainsMouseChanged.disconnect(visibilityManager.slotContainsMouseChanged);
-                latteView.visibility.onMustBeHide.disconnect(visibilityManager.slotMustBeHide);
-                latteView.visibility.onMustBeShown.disconnect(visibilityManager.slotMustBeShown);
+            if (dockView.visibility) {
+                dockView.visibility.onContainsMouseChanged.disconnect(visibilityManager.slotContainsMouseChanged);
+                dockView.visibility.onMustBeHide.disconnect(visibilityManager.slotMustBeHide);
+                dockView.visibility.onMustBeShown.disconnect(visibilityManager.slotMustBeShown);
             }
         }
     }
@@ -980,13 +985,13 @@ Item {
 
     Ability.Indicators{
         id: _indicators
-        view: latteView
+        view: dockView
     }
 
     Ability.Launchers {
         id: _launchers
         layouts: layoutsContainer
-        layoutName: latteView && latteView.layout ? latteView.layout.name : ""
+        layoutName: dockView && dockView.layout ? dockView.layout.name : ""
     }
 
     Ability.Layouter {
@@ -1015,7 +1020,7 @@ Item {
         animations: _animations
         debug: _debug
         layouts: layoutsContainer
-        view: latteView
+        view: dockView
         settings: universalSettings
     }
 
@@ -1028,12 +1033,12 @@ Item {
         id: _thinTooltip
         debug: _debug
         layouts: layoutsContainer
-        view: latteView
+        view: dockView
     }
 
     Ability.UserRequests {
         id: _userRequests
-        view: latteView
+        view: dockView
     }
 
     LatteApp.Interfaces {
@@ -1061,11 +1066,11 @@ Item {
 
     ///////////////BEGIN TIMER elements
 
-    //! It is used in order to slide-in the latteView on startup
+    //! It is used in order to slide-in the dockView on startup
     onInStartupChanged: {
         if (!inStartup) {
-            latteView.positioner.startupFinished();
-            latteView.positioner.slideInDuringStartup();
+            dockView.positioner.startupFinished();
+            dockView.positioner.slideInDuringStartup();
             visibilityManager.slotMustBeShown();
         }
     }
@@ -1098,11 +1103,11 @@ Item {
         anchors.fill: parent
         active: debug.localGeometryEnabled
         sourceComponent: Rectangle{
-            x: latteView.localGeometry.x
-            y: latteView.localGeometry.y
+            x: dockView.localGeometry.x
+            y: dockView.localGeometry.y
             //! when view is resized there is a chance that geometry is faulty stacked in old values
-            width: Math.min(latteView.localGeometry.width, root.width) //! fixes updating
-            height: Math.min(latteView.localGeometry.height, root.height) //! fixes updating
+            width: Math.min(dockView.localGeometry.width, root.width) //! fixes updating
+            height: Math.min(dockView.localGeometry.height, root.height) //! fixes updating
 
             color: "blue"
             border.width: 2
@@ -1114,13 +1119,13 @@ Item {
 
     Loader{
         anchors.fill: parent
-        active: latteView && latteView.effects && debug.inputMaskEnabled
+        active: dockView && dockView.effects && debug.inputMaskEnabled
         sourceComponent: Rectangle{
-            x: latteView.effects.inputMask.x
-            y: latteView.effects.inputMask.y
+            x: dockView.effects.inputMask.x
+            y: dockView.effects.inputMask.y
             //! when view is resized there is a chance that geometry is faulty stacked in old values
-            width: Math.min(latteView.effects.inputMask.width, root.width) //! fixes updating
-            height: Math.min(latteView.effects.inputMask.height, root.height) //! fixes updating
+            width: Math.min(dockView.effects.inputMask.width, root.width) //! fixes updating
+            height: Math.min(dockView.effects.inputMask.height, root.height) //! fixes updating
 
             color: "purple"
             border.width: 1

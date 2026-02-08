@@ -1,118 +1,149 @@
-project(lattedock)
-cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
+# SynDock - The NSE Docking Experience for SynOS
+# Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+# Designed by Kavish Krishnakumar in Manchester.
+# SPDX-License-Identifier: GPL-2.0-or-later
+#
+# Based on Latte Dock
+# SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
+# SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
 
-set(CMAKE_CXX_STANDARD 17)
+cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
+
+project(syndock VERSION 1.0.0 LANGUAGES CXX)
+
+# Modern C++20 standard
+set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(VERSION 0.10.77)
-set(AUTHOR "Michail Vourlakos, Smith Ar")
-set(EMAIL "mvourlakos@gmail.com, audoban@openmailbox.org")
-set(WEBSITE "https://userbase.kde.org/LatteDock")
-set(BUG_ADDRESS "https://bugs.kde.org/enter_bug.cgi?product=lattedock")
-set(FAQS "https://userbase.kde.org/LatteDock/FAQ")
+set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(QT_MIN_VERSION "5.15.0")
-set(KF5_MIN_VERSION "5.88.0")
-set(KDE_COMPILERSETTINGS_LEVEL "5.84.0")
+# Project metadata
+set(AUTHOR "Syndromatic Ltd.")
+set(EMAIL "support@syndromatic.com")
+set(WEBSITE "https://syndromatic.com/syndock")
+set(BUG_ADDRESS "https://github.com/syndromatic/syndock/issues")
 
-set(KF5_LOCALE_PREFIX "")
+# Version requirements - Qt 6 / KF6 / Plasma 6
+set(QT_MIN_VERSION "6.7.0")
+set(KF6_MIN_VERSION "6.0.0")
+set(PLASMA_MIN_VERSION "6.0.0")
 
-find_package(ECM ${KF5_MIN_VERSION} REQUIRED NO_MODULE)
+# Find ECM (Extra CMake Modules)
+find_package(ECM ${KF6_MIN_VERSION} REQUIRED NO_MODULE)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH})
 
+# KDE CMake includes
 include(KDEInstallDirs)
-include(CheckIncludeFiles)
-include(CMakePackageConfigHelpers)
-include(ECMOptionalAddSubdirectory)
-include(ECMQtDeclareLoggingCategory)
 include(KDECMakeSettings)
 include(KDECompilerSettings NO_POLICY_SCOPE)
-include(KDEPackageAppTemplates)
-include(WriteBasicConfigVersionFile)
+include(ECMOptionalAddSubdirectory)
+include(ECMQtDeclareLoggingCategory)
+include(CMakePackageConfigHelpers)
+include(CheckIncludeFiles)
+include(FeatureSummary)
 
+# ============================================================================
+# Qt 6 - Wayland-only build (no X11 dependencies)
+# ============================================================================
+find_package(Qt6 ${QT_MIN_VERSION} REQUIRED COMPONENTS
+    Core
+    DBus
+    Gui
+    Qml
+    Quick
+    QuickControls2
+    Widgets
+    WaylandClient
+)
 
-find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED NO_MODULE COMPONENTS DBus Gui Qml Quick)
+# ============================================================================
+# KDE Frameworks 6
+# ============================================================================
+find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
+    Activities
+    Archive
+    CoreAddons
+    Declarative
+    GuiAddons
+    Crash
+    DBusAddons
+    GlobalAccel
+    I18n
+    IconThemes
+    KIO
+    Notifications
+    Package
+    Svg
+    WindowSystem
+    XmlGui
+)
 
-find_package(KF5 ${KF5_MIN_VERSION} REQUIRED COMPONENTS
-    Activities Archive CoreAddons GuiAddons Crash DBusAddons Declarative GlobalAccel Kirigami2
-    I18n IconThemes KIO NewStuff Notifications Plasma PlasmaQuick Wayland WindowSystem XmlGui)
-
+# ============================================================================
+# Plasma 6 - Deep integration with KDE Plasma
+# ============================================================================
+find_package(Plasma ${PLASMA_MIN_VERSION} REQUIRED)
+find_package(PlasmaQuick ${PLASMA_MIN_VERSION} REQUIRED)
 find_package(LibTaskManager REQUIRED)
 add_definitions(-DPLASMA_WORKSPACE_VERSION="${LibTaskManager_VERSION}")
-   
-find_package(X11 REQUIRED)
-set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
-    URL "http://www.x.org"
-    TYPE OPTIONAL
-    PURPOSE "Required for building the X11 based workspace")
 
-if(X11_FOUND)
-    find_package(XCB MODULE REQUIRED COMPONENTS XCB RANDR SHAPE EVENT)
-    set_package_properties(XCB PROPERTIES TYPE REQUIRED)
-    find_package(Qt5 ${QT_MIN_VERSION} CONFIG REQUIRED COMPONENTS X11Extras)
-
-    if(NOT X11_SM_FOUND)
-        message(FATAL_ERROR "\nThe X11 Session Management (SM) development package could not be found.
-                \nPlease install libSM.\n")
-    endif(NOT X11_SM_FOUND)
-
-endif()
-
-if(X11_FOUND AND XCB_XCB_FOUND)
-    set(HAVE_X11 ON)
-endif()
-
-
-find_package(QtWaylandScanner REQUIRED)
-find_package(Qt${QT_MAJOR_VERSION}WaylandClient)
+# ============================================================================
+# Wayland - LayerShell for panel surfaces (KWin 6.x)
+# ============================================================================
+find_package(LayerShellQt REQUIRED)
 find_package(PlasmaWaylandProtocols 1.6 REQUIRED)
 find_package(Wayland REQUIRED COMPONENTS Client)
 
-string(REGEX MATCH "\\.([^]]+)\\." KF5_VERSION_MINOR ${KF5_VERSION})
-string(REGEX REPLACE "\\." "" KF5_VERSION_MINOR ${KF5_VERSION_MINOR})
+# Wayland-only build - explicitly disable X11
+set(HAVE_X11 OFF)
+message(STATUS "SynDock: Wayland-only build (X11 support removed)")
 
-message(STATUS "KF5 VERSION : ${KF5_VERSION}")
-message(STATUS "KF5 VERSION MINOR : ${KF5_VERSION_MINOR}")
+# KF6 version info
+message(STATUS "Qt6 VERSION          : ${Qt6_VERSION}")
+message(STATUS "KF6 VERSION          : ${KF6_VERSION}")
+message(STATUS "Plasma VERSION       : ${Plasma_VERSION}")
+message(STATUS "LayerShellQt         : Found")
 
-
+# ============================================================================
+# QML Module verification
+# ============================================================================
 include(ECMFindQmlModule)
-ecm_find_qmlmodule(QtQuick 2.7)
-ecm_find_qmlmodule(QtQuick.Layouts 1.3)
-ecm_find_qmlmodule(QtQuick.Controls 1.4)
-ecm_find_qmlmodule(QtQuick.Controls.Styles.Plasma 2.0)
-ecm_find_qmlmodule(QtGraphicalEffects 1.0)
-ecm_find_qmlmodule(org.kde.kquickcontrolsaddons 2.0)
-ecm_find_qmlmodule(org.kde.plasma.core 2.0)
-ecm_find_qmlmodule(org.kde.plasma.components 2.0)
+ecm_find_qmlmodule(QtQuick 6.0)
+ecm_find_qmlmodule(QtQuick.Layouts 6.0)
+ecm_find_qmlmodule(QtQuick.Controls 6.0)
+ecm_find_qmlmodule(org.kde.plasma.core 6.0)
+ecm_find_qmlmodule(org.kde.plasma.components 6.0)
+ecm_find_qmlmodule(org.kde.kirigami 6.0)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/app/config-latte.h.cmake
-               ${CMAKE_CURRENT_BINARY_DIR}/app/config-latte.h)
+# ============================================================================
+# Configuration header
+# ============================================================================
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/app/config-syndock.h.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/app/config-syndock.h)
 
-#hide warnings
-string(REPLACE "-Wall" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-string(REPLACE "-Wdeprecated-declarations" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-string(REPLACE "-Wreorder" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-string(REPLACE "-Wunused-variable" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-string(REPLACE "-Wunused-parameter" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-
-#add format security check
+# Compiler flags - enable warnings for quality code
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wpedantic")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wformat -Werror=format-security")
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-unused-parameter")
 
-message(STATUS "COMPILER FLAGS : ${CMAKE_CXX_FLAGS}")
+message(STATUS "COMPILER FLAGS       : ${CMAKE_CXX_FLAGS}")
 
-# Share Same Core Types between declarativeimports and app
+# ============================================================================
+# Share Core Types between modules
+# ============================================================================
 set(CORETYPESHEADER "LIBCORETYPES_H")
 configure_file(declarativeimports/coretypes.h.in declarativeimports/core/types.h)
 set(CORETYPESHEADER "APPCORETYPES_H")
 configure_file(declarativeimports/coretypes.h.in app/coretypes.h)
-set(CORETYPESHEADER "LATTEGENERALCONTAINMENTTYPES_H")
-configure_file(declarativeimports/coretypes.h.in containment/plugin/lattetypes.h)
+set(CORETYPESHEADER "NSECONTAINMENTTYPES_H")
+configure_file(declarativeimports/coretypes.h.in containment/plugin/nsetypes.h)
 
-# Share App::Settings::GenericTools to containment actions
+# Share settings tools to containment actions
 configure_file(app/settings/generic/generictools.h containmentactions/contextmenu/generictools.h)
 configure_file(app/settings/generic/generictools.cpp containmentactions/contextmenu/generictools.cpp)
 configure_file(app/data/contextmenudata.h containmentactions/contextmenu/contextmenudata.h)
 
-# subdirectories
+# ============================================================================
+# Subdirectories
+# ============================================================================
 add_subdirectory(declarativeimports)
 add_subdirectory(indicators)
 add_subdirectory(app)
@@ -123,3 +154,5 @@ add_subdirectory(plasmoid)
 add_subdirectory(shell)
 
 ki18n_install(po)
+
+feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)

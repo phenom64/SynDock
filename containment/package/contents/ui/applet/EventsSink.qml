@@ -3,10 +3,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.plasma.core as PlasmaCore
+import org.kde.syndock.core 0.2 as LatteCore
 
 Item {
     property Item destination: null
@@ -36,7 +36,7 @@ Item {
             anchors.fill: parent
             color: "yellow"
             opacity: 0.2
-            visible: root.latteView && root.latteView.sink.destinationItem === destination
+            visible: root.dockView && root.dockView.sink.destinationItem === destination
         }
     }
 

@@ -8,7 +8,7 @@
 // local
 #include "genericdialog.h"
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 

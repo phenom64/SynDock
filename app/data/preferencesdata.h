@@ -13,7 +13,7 @@
 // Qt
 #include <QStringList>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class Preferences

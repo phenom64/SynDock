@@ -1,13 +1,30 @@
-/*
-    SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
-    SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
-
-    SPDX-License-Identifier: GPL-2.0-or-later
-*/
+/* This file is a part of the Atmo desktop experience's SynDock project for SynOS .
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or 
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock:
+ * SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
+ * SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
 // local
-#include "config-latte.h"
+#include "config-syndock.h"
 #include "apptypes.h"
+#include "NSETypes.h"
 #include "lattecorona.h"
 #include "layouts/importer.h"
 #include "templates/templatesmanager.h"
@@ -36,7 +53,6 @@
 #include <KLocalizedString>
 #include <KAboutData>
 #include <KDBusService>
-#include <KQuickAddons/QtQuickSettings>
 
 //! COLORS
 #define CNORMAL  "\e[0m"
@@ -56,39 +72,22 @@ QString filterDebugLogFile;
 
 int main(int argc, char **argv)
 {
-    //Plasma scales itself to font DPI
-    //on X, where we don't have compositor scaling, this generally works fine.
-    //also there are bugs on older Qt, especially when it comes to fractional scaling
-    //there's advantages to disabling, and (other than small context menu icons) few advantages in enabling
-
-    //On wayland, it's different. Everything is simpler as all coordinates are in the same coordinate system
-    //we don't have fractional scaling on the client so don't hit most the remaining bugs and
-    //even if we don't use Qt scaling the compositor will try to scale us anyway so we have no choice
-    if (!qEnvironmentVariableIsSet("PLASMA_USE_QT_SCALING")) {
-        qunsetenv("QT_DEVICE_PIXEL_RATIO");
-        QCoreApplication::setAttribute(Qt::AA_DisableHighDpiScaling);
-    } else {
-        QCoreApplication::setAttribute(Qt::AA_UseHighDpiPixmaps);
-    }
-
+    // Qt 6: Native HiDPI scaling - no manual AA_ attributes needed
+    // The deprecated Qt::AA_DisableHighDpiScaling and Qt::AA_UseHighDpiPixmaps
+    // are removed in Qt 6; scaling is handled automatically via QT_SCALE_FACTOR
+    
     QQuickWindow::setDefaultAlphaBuffer(true);
 
-    qputenv("QT_WAYLAND_DISABLE_FIXED_POSITIONS", {});
-    const bool qpaVariable = qEnvironmentVariableIsSet("QT_QPA_PLATFORM");
+    // Wayland-only platform detection
     detectPlatform(argc, argv);
+    
     QApplication app(argc, argv);
-    qunsetenv("QT_WAYLAND_DISABLE_FIXED_POSITIONS");
 
-    if (!qpaVariable) {
-        // don't leak the env variable to processes we start
-        qunsetenv("QT_QPA_PLATFORM");
-    }
+    // KF6: KQuickAddons::QtQuickSettings removed; Qt 6 handles quick settings natively
 
-    KQuickAddons::QtQuickSettings::init();
-
-    KLocalizedString::setApplicationDomain("latte-dock");
-    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("latte-dock")));
-    //protect from closing app when changing to "alternative session" and back
+    KLocalizedString::setApplicationDomain("syndock");
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("syndock")));
+    // Protect from closing app when changing to "alternative session" and back
     app.setQuitOnLastWindowClosed(false);
 
     configureAboutData();
@@ -187,18 +186,18 @@ int main(int argc, char **argv)
     parser.process(app);
 
     if (parser.isSet(QStringLiteral("enable-autostart"))) {
-        Latte::Layouts::Importer::enableAutostart();
+        NSE::Layouts::Importer::enableAutostart();
     }
 
     if (parser.isSet(QStringLiteral("disable-autostart"))) {
-        Latte::Layouts::Importer::disableAutostart();
+        NSE::Layouts::Importer::disableAutostart();
         qGuiApp->exit();
         return 0;
     }
 
     //! print available-layouts
     if (parser.isSet(QStringLiteral("available-layouts"))) {
-        QStringList layouts = Latte::Layouts::Importer::availableLayouts();
+        QStringList layouts = NSE::Layouts::Importer::availableLayouts();
 
         if (layouts.count() > 0) {
             qInfo() << i18n("Available layouts that can be used to start Latte:");
@@ -216,7 +215,7 @@ int main(int argc, char **argv)
 
     //! print available-layout-templates
     if (parser.isSet(QStringLiteral("available-layout-templates"))) {
-        QStringList templates = Latte::Layouts::Importer::availableLayoutTemplates();
+        QStringList templates = NSE::Layouts::Importer::availableLayoutTemplates();
 
         if (templates.count() > 0) {
             qInfo() << i18n("Available layout templates found in your system:");
@@ -234,7 +233,7 @@ int main(int argc, char **argv)
 
     //! print available-dock-templates
     if (parser.isSet(QStringLiteral("available-dock-templates"))) {
-        QStringList templates = Latte::Layouts::Importer::availableViewTemplates();
+        QStringList templates = NSE::Layouts::Importer::availableViewTemplates();
 
         if (templates.count() > 0) {
             qInfo() << i18n("Available dock templates found in your system:");
@@ -274,7 +273,7 @@ int main(int argc, char **argv)
     } else if (parser.isSet(QStringLiteral("layout"))) {
         layoutNameOnStartup = parser.value(QStringLiteral("layout"));
 
-        if (!Latte::Layouts::Importer::layoutExists(layoutNameOnStartup)) {
+        if (!NSE::Layouts::Importer::layoutExists(layoutNameOnStartup)) {
             qInfo() << i18nc("layout missing", "This layout doesn't exist in the system.");
             qGuiApp->exit();
             return 0;
@@ -287,7 +286,7 @@ int main(int argc, char **argv)
     if (username.isEmpty())
         username = qgetenv("USERNAME");
 
-    QLockFile lockFile {QDir::tempPath() + "/latte-dock." + username + ".lock"};
+    QLockFile lockFile {QDir::tempPath() + "/syndock." + username + ".lock"};
 
     int timeout {100};
 
@@ -349,7 +348,7 @@ int main(int argc, char **argv)
 
     //! import-full option
     if (parser.isSet(QStringLiteral("import-full"))) {
-        bool imported = Latte::Layouts::Importer::importHelper(parser.value(QStringLiteral("import-full")));
+        bool imported = NSE::Layouts::Importer::importHelper(parser.value(QStringLiteral("import-full")));
 
         if (!imported) {
             qInfo() << i18n("The configuration cannot be imported");
@@ -361,7 +360,7 @@ int main(int argc, char **argv)
     //! import-layout option
     if (parser.isSet(QStringLiteral("import-layout"))) {
         QString suggestedname = parser.isSet(QStringLiteral("suggested-layout-name")) ? parser.value(QStringLiteral("suggested-layout-name")) : QString();
-        QString importedLayout = Latte::Layouts::Importer::importLayoutHelper(parser.value(QStringLiteral("import-layout")), suggestedname);
+        QString importedLayout = NSE::Layouts::Importer::importLayoutHelper(parser.value(QStringLiteral("import-layout")), suggestedname);
 
         if (importedLayout.isEmpty()) {
             qInfo() << i18n("The layout cannot be imported");
@@ -374,22 +373,22 @@ int main(int argc, char **argv)
 
     //! memory usage option
     if (parser.isSet(QStringLiteral("multiple"))) {
-        memoryUsage = (int)(Latte::MemoryUsage::MultipleLayouts);
+        memoryUsage = (int)(NSE::MemoryUsage::MultipleLayouts);
     } else if (parser.isSet(QStringLiteral("single"))) {
-        memoryUsage = (int)(Latte::MemoryUsage::SingleLayout);
+        memoryUsage = (int)(NSE::MemoryUsage::SingleLayout);
     }
 
     //! add-dock usage option
     if (parser.isSet(QStringLiteral("add-dock"))) {
         QString viewTemplateName = parser.value(QStringLiteral("add-dock"));
-        QStringList viewTemplates = Latte::Layouts::Importer::availableViewTemplates();
+        QStringList viewTemplates = NSE::Layouts::Importer::availableViewTemplates();
 
         if (viewTemplates.contains(viewTemplateName)) {
             if (layoutNameOnStartup.isEmpty()) {
                 //! Clean layout template is applied and proper name is used
-                QString emptytemplatepath = Latte::Layouts::Importer::layoutTemplateSystemFilePath(Latte::Templates::EMPTYLAYOUTTEMPLATENAME);
+                QString emptytemplatepath = NSE::Layouts::Importer::layoutTemplateSystemFilePath(NSE::Templates::EMPTYLAYOUTTEMPLATENAME);
                 QString suggestedname = parser.isSet(QStringLiteral("suggested-layout-name")) ? parser.value(QStringLiteral("suggested-layout-name")) : viewTemplateName;
-                QString importedLayout = Latte::Layouts::Importer::importLayoutHelper(emptytemplatepath, suggestedname);
+                QString importedLayout = NSE::Layouts::Importer::importLayoutHelper(emptytemplatepath, suggestedname);
 
                 if (importedLayout.isEmpty()) {
                     qInfo() << i18n("The layout cannot be imported");
@@ -432,7 +431,7 @@ int main(int argc, char **argv)
     KCrash::setDrKonqiEnabled(true);
     KCrash::setFlags(KCrash::AutoRestart | KCrash::AlwaysDirectly);
 
-    Latte::Corona corona(defaultLayoutOnStartup, layoutNameOnStartup, addViewTemplateNameOnStartup, memoryUsage);
+    NSE::Corona corona(defaultLayoutOnStartup, layoutNameOnStartup, addViewTemplateNameOnStartup, memoryUsage);
     KDBusService service(KDBusService::Unique);
 
     return app.exec();
@@ -501,53 +500,45 @@ inline void filterDebugMessageOutput(QtMsgType type, const QMessageLogContext &c
 
 inline void configureAboutData()
 {
-    KAboutData about(QStringLiteral("lattedock")
-                     , QStringLiteral("Latte Dock")
+    KAboutData about(QStringLiteral("syndock")
+                     , QStringLiteral("SynDock")
                      , QStringLiteral(VERSION)
-                     , i18n("Latte is a dock based on plasma frameworks that provides an elegant and "
-                            "intuitive experience for your tasks and plasmoids. It animates its contents "
-                            "by using parabolic zoom effect and tries to be there only when it is needed."
-                            "\n\n\"Art in Coffee\"")
+                     , i18n("SynDock is the primary docking interface for the Syndromatic Desktop Experience. "
+                            "It features the NSE Parabolic Zoom effect, live window previews, and deep "
+                            "integration with KDE Plasma 6.\n\n\"The Syndromatic Experience\"")
                      , KAboutLicense::GPL_V2
-                     , QStringLiteral("\251 2016-2017 Michail Vourlakos, Smith AR"));
+                     , QStringLiteral("\251 2026 Syndromatic Ltd. All rights reserved"));
 
     about.setHomepage(WEBSITE);
-    about.setProgramLogo(QIcon::fromTheme(QStringLiteral("latte-dock")));
-    about.setDesktopFileName(QStringLiteral("latte-dock"));
-    about.setProductName(QByteArray("lattedock"));
+    about.setProgramLogo(QIcon::fromTheme(QStringLiteral("syndock")));
+    about.setDesktopFileName(QStringLiteral("org.syndromatic.syndock"));
+    about.setProductName(QByteArray("syndock"));
 
     // Authors
-    about.addAuthor(QStringLiteral("Michail Vourlakos"), QString(), QStringLiteral("mvourlakos@gmail.com"));
-    about.addAuthor(QStringLiteral("Smith AR"), QString(), QStringLiteral("audoban@openmailbox.org"));
+    about.addAuthor(QStringLiteral("Kavish Krishnakumar"), i18n("Lead Developer"), QStringLiteral("kavish@syndromatic.com"));
+    
+    // Original Latte Dock authors (credit retained)
+    about.addCredit(QStringLiteral("Michail Vourlakos"), i18n("Original Latte Dock author"), QStringLiteral("mvourlakos@gmail.com"));
+    about.addCredit(QStringLiteral("Smith AR"), i18n("Original Latte Dock author"), QStringLiteral("audoban@openmailbox.org"));
 
     KAboutData::setApplicationData(about);
 }
 
-//! used the version provided by PW:KWorkspace
-inline void detectPlatform(int argc, char **argv)
+// Wayland-only platform detection
+// X11 support has been removed from SynDock
+inline void detectPlatform([[maybe_unused]] int argc, [[maybe_unused]] char **argv)
 {
     if (qEnvironmentVariableIsSet("QT_QPA_PLATFORM")) {
         return;
     }
 
-    for (int i = 0; i < argc; i++) {
-        if (qstrcmp(argv[i], "-platform") == 0 ||
-                qstrcmp(argv[i], "--platform") == 0 ||
-                QByteArray(argv[i]).startsWith("-platform=") ||
-                QByteArray(argv[i]).startsWith("--platform=")) {
-            return;
-        }
-    }
-
     const QByteArray sessionType = qgetenv("XDG_SESSION_TYPE");
 
-    if (sessionType.isEmpty()) {
-        return;
-    }
-
-    if (qstrcmp(sessionType, "wayland") == 0) {
+    if (sessionType.isEmpty() || qstrcmp(sessionType, "wayland") == 0) {
         qputenv("QT_QPA_PLATFORM", "wayland");
-    } else if (qstrcmp(sessionType, "x11") == 0) {
-        qputenv("QT_QPA_PLATFORM", "xcb");
+    } else {
+        // SynDock is Wayland-only; warn if running under X11
+        qWarning() << "SynDock requires a Wayland session. X11 is not supported.";
+        qputenv("QT_QPA_PLATFORM", "wayland");
     }
 }

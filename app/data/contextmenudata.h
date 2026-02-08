@@ -9,7 +9,7 @@
 // Qt
 #include <QStringList>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 namespace ContextMenu {
 

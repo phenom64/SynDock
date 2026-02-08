@@ -18,7 +18,7 @@
 #include <QStringList>
 
 
-namespace Latte {
+namespace NSE {
 class CentralLayout;
 class View;
 namespace Layout{
@@ -37,7 +37,7 @@ namespace KActivities {
 class Controller;
 }
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 
 //! This is a Layouts map in the following structure:
@@ -71,7 +71,7 @@ public:
     //! In that case single layout file must be removed after loading the new layout
     void setIsSingleLayoutInDeprecatedRenaming(const bool &enabled);
 
-    bool latteViewExists(Latte::View *view) const;
+    bool latteViewExists(NSE::View *view) const;
     bool layoutExists(QString layoutName) const;
     //! switch to specified layout, default previousMemoryUsage means that it didn't change
     bool switchToLayout(QString layoutName,  MemoryUsage::LayoutsMemory newMemoryUsage = MemoryUsage::Current);
@@ -90,16 +90,16 @@ public:
     QStringList validActivities(const QStringList &layoutActivities);
 
     int screenForContainment(Plasma::Containment *containment);
-    Latte::View *viewForContainment(Plasma::Containment *containment);
-    Latte::View *viewForContainment(uint id);
+    NSE::View *viewForContainment(Plasma::Containment *containment);
+    NSE::View *viewForContainment(uint id);
 
     QList<CentralLayout *> currentLayouts() const;
-    QList<Latte::View *> currentViews() const;
-    QList<Latte::View *> currentViewsWithPlasmaShortcuts() const;
-    QList<Latte::View *> currentOriginalViews() const;
-    QList<Latte::View *> sortedCurrentViews() const;
-    QList<Latte::View *> sortedCurrentOriginalViews() const;
-    QList<Latte::View *> viewsBasedOnActivityId(const QString &id) const;
+    QList<NSE::View *> currentViews() const;
+    QList<NSE::View *> currentViewsWithPlasmaShortcuts() const;
+    QList<NSE::View *> currentOriginalViews() const;
+    QList<NSE::View *> sortedCurrentViews() const;
+    QList<NSE::View *> sortedCurrentOriginalViews() const;
+    QList<NSE::View *> viewsBasedOnActivityId(const QString &id) const;
 
     CentralLayout *centralLayout(QString layoutname) const;
     Layout::GenericLayout *layout(QString layoutname) const;

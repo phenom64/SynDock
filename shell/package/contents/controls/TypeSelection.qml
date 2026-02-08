@@ -4,18 +4,18 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import QtGraphicalEffects 1.0
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.3
+import QtQuick
+import Qt5Compat.GraphicalEffects
+import QtQuick.Controls
+import QtQuick.Layouts
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.plasmoid
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.private.containment 0.1 as LatteContainment
 
 Grid {
     id: typeRow
@@ -51,16 +51,16 @@ Grid {
         enabled: LatteCore.WindowSystem.compositingActive
 
         checkable: true
-        checked: latteView.type === LatteCore.Types.DockView
+        checked: dockView.type === LatteCore.Types.DockView
         text: i18nc("dock type","Dock")
         exclusiveGroup: viewTypeGroup
         tooltip: i18n("Change the behavior and appearance to Dock type")
 
         onPressedChanged: {
             if (pressed && !checked) {
-                latteView.userRequestedViewType(LatteCore.Types.DockView);
+                dockView.userRequestedViewType(LatteCore.Types.DockView);
 
-                latteView.visibility.mode = LatteCore.Types.DodgeActive;
+                dockView.visibility.mode = LatteCore.Types.DodgeActive;
                 plasmoid.configuration.alignment = LatteCore.Types.Center;
                 plasmoid.configuration.useThemePanel = true;
                 plasmoid.configuration.solidPanel = false;
@@ -95,16 +95,16 @@ Grid {
         enabled: LatteCore.WindowSystem.compositingActive
 
         checkable: true
-        checked: latteView.type === LatteCore.Types.PanelView
+        checked: dockView.type === LatteCore.Types.PanelView
         text: i18nc("panel type","Panel")
         exclusiveGroup: viewTypeGroup
         tooltip: i18n("Change the behavior and appearance to Panel type")
 
         onPressedChanged: {
             if (pressed && !checked) {
-                latteView.userRequestedViewType(LatteCore.Types.PanelView);
+                dockView.userRequestedViewType(LatteCore.Types.PanelView);
 
-                latteView.visibility.mode = LatteCore.Types.AlwaysVisible;
+                dockView.visibility.mode = LatteCore.Types.AlwaysVisible;
                 plasmoid.configuration.alignment = LatteCore.Types.Justify;
                 plasmoid.configuration.useThemePanel = true;
                 plasmoid.configuration.solidPanel = false;

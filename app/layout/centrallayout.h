@@ -16,11 +16,11 @@
 // Qt
 #include <QObject>
 
-namespace Latte {
+namespace NSE {
 class Corona;
 }
 
-namespace Latte {
+namespace NSE {
 
 //! CentralLayout is a layout that is assigned to ALL Activities, FREE Activities or SPRECIFIC Activities.
 //! It is a real running layout instance.
@@ -35,7 +35,7 @@ namespace Latte {
 class CentralLayout : public Layout::GenericLayout
 {
     Q_OBJECT
-    Q_PROPERTY(Latte::WindowSystem::SchemeColors *scheme READ scheme NOTIFY schemeChanged)
+    Q_PROPERTY(NSE::WindowSystem::SchemeColors *scheme READ scheme NOTIFY schemeChanged)
 
 public:
     CentralLayout(QObject *parent, QString layoutFile, QString layoutName = QString());
@@ -61,7 +61,7 @@ public:
     Layout::Type type() const override;
     Data::Layout data() const;
 
-    Latte::WindowSystem::SchemeColors *scheme() const;
+    NSE::WindowSystem::SchemeColors *scheme() const;
 
 public:
     Q_INVOKABLE bool isCurrent() override;
@@ -81,14 +81,14 @@ private:
     void init();
     void importLocalLayout(QString file);
 
-    void setScheme(Latte::WindowSystem::SchemeColors *_scheme);
+    void setScheme(NSE::WindowSystem::SchemeColors *_scheme);
 
 private:
     bool m_disableBordersForMaximizedWindows{false};
     bool m_showInMenu{false};
     QStringList m_activities;
 
-    Latte::WindowSystem::SchemeColors *m_scheme{nullptr};
+    NSE::WindowSystem::SchemeColors *m_scheme{nullptr};
 };
 
 }

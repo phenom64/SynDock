@@ -2,11 +2,11 @@
     SPDX-FileCopyrightText: 2019 Michail Vourlakos <mvourlakos@gmail.com>
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.0
-import QtQuick.Layouts 1.3
-import QtQuick.Controls 1.4
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Controls
 
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.components as PlasmaComponents
 
 PlasmaComponents.TextField {
     id: textField

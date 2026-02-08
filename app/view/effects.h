@@ -19,12 +19,12 @@
 #include <Plasma/FrameSvg>
 #include <Plasma/Theme>
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 class Effects: public QObject
@@ -55,7 +55,7 @@ class Effects: public QObject
     Q_PROPERTY(QQuickItem *panelBackgroundSvg READ panelBackgroundSvg WRITE setPanelBackgroundSvg NOTIFY panelBackgroundSvgChanged)
 
 public:
-    Effects(Latte::View *parent);
+    Effects(NSE::View *parent);
     virtual ~Effects();
 
     bool animationsBlocked() const;
@@ -185,8 +185,8 @@ private:
     QRect m_inputMask;
     QRect m_appletsLayoutGeometry;
 
-    QPointer<Latte::View> m_view;
-    QPointer<Latte::Corona> m_corona;
+    QPointer<NSE::View> m_view;
+    QPointer<NSE::Corona> m_corona;
 
     PlasmaExtended::CornerRegions m_cornersMaskRegion;
 

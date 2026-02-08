@@ -1,14 +1,19 @@
 /*
-    SPDX-FileCopyrightText: 2020 Michail Vourlakos <mvourlakos@gmail.com>
-    SPDX-License-Identifier: GPL-2.0-or-later
-*/
+ * This file is a part of the Atmo desktop experience's SynDock project for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * Based on Latte Dock:
+ * SPDX-FileCopyrightText: 2020 Michail Vourlakos <mvourlakos@gmail.com>
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
-import QtQuick 2.7
+import QtQuick
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.syndock.core 0.2 as LatteCore
 
 import "./privates" as Ability
 

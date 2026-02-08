@@ -3,10 +3,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.6
-import QtQuick.Controls 1.4
-import QtQuick.Templates 2.2 as T
-import org.kde.plasma.core 2.0 as PlasmaCore
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Templates as T
+import org.kde.plasma.core as PlasmaCore
 
 T.ToolTip {
     id: control

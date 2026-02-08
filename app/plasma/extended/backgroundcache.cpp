@@ -29,7 +29,7 @@
 #define PLASMACONFIG "plasma-org.kde.plasma.desktop-appletsrc"
 #define DEFAULTWALLPAPER "wallpapers/Next/contents/images/1920x1080.png"
 
-namespace Latte{
+namespace NSE{
 namespace PlasmaExtended {
 
 BackgroundCache::BackgroundCache(QObject *parent)
@@ -41,7 +41,7 @@ BackgroundCache::BackgroundCache(QObject *parent)
                 QStandardPaths::GenericConfigLocation) +
             QLatin1Char('/') + PLASMACONFIG;
 
-    m_defaultWallpaperPath = Latte::standardPath(DEFAULTWALLPAPER);
+    m_defaultWallpaperPath = NSE::standardPath(DEFAULTWALLPAPER);
 
     qDebug() << "Default Wallpaper path ::: " << m_defaultWallpaperPath;
 
@@ -217,7 +217,7 @@ float BackgroundCache::brightnessFromArea(QImage &image, int firstRow, int first
 
             for (int col = firstColumn; col < endColumn ; ++col) {
                 QRgb pixelData = line[col];
-                float pixelBrightness = Latte::colorBrightness(pixelData);
+                float pixelBrightness = NSE::colorBrightness(pixelData);
 
                 areaBrightness = (areaBrightness == -1000) ? pixelBrightness : (areaBrightness + pixelBrightness);
             }
@@ -378,7 +378,7 @@ float BackgroundCache::brightnessForFile(QString imageFile, Plasma::Types::Locat
 
     //! if it is a color
     if (imageFile.startsWith("#")) {
-        return Latte::colorBrightness(QColor(imageFile));
+        return NSE::colorBrightness(QColor(imageFile));
     }
 
     updateImageCalculations(imageFile, location);

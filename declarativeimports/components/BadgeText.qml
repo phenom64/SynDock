@@ -3,10 +3,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.2
-import QtGraphicalEffects 1.0
+import QtQuick
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.plasmoid
 
 Rectangle {
     property double proportion: 0

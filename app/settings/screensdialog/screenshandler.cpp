@@ -17,7 +17,7 @@
 // KDE
 #include <KMessageBox>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 

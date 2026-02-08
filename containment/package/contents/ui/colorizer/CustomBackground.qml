@@ -3,10 +3,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
 
 Item{
     id: main
@@ -53,7 +53,7 @@ Item{
         return i;
     }
 
-    readonly property bool allBorders: (latteView && latteView.effects && (latteView.effects.enabledBorders === PlasmaCore.FrameSvg.AllBorders))
+    readonly property bool allBorders: (dockView && dockView.effects && (dockView.effects.enabledBorders === PlasmaCore.FrameSvg.AllBorders))
 
     readonly property bool bothVerticals: (leftBorder && rightBorder)
     readonly property bool bothHorizontals: (bottomBorder && topBorder)
@@ -65,36 +65,36 @@ Item{
     Binding{
         target: main
         property: "topBorder"
-        when: latteView
+        when: dockView
         value: {
-            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & PlasmaCore.FrameSvg.TopBorder)) > 0) || allBorders;
+            return (dockView && dockView.effects && ((dockView.effects.enabledBorders & PlasmaCore.FrameSvg.TopBorder)) > 0) || allBorders;
         }
     }
 
     Binding{
         target: main
         property: "leftBorder"
-        when: latteView
+        when: dockView
         value: {
-            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & PlasmaCore.FrameSvg.LeftBorder)) > 0) || allBorders;
+            return (dockView && dockView.effects && ((dockView.effects.enabledBorders & PlasmaCore.FrameSvg.LeftBorder)) > 0) || allBorders;
         }
     }
 
     Binding{
         target: main
         property: "bottomBorder"
-        when: latteView
+        when: dockView
         value: {
-            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & PlasmaCore.FrameSvg.BottomBorder)) > 0) || allBorders;
+            return (dockView && dockView.effects && ((dockView.effects.enabledBorders & PlasmaCore.FrameSvg.BottomBorder)) > 0) || allBorders;
         }
     }
 
     Binding{
         target: main
         property: "rightBorder"
-        when: latteView
+        when: dockView
         value: {
-            return (latteView && latteView.effects && ((latteView.effects.enabledBorders & PlasmaCore.FrameSvg.RightBorder)) > 0) || allBorders;
+            return (dockView && dockView.effects && ((dockView.effects.enabledBorders & PlasmaCore.FrameSvg.RightBorder)) > 0) || allBorders;
         }
     }
 

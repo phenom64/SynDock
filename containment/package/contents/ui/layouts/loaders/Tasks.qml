@@ -3,12 +3,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
-import org.kde.taskmanager 0.1 as TaskManager
+import org.kde.taskmanager as TaskManager
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.private.containment 0.1 as LatteContainment
 
 Loader {
     id: tasksLoader
@@ -17,11 +17,11 @@ Loader {
         TaskManager.TasksModel {
             id: tasksModel
             virtualDesktop: virtualDesktopInfo.currentDesktop
-            screenGeometry: latteView ? latteView.screenGeometry : Qt.rect(-1, -1, 0, 0)
+            screenGeometry: dockView ? dockView.screenGeometry : Qt.rect(-1, -1, 0, 0)
             activity: activityInfo.currentActivity
 
             filterByVirtualDesktop: true
-            filterByScreen:latteView ?  true : false
+            filterByScreen:dockView ?  true : false
             filterByActivity: true
 
             launchInPlace: true

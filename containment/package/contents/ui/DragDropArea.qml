@@ -3,12 +3,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.draganddrop 2.0 as DragDrop
+import org.kde.plasma.core as PlasmaCore
+import org.kde.draganddrop as DragDrop
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.syndock.core 0.2 as LatteCore
 
 DragDrop.DropArea {
     id: dragArea
@@ -16,7 +16,7 @@ DragDrop.DropArea {
     property bool containsDrag: false
 
     readonly property Item dragInfo: Item {
-        readonly property bool entered: latteView && latteView.containsDrag
+        readonly property bool entered: dockView && dockView.containsDrag
         property bool isTask: false
         property bool isPlasmoid: false
         property bool isSeparator: false
@@ -37,10 +37,10 @@ DragDrop.DropArea {
     }
 
     Connections{
-        target: latteView
+        target: dockView
 
         onContainsDragChanged: {
-            if(!latteView.containsDrag) {
+            if(!dockView.containsDrag) {
                 dragArea.clearInfo();
             }
         }
@@ -51,13 +51,13 @@ DragDrop.DropArea {
     }
 
     function isDroppingOnlyLaunchers(event) {
-        if (!latteView) {
+        if (!dockView) {
             return
         }
 
         if (event.mimeData.hasUrls || (event.mimeData.formats.indexOf("text/x-plasmoidservicename") !== 0)) {
             var onlyLaunchers = event.mimeData.urls.every(function (item) {
-                return latteView.extendedInterface.isApplication(item);
+                return dockView.extendedInterface.isApplication(item);
             });
 
             return onlyLaunchers;
@@ -95,12 +95,12 @@ DragDrop.DropArea {
 
         var isSeparator = event !== undefined
                 && event.mimeData !== undefined
-                && ( latteView.mimeContainsPlasmoid(event.mimeData, "audoban.applet.separator")
-                    || latteView.mimeContainsPlasmoid(event.mimeData, "org.kde.latte.separator") );
+                && ( dockView.mimeContainsPlasmoid(event.mimeData, "audoban.applet.separator")
+                    || dockView.mimeContainsPlasmoid(event.mimeData, "org.kde.syndock.separator") );
 
         var isLatteTasks = event !== undefined
                 && event.mimeData !== undefined
-                && latteView.mimeContainsPlasmoid(event.mimeData, "org.kde.latte.plasmoid");
+                && dockView.mimeContainsPlasmoid(event.mimeData, "org.kde.syndock.plasmoid");
 
         var isPlasmoid = event !== undefined
                 && event.mimeData !== undefined
@@ -193,7 +193,7 @@ DragDrop.DropArea {
 
             plasmoid.processMimeData(event.mimeData, eventx, eventy);
             //! inform others what plasmoid was drag n' dropped to be added
-            latteView.extendedInterface.appletDropped(event.mimeData, eventx, eventy);
+            dockView.extendedInterface.appletDropped(event.mimeData, eventx, eventy);
             event.accept(event.proposedAction);
         }
 

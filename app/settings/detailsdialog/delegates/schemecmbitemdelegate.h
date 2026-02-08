@@ -12,7 +12,7 @@
 class QModelIndex;
 class QWidget;
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Details {
 namespace Delegate {

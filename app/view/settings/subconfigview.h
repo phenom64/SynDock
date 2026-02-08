@@ -25,13 +25,13 @@ class PlasmaShellSurface;
 }
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 }
 
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 class SubConfigView : public QQuickView
@@ -40,7 +40,7 @@ class SubConfigView : public QQuickView
     Q_PROPERTY(Plasma::FrameSvg::EnabledBorders enabledBorders READ enabledBorders NOTIFY enabledBordersChanged)
 
 public:
-    SubConfigView(Latte::View *view, const QString &title, const bool &isNormalWindow = true);
+    SubConfigView(NSE::View *view, const QString &title, const bool &isNormalWindow = true);
     ~SubConfigView() override;
 
     virtual void requestActivate();
@@ -49,12 +49,12 @@ public:
 
     Plasma::FrameSvg::EnabledBorders enabledBorders() const;
 
-    Latte::Corona *corona() const;
-    Latte::View *parentView() const;
-    virtual void setParentView(Latte::View *view, const bool &immediate = false);
+    NSE::Corona *corona() const;
+    NSE::View *parentView() const;
+    virtual void setParentView(NSE::View *view, const bool &immediate = false);
     virtual void showAfter(int msecs = 0);
 
-    Latte::WindowSystem::WindowId trackedWindowId();
+    NSE::WindowSystem::WindowId trackedWindowId();
     KWayland::Client::PlasmaShellSurface *surface();
 
 public slots:
@@ -67,7 +67,7 @@ protected:
     virtual void syncSlideEffect();
 
     virtual void init();
-    virtual void initParentView(Latte::View *view);
+    virtual void initParentView(NSE::View *view);
     virtual void updateEnabledBorders() = 0;
 
     void showEvent(QShowEvent *ev) override;
@@ -79,14 +79,14 @@ protected:
     bool m_isNormalWindow{true};
     QTimer m_screenSyncTimer;
 
-    QPointer<Latte::View> m_latteView;
+    QPointer<NSE::View> m_latteView;
 
     QList<QMetaObject::Connection> connections;
     QList<QMetaObject::Connection> viewconnections;
 
     Plasma::FrameSvg::EnabledBorders m_enabledBorders{Plasma::FrameSvg::AllBorders};
 
-    Latte::Corona *m_corona{nullptr};
+    NSE::Corona *m_corona{nullptr};
     KWayland::Client::PlasmaShellSurface *m_shellSurface{nullptr};
 
 private slots:
@@ -100,7 +100,7 @@ private:
 
     QTimer m_showTimer;
 
-    Latte::WindowSystem::WindowId m_waylandWindowId;
+    NSE::WindowSystem::WindowId m_waylandWindowId;
 };
 
 }

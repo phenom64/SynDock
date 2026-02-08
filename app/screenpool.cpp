@@ -7,7 +7,6 @@
 #include "screenpool.h"
 
 // local
-#include <config-latte.h>
 #include "primaryoutputwatcher.h"
 
 // Qt
@@ -18,17 +17,8 @@
 
 // KDE
 #include <KLocalizedString>
-#include <KWindowSystem>
 
-// X11
-#if HAVE_X11
-#include <QtX11Extras/QX11Info>
-#include <xcb/xcb.h>
-#include <xcb/randr.h>
-#include <xcb/xcb_event.h>
-#endif
-
-namespace Latte {
+namespace NSE {
 
 const int ScreenPool::FIRSTSCREENID;
 
@@ -89,10 +79,6 @@ void ScreenPool::load()
         onScreenAdded(screen);
     }
 
-    if (KWindowSystem::isPlatformX11()) {
-        connect(qGuiApp, &QGuiApplication::primaryScreenChanged, this, &ScreenPool::primaryScreenChanged, Qt::UniqueConnection);
-    }
-
     connect(m_primaryWatcher, &PrimaryOutputWatcher::primaryOutputNameChanged, this, &ScreenPool::onPrimaryOutputNameChanged, Qt::UniqueConnection);
 }
 
@@ -142,7 +128,7 @@ void ScreenPool::updateScreenGeometry(const int &screenId, const QRect &screenGe
 }
 
 
-Latte::Data::ScreensTable ScreenPool::screensTable()
+NSE::Data::ScreensTable ScreenPool::screensTable()
 {   
     return m_screensTable;
 }
@@ -159,7 +145,7 @@ void ScreenPool::reload(QString path)
     }
 }
 
-void ScreenPool::removeScreens(const Latte::Data::ScreensTable &obsoleteScreens)
+void ScreenPool::removeScreens(const NSE::Data::ScreensTable &obsoleteScreens)
 {
     for (int i=0; i<obsoleteScreens.rowCount(); ++i) {
         if (!m_screensTable.containsId(obsoleteScreens[i].id)) {

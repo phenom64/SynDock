@@ -3,20 +3,20 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.8
-import QtGraphicalEffects 1.0
+import QtQuick
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.private.app 0.1 as LatteApp
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.syndock.private.app 0.1 as LatteApp
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.private.containment 0.1 as LatteContainment
 
 import "canvas" as CanvasComponent
 
 Loader {
-    active: plasmoid && plasmoid.configuration && latteView
+    active: plasmoid && plasmoid.configuration && dockView
 
     sourceComponent: Item{
         id: root
@@ -73,7 +73,7 @@ Loader {
             anchors.fill: parent
             opacity: root.maxOpacity
             fillMode: Image.Tile
-            source: latteView.layout ? latteView.layout.background : "../images/canvas/blueprint.jpg"
+            source: dockView.layout ? dockView.layout.background : "../images/canvas/blueprint.jpg"
 
             Behavior on opacity {
                 NumberAnimation {
@@ -86,7 +86,7 @@ Loader {
         LatteApp.ContextMenuLayer {
             id: contextMenuLayer
             anchors.fill: parent
-            view: latteView
+            view: dockView
         }
 
         MouseArea {

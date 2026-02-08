@@ -22,7 +22,7 @@ static const int INFORMATIONWITHACTIONINTERVAL = 5000;
 static const int POSITIVEINTERVAL = 3000;
 static const int WARNINGINTERVAL = 3500;
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Dialog {
 

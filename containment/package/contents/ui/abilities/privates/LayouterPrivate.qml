@@ -3,10 +3,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import org.kde.plasma.plasmoid 2.0
+import QtQuick
+import org.kde.plasma.plasmoid
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.syndock.core 0.2 as LatteCore
 
 import "./layouter" as LayouterElements
 
@@ -75,8 +75,8 @@ Item {
         for(var i=0; i<layout.children.length; ++i) {
             var curApplet = layout.children[i];
 
-            // console.log( "org.kde.latte s3_-1 " + curApplet.pluginName + " : "+ curApplet.index +" (" +curApplet.isAutoFillApplet+","+!curApplet.isHidden +") ");
-            // console.log( "org.kde.latte s3_-1 " + curApplet.pluginName + " : "+ availableSpace + " _ " + sizePerApplet + " _ " + noOfApplets);
+            // console.log( "org.kde.syndock s3_-1 " + curApplet.pluginName + " : "+ curApplet.index +" (" +curApplet.isAutoFillApplet+","+!curApplet.isHidden +") ");
+            // console.log( "org.kde.syndock s3_-1 " + curApplet.pluginName + " : "+ availableSpace + " _ " + sizePerApplet + " _ " + noOfApplets);
 
             if (curApplet && curApplet.isAutoFillApplet && !curApplet.isHidden
                     && (curApplet.applet || curApplet.isInternalViewSplitter)) {
@@ -84,7 +84,7 @@ Item {
                 var prefSize = curApplet.appletPreferredLength;
                 var maxSize = curApplet.appletMaximumLength;
 
-                // console.log( "org.kde.latte s3_0 " + curApplet.pluginName + " : "+ curApplet.index +" (" +minSize+","+prefSize+","+maxSize+") ");
+                // console.log( "org.kde.syndock s3_0 " + curApplet.pluginName + " : "+ curApplet.index +" (" +minSize+","+prefSize+","+maxSize+") ");
 
                 minSize = minSize>=0 && minSize!==Infinity ? minSize : -1;
                 prefSize = minSize>=0 && prefSize!==Infinity ? prefSize : -1;
@@ -106,14 +106,14 @@ Item {
                     if (noOfApplets>1) {
                         appliedSize = appletPreferredLength(minSize, prefSize, maxSize);
 
-                        // console.log( "org.kde.latte s3_1 " + curApplet.pluginName + " : (" +minSize+","+prefSize+","+maxSize+") -> " + appliedSize);
+                        // console.log( "org.kde.syndock s3_1 " + curApplet.pluginName + " : (" +minSize+","+prefSize+","+maxSize+") -> " + appliedSize);
                     } else if (noOfApplets===1) {
                         //! at this step if only one applet has remained for which the max size is not null,
                         //! then for this applet we make sure the maximum size does not exceed the available space
                         //! in order for the applet to not be drawn outside the boundaries
                         appliedSize = appletPreferredLength(minSize, prefSize, Math.min(maxSize, sizePerApplet));
 
-                        // console.log( "org.kde.latte s3_2 " + curApplet.pluginName + " : (" +minSize+","+prefSize+","+maxSize+") -> " + appliedSize);
+                        // console.log( "org.kde.syndock s3_2 " + curApplet.pluginName + " : (" +minSize+","+prefSize+","+maxSize+") -> " + appliedSize);
                     }
 
                     //! appliedSize is valid and is also lower than the availableSpace, if it is not lower then
@@ -134,11 +134,11 @@ Item {
                         noOfApplets = noOfApplets - 1;
                         sizePerApplet = noOfApplets > 1 ? Math.floor(availableSpace / noOfApplets) : availableSpace;
 
-                        // console.log( "org.kde.latte s3_3 " + curApplet.pluginName + " assigned: " + curApplet.maxAutoFillLength);
+                        // console.log( "org.kde.syndock s3_3 " + curApplet.pluginName + " assigned: " + curApplet.maxAutoFillLength);
                     }
                 }
 
-                // console.log("org.kde.latte s3_r " +curApplet.pluginName + " : " + availableSpace + " _ " + sizePerApplet + " _ " + noOfApplets + "\n");
+                // console.log("org.kde.syndock s3_r " +curApplet.pluginName + " : " + availableSpace + " _ " + sizePerApplet + " _ " + noOfApplets + "\n");
             }
         }
 
@@ -175,7 +175,7 @@ Item {
 
                         var isNeutral = (minSize<=0 && prefSize<=0);
 
-                        // console.log( " org.kde.latte s4_0 " + curApplet.pluginName + " : (" +minSize+","+prefSize+","+maxSize+") ");
+                        // console.log( " org.kde.syndock s4_0 " + curApplet.pluginName + " : (" +minSize+","+prefSize+","+maxSize+") ");
 
                         if (!isNeutral
                                 && ((inMaxAutoFillCalculations && curApplet.maxAutoFillLength>mostDemandingAppletSize)
@@ -199,16 +199,16 @@ Item {
                     }
 
                     /*if (inMaxAutoFillCalculations) {
-                        console.log(" org.kde.latte s4_1  "+ mostDemandingApplet.applet.pluginName + " assigned max : "  + mostDemandingApplet.maxAutoFillLength + "\n");
+                        console.log(" org.kde.syndock s4_1  "+ mostDemandingApplet.applet.pluginName + " assigned max : "  + mostDemandingApplet.maxAutoFillLength + "\n");
                     } else {
-                        console.log(" org.kde.latte s4_1  "+ mostDemandingApplet.applet.pluginName + " assigned min: "  + mostDemandingApplet.minAutoFillLength + "\n");
+                        console.log(" org.kde.syndock s4_1  "+ mostDemandingApplet.applet.pluginName + " assigned min: "  + mostDemandingApplet.minAutoFillLength + "\n");
                     }*/
                 } else if (neutralAppletsNo>0) {
                     //! if no demanding applets was found then the available space is splitted equally
                     //! between all neutralApplets
                     var adjustedAppletSize = (sizePerApplet / neutralAppletsNo);
                     for (var j=0; j<neutralApplets.length; ++j) {
-                        // console.log(" org.kde.latte s4_2.0  "+ neutralApplets[j].pluginName + " _ " + neutralApplets[j].maxAutoFillLength + " _ " + adjustedAppletSize);
+                        // console.log(" org.kde.syndock s4_2.0  "+ neutralApplets[j].pluginName + " _ " + neutralApplets[j].maxAutoFillLength + " _ " + adjustedAppletSize);
 
                         if (inMaxAutoFillCalculations) {
                             neutralApplets[j].maxAutoFillLength = neutralApplets[j].maxAutoFillLength + adjustedAppletSize;
@@ -216,7 +216,7 @@ Item {
                             neutralApplets[j].minAutoFillLength = neutralApplets[j].minAutoFillLength + adjustedAppletSize;
                         }
 
-                        // console.log(" org.kde.latte s4_2.1  "+ neutralApplets[j].pluginName + " assigned: "  + sizePerApplet + "\n");
+                        // console.log(" org.kde.syndock s4_2.1  "+ neutralApplets[j].pluginName + " assigned: "  + sizePerApplet + "\n");
                     }
                 }
             } else {
@@ -230,7 +230,7 @@ Item {
                             curApplet.minAutoFillLength = Math.max(curApplet.appletMinimumLength,sizePerApplet);
                         }
 
-                        // console.log(" org.kde.latte s4_3  "+ curApplet.pluginName + " assigned: "  + sizePerApplet + "\n");
+                        // console.log(" org.kde.syndock s4_3  "+ curApplet.pluginName + " assigned: "  + sizePerApplet + "\n");
                         curApplet.inFillCalculations = false;
                     }
                 }
@@ -304,7 +304,7 @@ Item {
 
         var res;
 
-        // console.log(" org.kde.latte S3.1 main fill applets :: " + mainLayout.fillApplets);
+        // console.log(" org.kde.syndock S3.1 main fill applets :: " + mainLayout.fillApplets);
         //! first pass
         if (mainLayout.fillApplets > 0){
             res = computeStep1ForLayout(mainLayout.grid, availableSpace, sizePerAppletMain, noMain, inMaxAutoFillCalculations);
@@ -371,7 +371,7 @@ Item {
         var max_length = inMaxAutoFillCalculations ? contentsMaxLength : root.minLength
         var noA = startLayout.fillApplets + mainLayout.fillApplets + endLayout.fillApplets;
 
-        // console.log(" org.kde.latte S2 _ SIZES ::: " + max_length + " ___ " + inMaxAutoFillCalculations + " __ " + startLayout.sizeWithNoFillApplets + " ___ " + mainLayout.sizeWithNoFillApplets + " ___ " + endLayout.sizeWithNoFillApplets);
+        // console.log(" org.kde.syndock S2 _ SIZES ::: " + max_length + " ___ " + inMaxAutoFillCalculations + " __ " + startLayout.sizeWithNoFillApplets + " ___ " + mainLayout.sizeWithNoFillApplets + " ___ " + endLayout.sizeWithNoFillApplets);
 
         var availableSpace = Math.max(0, max_length - startLayout.sizeWithNoFillApplets - mainLayout.sizeWithNoFillApplets - endLayout.sizeWithNoFillApplets);
         var sizePerApplet = availableSpace / noA;
@@ -411,14 +411,14 @@ Item {
         computeStep2ForLayout(mainLayout.grid, sizePerApplet, mainNo, inMaxAutoFillCalculations); //default behavior
         computeStep2ForLayout(endLayout.grid, sizePerApplet, endNo, inMaxAutoFillCalculations); //default behavior
 
-        // console.log(" org.kde.latte s5...");
+        // console.log(" org.kde.syndock s5...");
     }
 
 
     function _updateSizeForAppletsInFill() {
         if (inNormalFillCalculationsState) {
-            // console.log(" org.kde.latte -------------");
-            // console.log(" org.kde.latte s1...");
+            // console.log(" org.kde.syndock -------------");
+            // console.log(" org.kde.syndock s1...");
             var noA = startLayout.fillApplets + mainLayout.fillApplets + endLayout.fillApplets;
 
             if (noA === 0) {

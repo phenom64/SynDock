@@ -17,7 +17,7 @@ class QModelIndex;
 class QWidget;
 class QVariant;
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Layout {
 namespace Delegate {
@@ -37,9 +37,9 @@ public:
 
 private:
     void updateCurrentActivityAction(QMenu *menu) const;
-    void updateButton(QWidget *editor, const Latte::Data::ActivitiesTable &allActivitiesTable) const;
+    void updateButton(QWidget *editor, const NSE::Data::ActivitiesTable &allActivitiesTable) const;
 
-    QString joinedActivities(const QList<Latte::Data::Activity> &activities, const QStringList &originalIds, bool isActive = false, bool formatText = true) const;
+    QString joinedActivities(const QList<NSE::Data::Activity> &activities, const QStringList &originalIds, bool isActive = false, bool formatText = true) const;
 };
 
 }

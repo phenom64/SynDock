@@ -5,7 +5,7 @@
 
 #include "persistentmenu.h"
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Layout {
 namespace Delegate {

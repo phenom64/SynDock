@@ -6,7 +6,7 @@
 #include "layouticondata.h"
 
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 LayoutIcon::LayoutIcon()

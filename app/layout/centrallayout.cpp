@@ -24,7 +24,7 @@
 #include <KActivities/Consumer>
 
 
-namespace Latte {
+namespace NSE {
 
 CentralLayout::CentralLayout(QObject *parent, QString layoutFile, QString assignedName)
     : Layout::GenericLayout(parent, layoutFile, assignedName)
@@ -132,12 +132,12 @@ void CentralLayout::setActivities(QStringList activities)
     emit activitiesChanged();
 }
 
-Latte::WindowSystem::SchemeColors *CentralLayout::scheme() const
+NSE::WindowSystem::SchemeColors *CentralLayout::scheme() const
 {
     return m_scheme;
 }
 
-void CentralLayout::setScheme(Latte::WindowSystem::SchemeColors *_scheme)
+void CentralLayout::setScheme(NSE::WindowSystem::SchemeColors *_scheme)
 {
     if (m_scheme == _scheme) {
         return;

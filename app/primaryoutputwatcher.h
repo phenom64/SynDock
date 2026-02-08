@@ -51,8 +51,6 @@ private:
     KWayland::Client::Registry *m_registry = nullptr;
     QString m_primaryOutputWayland;
 
-    // Xrandr
-    int m_xrandrExtensionOffset;
 };
 
 #endif // PRIMARYOUTPUTWATCHER_H

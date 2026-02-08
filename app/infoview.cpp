@@ -8,7 +8,7 @@
 #include "infoview.h"
 
 // local
-#include <config-latte.h>
+#include <config-syndock.h>
 #include "wm/abstractwindowinterface.h"
 #include "view/panelshadows_p.h"
 
@@ -28,9 +28,9 @@
 // Plasma
 #include <Plasma/Package>
 
-namespace Latte {
+namespace NSE {
 
-InfoView::InfoView(Latte::Corona *corona, QString message, QScreen *screen, QWindow *parent)
+InfoView::InfoView(NSE::Corona *corona, QString message, QScreen *screen, QWindow *parent)
     : QQuickView(parent),
       m_corona(corona),
       m_message(message),
@@ -79,7 +79,7 @@ void InfoView::init()
 
     KDeclarative::KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(engine());
-    kdeclarative.setTranslationDomain(QStringLiteral("latte-dock"));
+    kdeclarative.setTranslationDomain(QStringLiteral("syndock"));
     kdeclarative.setupContext();
     kdeclarative.setupEngine(engine());
 
@@ -144,7 +144,7 @@ void InfoView::showEvent(QShowEvent *ev)
 
 void InfoView::updateWaylandId()
 {
-    Latte::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("latte-dock", validTitle());
+    NSE::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("syndock", validTitle());
 
     if (m_trackedWindowId != newId) {
         if (!m_trackedWindowId.isNull()) {

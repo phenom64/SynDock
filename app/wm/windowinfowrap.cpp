@@ -8,7 +8,7 @@
 #include "windowinfowrap.h"
 
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 
 WindowInfoWrap::WindowInfoWrap()

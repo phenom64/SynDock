@@ -6,7 +6,7 @@
 #include "subconfigview.h"
 
 //local
-#include <config-latte.h>
+#include <config-syndock.h>
 #include "../view.h"
 #include "../../lattecorona.h"
 #include "../../layouts/manager.h"
@@ -23,14 +23,14 @@
 #include <KWayland/Client/surface.h>
 #include <KWindowSystem>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-SubConfigView::SubConfigView(Latte::View *view, const QString &title, const bool &isNormalWindow)
+SubConfigView::SubConfigView(NSE::View *view, const QString &title, const bool &isNormalWindow)
     : QQuickView(nullptr),
       m_isNormalWindow(isNormalWindow)
 {
-    m_corona = qobject_cast<Latte::Corona *>(view->containment()->corona());
+    m_corona = qobject_cast<NSE::Corona *>(view->containment()->corona());
 
     setupWaylandIntegration();
 
@@ -65,7 +65,7 @@ SubConfigView::SubConfigView(Latte::View *view, const QString &title, const bool
         if (KWindowSystem::isPlatformX11()) {
             if (m_isNormalWindow) {
                 setFlags(wFlags());
-                m_corona->wm()->setViewExtraFlags(this, false, Latte::Types::NormalWindow);
+                m_corona->wm()->setViewExtraFlags(this, false, NSE::Types::NormalWindow);
             }
         }
 
@@ -116,7 +116,7 @@ void SubConfigView::init()
 
     KDeclarative::KDeclarative kdeclarative;
     kdeclarative.setDeclarativeEngine(engine());
-    kdeclarative.setTranslationDomain(QStringLiteral("latte-dock"));
+    kdeclarative.setTranslationDomain(QStringLiteral("syndock"));
     kdeclarative.setupContext();
     kdeclarative.setupEngine(engine());
 
@@ -132,7 +132,7 @@ QString SubConfigView::validTitle() const
     return m_validTitle;
 }
 
-Latte::WindowSystem::WindowId SubConfigView::trackedWindowId()
+NSE::WindowSystem::WindowId SubConfigView::trackedWindowId()
 {
     if (KWindowSystem::isPlatformWayland() && m_waylandWindowId.toInt() <= 0) {
         updateWaylandId();
@@ -141,17 +141,17 @@ Latte::WindowSystem::WindowId SubConfigView::trackedWindowId()
     return !KWindowSystem::isPlatformWayland() ? winId() :  m_waylandWindowId;
 }
 
-Latte::Corona *SubConfigView::corona() const
+NSE::Corona *SubConfigView::corona() const
 {
     return m_corona;
 }
 
-Latte::View *SubConfigView::parentView() const
+NSE::View *SubConfigView::parentView() const
 {
     return m_latteView;
 }
 
-void SubConfigView::setParentView(Latte::View *view, const bool &immediate)
+void SubConfigView::setParentView(NSE::View *view, const bool &immediate)
 {
     if (m_latteView == view) {
         return;
@@ -160,7 +160,7 @@ void SubConfigView::setParentView(Latte::View *view, const bool &immediate)
     initParentView(view);
 }
 
-void SubConfigView::initParentView(Latte::View *view)
+void SubConfigView::initParentView(NSE::View *view)
 {
     for (const auto &var : viewconnections) {
         QObject::disconnect(var);
@@ -312,7 +312,7 @@ bool SubConfigView::event(QEvent *e)
 
 void SubConfigView::updateWaylandId()
 {
-    Latte::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("latte-dock", validTitle());
+    NSE::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("syndock", validTitle());
 
     if (m_waylandWindowId != newId) {
         if (!m_waylandWindowId.isNull()) {

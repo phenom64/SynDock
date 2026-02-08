@@ -3,21 +3,21 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.3
-import QtGraphicalEffects 1.0
-import QtQuick.Dialogs 1.2
-import QtQuick.Controls 2.12 as QtQuickControls212
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
+import QtQuick.Dialogs
+import QtQuick.Controls as QtQuickControls212
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.components as PlasmaComponents3
+import org.kde.plasma.extras as PlasmaExtras
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.components 1.0 as LatteComponents
+import org.kde.syndock.private.containment 0.1 as LatteContainment
 
 import "../../controls" as LatteExtraControls
 
@@ -392,12 +392,12 @@ PlasmaComponents.Page {
                 Layout.fillWidth: true
                 Layout.minimumHeight: implicitHeight
 
-                checked: latteView.indicator.enabled
+                checked: dockView.indicator.enabled
                 text: i18n("Indicators")
                 tooltip: i18n("Enable/disable indicators")
 
                 onPressed: {
-                    latteView.indicator.enabled = !latteView.indicator.enabled;
+                    dockView.indicator.enabled = !dockView.indicator.enabled;
                 }
             }
 
@@ -419,27 +419,27 @@ PlasmaComponents.Page {
                         id: tabBar
                         width: parent.width
 
-                        property string type: latteView.indicator.type
+                        property string type: dockView.indicator.type
 
                         PlasmaComponents.TabButton {
                             id: latteBtn
                             text: i18nc("latte indicator style", "Latte")
-                            readonly property string type: "org.kde.latte.default"
+                            readonly property string type: "org.kde.syndock.default"
 
                             onCheckedChanged: {
                                 if (checked) {
-                                    latteView.indicator.type = type;
+                                    dockView.indicator.type = type;
                                 }
                             }
                         }
                         PlasmaComponents.TabButton {
                             id: plasmaBtn
                             text: i18nc("plasma indicator style", "Plasma")
-                            readonly property string type: "org.kde.latte.plasma"
+                            readonly property string type: "org.kde.syndock.plasma"
 
                             onCheckedChanged: {
                                 if (checked) {
-                                    latteView.indicator.type = type;
+                                    dockView.indicator.type = type;
                                 }
                             }
                         }
@@ -508,7 +508,7 @@ PlasmaComponents.Page {
                     id: indicatorsStackView
                     Layout.fillWidth: true
                     Layout.maximumHeight: Layout.minimumHeight
-                    enabled: latteView.indicator.enabled
+                    enabled: dockView.indicator.enabled
 
                     property bool forwardSliding: true
 

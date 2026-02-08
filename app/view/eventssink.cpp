@@ -18,10 +18,10 @@
 #include <QRectF>
 
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-EventsSink::EventsSink(Latte::View *parent)
+EventsSink::EventsSink(NSE::View *parent)
     : QObject(parent),
       m_view(parent)
 {

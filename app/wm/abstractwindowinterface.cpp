@@ -20,7 +20,7 @@
 #include <KWindowSystem>
 #include <KActivities/Controller>
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 
 #define MAXPLASMAPANELTHICKNESS 96
@@ -36,7 +36,7 @@ AbstractWindowInterface::AbstractWindowInterface(QObject *parent)
     m_activities = new KActivities::Consumer(this);
     m_currentActivity = m_activities->currentActivity();
 
-    m_corona = qobject_cast<Latte::Corona *>(parent);
+    m_corona = qobject_cast<NSE::Corona *>(parent);
     m_windowsTracker = new Tracker::Windows(this);
     m_schemesTracker = new Tracker::Schemes(this);
 
@@ -115,7 +115,7 @@ QString AbstractWindowInterface::currentActivity()
     return m_currentActivity;
 }
 
-Latte::Corona *AbstractWindowInterface::corona()
+NSE::Corona *AbstractWindowInterface::corona()
 {
     return m_corona;
 }

@@ -11,7 +11,7 @@
 #include <QKeyEvent>
 #include <QMouseEvent>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Applets {
 namespace Delegate {

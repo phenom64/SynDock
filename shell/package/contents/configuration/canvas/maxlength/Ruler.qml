@@ -3,14 +3,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
-import QtQuick.Layouts 1.0
+import QtQuick.Layouts
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.syndock.core 0.2 as LatteCore
 
 Item{
     id: rulerItem

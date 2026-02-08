@@ -12,7 +12,7 @@
 #include "indicator/indicator.h"
 #include "view.h"
 
-namespace Latte {
+namespace NSE {
 
 class ClonedView : public View
 {
@@ -21,7 +21,7 @@ class ClonedView : public View
 public:
     static const int ERRORAPPLETID = -999;
 
-    ClonedView(Plasma::Corona *corona, Latte::OriginalView *originalView, QScreen *targetScreen = nullptr, bool byPassX11WM = false);
+    ClonedView(Plasma::Corona *corona, NSE::OriginalView *originalView, QScreen *targetScreen = nullptr, bool byPassX11WM = false);
     ~ClonedView();
 
     bool isOriginal() const override;
@@ -31,10 +31,10 @@ public:
     bool isPreferredForShortcuts() const override;
     int groupId() const override;
 
-    Latte::Types::ScreensGroup screensGroup() const override;
+    NSE::Types::ScreensGroup screensGroup() const override;
 
     ViewPart::Indicator *indicator() const override;
-    Latte::Data::View data() const override;
+    NSE::Data::View data() const override;
 
 protected:
     void showConfigurationInterface(Plasma::Applet *applet) override;
@@ -63,7 +63,7 @@ private:
 private:
     static QStringList CONTAINMENTMANUALSYNCEDPROPERTIES;
 
-    QPointer<Latte::OriginalView> m_originalView;
+    QPointer<NSE::OriginalView> m_originalView;
     QHash<int, int> m_currentAppletIds;
 };
 

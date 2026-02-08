@@ -6,7 +6,7 @@
 #include "secondaryconfigview.h"
 
 // local
-#include <config-latte.h>
+#include <config-syndock.h>
 #include "primaryconfigview.h"
 #include "../panelshadows_p.h"
 #include "../view.h"
@@ -30,10 +30,10 @@
 // Plasma
 #include <Plasma/Package>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-SecondaryConfigView::SecondaryConfigView(Latte::View *view, PrimaryConfigView *parent)
+SecondaryConfigView::SecondaryConfigView(NSE::View *view, PrimaryConfigView *parent)
     : SubConfigView(view, QString("#secondaryconfigview#")),
       m_parent(parent)
 {
@@ -74,7 +74,7 @@ QRect SecondaryConfigView::geometryWhenVisible() const
     return m_geometryWhenVisible;
 }
 
-void SecondaryConfigView::initParentView(Latte::View *view)
+void SecondaryConfigView::initParentView(NSE::View *view)
 {   
     SubConfigView::initParentView(view);
 
@@ -180,7 +180,7 @@ void SecondaryConfigView::showEvent(QShowEvent *ev)
     }
 
     setFlags(wFlags());
-    m_corona->wm()->setViewExtraFlags(this, false, Latte::Types::NormalWindow);
+    m_corona->wm()->setViewExtraFlags(this, false, NSE::Types::NormalWindow);
 
     syncGeometry();
 

@@ -13,7 +13,7 @@
 // KDE
 #include <KLocalizedString>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Model {
 
@@ -154,7 +154,7 @@ QString Screens::sortableText(const int &priority, const QString &text) const
     return (numberPart + text);
 }
 
-void Screens::setData(const Latte::Data::ScreensTable &screens)
+void Screens::setData(const NSE::Data::ScreensTable &screens)
 {
     clear();
 
@@ -169,7 +169,7 @@ void Screens::setData(const Latte::Data::ScreensTable &screens)
     }
 }
 
-void Screens::setSelected(const Latte::Data::ScreensTable &screens)
+void Screens::setSelected(const NSE::Data::ScreensTable &screens)
 {
     bool changed{false};
 
@@ -191,7 +191,7 @@ void Screens::setSelected(const Latte::Data::ScreensTable &screens)
     }
 }
 
-Latte::Data::ScreensTable Screens::checkedScreens()
+NSE::Data::ScreensTable Screens::checkedScreens()
 {
     Data::ScreensTable checked;
 
@@ -290,8 +290,8 @@ QVariant Screens::data(const QModelIndex &index, int role) const
         return c_screens[row].isSelected;
     } else if (role == SCREENDATAROLE) {
         QVariant scrVariant;
-        Latte::Data::Screen scrdata = c_screens[row];
-        scrVariant.setValue<Latte::Data::Screen>(scrdata);
+        NSE::Data::Screen scrdata = c_screens[row];
+        scrVariant.setValue<NSE::Data::Screen>(scrdata);
         return scrVariant;
     } else if (role == SORTINGROLE) {
         //! reverse id priority, smaller id has higher priority

@@ -23,14 +23,14 @@
 #include <Plasma/Applet>
 #include <Plasma/Containment>
 
-namespace Latte {
+namespace NSE {
 class Corona;
 namespace Layout {
 class GenericLayout;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 
 struct SubContaimentIdentityData
@@ -85,8 +85,8 @@ public:
     bool exportTemplate(const QString &originFile, const QString &destinationFile, const Data::AppletsTable &approvedApplets);
     bool exportTemplate(const Layout::GenericLayout *layout, Plasma::Containment *containment, const QString &destinationFile, const Data::AppletsTable &approvedApplets);
 
-    int expectedViewScreenId(const Latte::Corona *corona, const Data::View &view) const;
-    int expectedViewScreenId(const Latte::Corona *corona, const KConfigGroup &containmentGroup) const;
+    int expectedViewScreenId(const NSE::Corona *corona, const Data::View &view) const;
+    int expectedViewScreenId(const NSE::Corona *corona, const KConfigGroup &containmentGroup) const;
     int expectedViewScreenId(const Layout::GenericLayout *layout, const Plasma::Containment *lattecontainment) const;
 
     /// STATIC

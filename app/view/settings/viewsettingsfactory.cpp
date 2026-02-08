@@ -13,7 +13,7 @@
 // Plasma
 #include <Plasma/Containment>
 
-namespace Latte {
+namespace NSE {
 
 ViewSettingsFactory::ViewSettingsFactory(QObject *parent)
     : QObject(parent)
@@ -48,7 +48,7 @@ ViewPart::PrimaryConfigView *ViewSettingsFactory::primaryConfigView()
     return m_primaryConfigView;
 }
 
-ViewPart::PrimaryConfigView *ViewSettingsFactory::primaryConfigView(Latte::View *view)
+ViewPart::PrimaryConfigView *ViewSettingsFactory::primaryConfigView(NSE::View *view)
 {
     if (!m_primaryConfigView) {
         //!set user configuring early enough in order to give config windows time to be created properly
@@ -72,7 +72,7 @@ ViewPart::PrimaryConfigView *ViewSettingsFactory::primaryConfigView(Latte::View 
     return m_primaryConfigView;
 }
 
-ViewPart::WidgetExplorerView *ViewSettingsFactory::widgetExplorerView(Latte::View *view)
+ViewPart::WidgetExplorerView *ViewSettingsFactory::widgetExplorerView(NSE::View *view)
 {
     //! it is deleted on hiding
     auto widgetExplorerView = new ViewPart::WidgetExplorerView(view);

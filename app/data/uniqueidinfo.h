@@ -10,7 +10,7 @@
 #include <QMetaType>
 #include <QString>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class UniqueIdInfo
@@ -36,6 +36,6 @@ public:
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::UniqueIdInfo)
+Q_DECLARE_METATYPE(NSE::Data::UniqueIdInfo)
 
 #endif

@@ -4,13 +4,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.1
-import QtQuick.Window 2.2
+import QtQuick
+import QtQuick.Window
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.extras 2.0 as PlasmaExtras
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.extras as PlasmaExtras
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.syndock.core 0.2 as LatteCore
 
 Window{
     width: mainGrid.width + 10
@@ -38,7 +38,7 @@ Window{
             }
 
             Text{
-                text: latteView && latteView.name.length > 0 ? latteView.name : "___"
+                text: dockView && dockView.name.length > 0 ? dockView.name : "___"
             }
 
             Text{
@@ -46,7 +46,7 @@ Window{
             }
 
             Text{
-                text: latteView && latteView.positioner ? latteView.positioner.currentScreenName : "___"
+                text: dockView && dockView.positioner ? dockView.positioner.currentScreenName : "___"
             }
 
             Text{
@@ -55,8 +55,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.screenGeometry){
-                        return latteView.screenGeometry.x+","+latteView.screenGeometry.y+ " "+latteView.screenGeometry.width+"x"+latteView.screenGeometry.height;
+                    if (dockView && dockView.screenGeometry){
+                        return dockView.screenGeometry.x+","+dockView.screenGeometry.y+ " "+dockView.screenGeometry.width+"x"+dockView.screenGeometry.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -69,8 +69,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView) {
-                        return  latteView.x + "," + latteView.y + " "+latteView.width+ "x"+latteView.height;
+                    if (dockView) {
+                        return  dockView.x + "," + dockView.y + " "+dockView.width+ "x"+dockView.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -83,7 +83,7 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.onPrimary)
+                    if (dockView && dockView.onPrimary)
                         return "Yes";
                     else
                         return "No";
@@ -160,8 +160,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.effects && latteView.effects.mask) {
-                        return latteView.effects.mask.x +", "+ latteView.effects.mask.y+"  "+latteView.effects.mask.width+"x"+latteView.effects.mask.height;
+                    if (dockView && dockView.effects && dockView.effects.mask) {
+                        return dockView.effects.mask.x +", "+ dockView.effects.mask.y+"  "+dockView.effects.mask.width+"x"+dockView.effects.mask.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -174,8 +174,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.effects && latteView.effects.inputMask) {
-                        return latteView.effects.inputMask.x +", "+ latteView.effects.inputMask.y+"  "+latteView.effects.inputMask.width+"x"+latteView.effects.inputMask.height;
+                    if (dockView && dockView.effects && dockView.effects.inputMask) {
+                        return dockView.effects.inputMask.x +", "+ dockView.effects.inputMask.y+"  "+dockView.effects.inputMask.width+"x"+dockView.effects.inputMask.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -188,8 +188,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.localGeometry) {
-                        return latteView.localGeometry.x + ", " + latteView.localGeometry.y + "  " + latteView.localGeometry.width + "x" + latteView.localGeometry.height;
+                    if (dockView && dockView.localGeometry) {
+                        return dockView.localGeometry.x + ", " + dockView.localGeometry.y + "  " + dockView.localGeometry.width + "x" + dockView.localGeometry.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -202,8 +202,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.absoluteGeometry) {
-                        return latteView.absoluteGeometry.x + ", " + latteView.absoluteGeometry.y + "  " + latteView.absoluteGeometry.width + "x" + latteView.absoluteGeometry.height;
+                    if (dockView && dockView.absoluteGeometry) {
+                        return dockView.absoluteGeometry.x + ", " + dockView.absoluteGeometry.y + "  " + dockView.absoluteGeometry.width + "x" + dockView.absoluteGeometry.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -217,7 +217,7 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.effects && latteView.effects.drawEffects)
+                    if (dockView && dockView.effects && dockView.effects.drawEffects)
                         return "Yes";
                     else
                         return "No";
@@ -230,8 +230,8 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.effects && latteView.effects.rect) {
-                        return latteView.effects.rect.x + ", " + latteView.effects.rect.y + "  " +latteView.effects.rect.width + "x" + latteView.effects.rect.height;
+                    if (dockView && dockView.effects && dockView.effects.rect) {
+                        return dockView.effects.rect.x + ", " + dockView.effects.rect.y + "  " +dockView.effects.rect.width + "x" + dockView.effects.rect.height;
                     } else {
                         return "_,_ _x_";
                     }
@@ -252,7 +252,7 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.visibility && latteView.visibility.isHidden)
+                    if (dockView && dockView.visibility && dockView.visibility.isHidden)
                         return "Yes";
                     else
                         return "No";
@@ -265,7 +265,7 @@ Window{
 
             Text{
                 text: {
-                    if (latteView && latteView.visibility && latteView.visibility.containsMouse)
+                    if (dockView && dockView.visibility && dockView.visibility.containsMouse)
                         return "Yes";
                     else
                         return "No";
@@ -355,10 +355,10 @@ Window{
 
             Text{
                 text: {
-                    if (!latteView || !latteView.visibility)
+                    if (!dockView || !dockView.visibility)
                         return "";
 
-                    switch(latteView.visibility.mode){
+                    switch(dockView.visibility.mode){
                     case LatteCore.Types.AlwaysVisible:
                         return "Always Visible";
                         break;
@@ -400,7 +400,7 @@ Window{
                         break;
                     }
 
-                    return "<unknown> : " + latteView.visibility.mode;
+                    return "<unknown> : " + dockView.visibility.mode;
                 }
             }
 
@@ -823,8 +823,8 @@ Window{
             }
 
             Text{
-                text: latteView && latteView.windowsTracker && latteView.windowsTracker.currentScreen.lastActiveWindow && latteView.windowsTracker.currentScreen.lastActiveWindow.isValid ?
-                          latteView.windowsTracker.currentScreen.lastActiveWindow.winId : "--"
+                text: dockView && dockView.windowsTracker && dockView.windowsTracker.currentScreen.lastActiveWindow && dockView.windowsTracker.currentScreen.lastActiveWindow.isValid ?
+                          dockView.windowsTracker.currentScreen.lastActiveWindow.winId : "--"
             }
 
             Text{
@@ -832,8 +832,8 @@ Window{
             }
 
             Text{
-                text: latteView && latteView.windowsTracker && latteView.windowsTracker.currentScreen.lastActiveWindow && latteView.windowsTracker.currentScreen.lastActiveWindow.isValid ?
-                          latteView.windowsTracker.currentScreen.lastActiveWindow.display : "--"
+                text: dockView && dockView.windowsTracker && dockView.windowsTracker.currentScreen.lastActiveWindow && dockView.windowsTracker.currentScreen.lastActiveWindow.isValid ?
+                          dockView.windowsTracker.currentScreen.lastActiveWindow.display : "--"
                 elide: Text.ElideRight
             }
 
@@ -842,8 +842,8 @@ Window{
             }
 
             Text{
-                text: latteView && latteView.windowsTracker && latteView.windowsTracker.allScreens.lastActiveWindow && latteView.windowsTracker.allScreens.lastActiveWindow.isValid ?
-                          latteView.windowsTracker.allScreens.lastActiveWindow.winId : "--"
+                text: dockView && dockView.windowsTracker && dockView.windowsTracker.allScreens.lastActiveWindow && dockView.windowsTracker.allScreens.lastActiveWindow.isValid ?
+                          dockView.windowsTracker.allScreens.lastActiveWindow.winId : "--"
             }
 
             Text{
@@ -851,8 +851,8 @@ Window{
             }
 
             Text{
-                text: latteView && latteView.windowsTracker && latteView.windowsTracker.allScreens.lastActiveWindow && latteView.windowsTracker.allScreens.lastActiveWindow.isValid ?
-                          latteView.windowsTracker.allScreens.lastActiveWindow.display : "--"
+                text: dockView && dockView.windowsTracker && dockView.windowsTracker.allScreens.lastActiveWindow && dockView.windowsTracker.allScreens.lastActiveWindow.isValid ?
+                          dockView.windowsTracker.allScreens.lastActiveWindow.display : "--"
                 elide: Text.ElideRight
             }
         }

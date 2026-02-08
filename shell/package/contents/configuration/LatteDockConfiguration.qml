@@ -4,29 +4,29 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import QtQuick.Controls 1.4
-import QtQuick.Controls 2.12 as QtQuickControls212
-import QtQuick.Layouts 1.3
-import QtGraphicalEffects 1.0
-import QtQuick.Window 2.2
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Controls as QtQuickControls212
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
+import QtQuick.Window
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.components 3.0 as PlasmaComponents3
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import QtQuick.Controls.Styles.Plasma 2.0 as Styles
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.components as PlasmaComponents3
+import org.kde.plasma.extras as PlasmaExtras
+import QtQuick.Controls.Styles.Plasma as Styles
 
-import org.kde.kquickcontrolsaddons 2.0 as KQuickControlAddons
+import org.kde.kquickcontrolsaddons as KQuickControlAddons
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.components 1.0 as LatteComponents
 
 import "pages" as Pages
 import "../controls" as LatteExtraControls
 
 Loader {
-    active: plasmoid && plasmoid.configuration && latteView
+    active: plasmoid && plasmoid.configuration && dockView
 
     sourceComponent: FocusScope {
         id: dialog
@@ -48,12 +48,12 @@ Loader {
                                     viewConfig.availableScreenGeometry.height - canvasHeadThickness - units.largeSpacing :
                                     viewConfig.availableScreenGeometry.height - 2 * units.largeSpacing
 
-        property int maxWidth: 0.6 * latteView.screenGeometry.width
+        property int maxWidth: 0.6 * dockView.screenGeometry.width
 
-        property int canvasThickness: plasmoid.formFactor === PlasmaCore.Types.Vertical ? latteView.positioner.canvasGeometry.width : latteView.positioner.canvasGeometry.height
+        property int canvasThickness: plasmoid.formFactor === PlasmaCore.Types.Vertical ? dockView.positioner.canvasGeometry.width : dockView.positioner.canvasGeometry.height
         property int canvasHeadThickness: {
-            var edgeMargin = latteView.behaveAsPlasmaPanel && latteView.screenEdgeMarginEnabled ? latteView.screenEdgeMargin : 0;
-            return Math.max(0,canvasThickness - latteView.maxNormalThickness - Math.max(0,edgeMargin))
+            var edgeMargin = dockView.behaveAsPlasmaPanel && dockView.screenEdgeMarginEnabled ? dockView.screenEdgeMargin : 0;
+            return Math.max(0,canvasThickness - dockView.maxNormalThickness - Math.max(0,edgeMargin))
         }
 
         //! propose size based on font size
@@ -85,7 +85,7 @@ Loader {
         LayoutMirroring.enabled: Qt.application.layoutDirection === Qt.RightToLeft
         LayoutMirroring.childrenInherit: true
 
-        readonly property bool viewIsPanel: latteView.type === LatteCore.Types.PanelView
+        readonly property bool viewIsPanel: dockView.type === LatteCore.Types.PanelView
 
         property bool panelIsVertical: plasmoid.formFactor === PlasmaCore.Types.Vertical
         property int subGroupSpacing: units.largeSpacing + units.smallSpacing * 1.5
@@ -110,13 +110,13 @@ Loader {
         }
 
         Connections {
-            target: latteView.positioner
+            target: dockView.positioner
             onCurrentScreenNameChanged: dialog.updateScales();
         }
 
         function updateScales() {
-            userScaleWidth = universalSettings.screenWidthScale(latteView.positioner.currentScreenName);
-            userScaleHeight = universalSettings.screenHeightScale(latteView.positioner.currentScreenName);
+            userScaleWidth = universalSettings.screenWidthScale(dockView.positioner.currentScreenName);
+            userScaleHeight = universalSettings.screenHeightScale(dockView.positioner.currentScreenName);
         }
 
         PlasmaCore.FrameSvgItem{
@@ -341,7 +341,7 @@ Loader {
 
                 Repeater {
                     id: tasksTabButtonRepeater
-                    model: latteView.extendedInterface.latteTasksModel
+                    model: dockView.extendedInterface.latteTasksModel
 
                     PlasmaComponents.TabButton {
                         text: index >= 1 ? i18nc("tasks header and index","Tasks <%1>", index+1) : i18n("Tasks")
@@ -471,7 +471,7 @@ Loader {
 
                     Repeater {
                         id: tasksRepeater
-                        model: plasmoid && plasmoid.configuration && latteView ? latteView.extendedInterface.latteTasksModel : 0
+                        model: plasmoid && plasmoid.configuration && dockView ? dockView.extendedInterface.latteTasksModel : 0
 
                         Pages.TasksConfig {
                             readonly property int pageIndex: tabBar.visibleStaticPages+index
@@ -527,9 +527,9 @@ Loader {
                             var item = actionsModel.get(index);
 
                             if (item && item.actionId === "add:") {
-                                latteView.newView(item.templateId);
+                                dockView.newView(item.templateId);
                             } else if (item && item.actionId === "duplicate:") {
-                                latteView.duplicateView();
+                                dockView.duplicateView();
                             }
 
                             actionsComboBtn.comboBox.currentIndex = -1;
@@ -554,7 +554,7 @@ Loader {
                     }
 
                     Connections{
-                        target: latteView
+                        target: dockView
                         onTypeChanged: actionsComboBtn.updateDuplicateText();
                     }
 
@@ -600,7 +600,7 @@ Loader {
                         for (var i=0; i<actionsModel.count; ++i) {
                             var item = actionsModel.get(i);
                             if (item.actionId === "duplicate:") {
-                                var duplicateText = latteView.type === LatteCore.Types.DockView ? i18n("Duplicate Dock") : i18n("Duplicate Panel")
+                                var duplicateText = dockView.type === LatteCore.Types.DockView ? i18n("Duplicate Dock") : i18n("Duplicate Panel")
                                 item.name = duplicateText;
                                 break;
                             }
@@ -618,7 +618,7 @@ Loader {
                     opacity: enabled ? 1 : 0
                     tooltip: i18n("Remove current dock")
 
-                    onClicked: latteView.removeView()
+                    onClicked: dockView.removeView()
                 }
 
                 PlasmaComponents.Button {

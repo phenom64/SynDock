@@ -14,7 +14,7 @@
 #include <QStyleOption>
 #include <QStyleOptionViewItem>
 
-namespace Latte {
+namespace NSE {
 
 bool isActive(const QStyleOption &option);
 bool isEnabled(const QStyleOption &option);
@@ -47,7 +47,7 @@ void drawIcon(QPainter *painter, const QStyleOption &option, const QString &icon
 QRect remainedFromLayoutIcon(const QStyleOption &option, Qt::AlignmentFlag alignment = Qt::AlignLeft, int lengthMargin = -1, int thickMargin = -1);
 void drawLayoutIcon(QPainter *painter, const QStyleOption &option, const bool &isBackgroundFile, const QString &iconName, Qt::AlignmentFlag alignment = Qt::AlignLeft, int lengthMargin = -1, int thickMargin = -1);
 
-//! color scheme icon
+//! colour scheme icon
 QRect remainedFromColorSchemeIcon(const QStyleOption &option, Qt::AlignmentFlag alignment = Qt::AlignLeft, int lengthMargin = -1, int thickMargin = -1);
 void drawColorSchemeIcon(QPainter *painter, const QStyleOption &option, const QColor &textColor, const QColor &backgroundColor,Qt::AlignmentFlag alignment = Qt::AlignLeft, int lengthMargin = -1, int thickMargin = -1);
 

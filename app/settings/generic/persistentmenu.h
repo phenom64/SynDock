@@ -10,7 +10,7 @@
 #include <QMenu>
 #include <QMouseEvent>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Layout {
 namespace Delegate {

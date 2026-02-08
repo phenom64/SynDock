@@ -12,7 +12,7 @@
 // Qt
 #include <QString>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class Generic

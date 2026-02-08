@@ -3,19 +3,19 @@
     SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
     SPDX-License-Identifier: GPL-2.0-or-later
 */
-import QtQuick 2.7
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.3
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.components 3.0 as PlasmaComponents3
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.components as PlasmaComponents3
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.components 1.0 as LatteComponents
 
-import org.kde.latte.private.tasks 0.1 as LatteTasks
+import org.kde.syndock.private.tasks 0.1 as LatteTasks
 
 PlasmaComponents.Page {
     id: _tasksPage
@@ -27,8 +27,8 @@ PlasmaComponents.Page {
     readonly property bool isCurrentPage: (dialog.currentPage === _tasksPage)
 
     onIsCurrentPageChanged: {
-        if (isCurrentPage && latteView.extendedInterface.latteTasksModel.count>1) {
-            latteView.extendedInterface.appletRequestedVisualIndicator(tasks.id);
+        if (isCurrentPage && dockView.extendedInterface.latteTasksModel.count>1) {
+            dockView.extendedInterface.appletRequestedVisualIndicator(tasks.id);
         }
     }
 
@@ -172,7 +172,7 @@ PlasmaComponents.Page {
                     // checked: tasks.configuration.isPreferredForPositionShortcuts //! Disabled because it was not updated between multiple Tasks
                     tooltip: i18n("Based on position global shortcuts are enabled only for current tasks and not for other applets")
                     visible: dialog.advancedLevel
-                    enabled: latteView.isPreferredForShortcuts || (!latteView.layout.preferredForShortcutsTouched && latteView.isHighestPriorityView())
+                    enabled: dockView.isPreferredForShortcuts || (!dockView.layout.preferredForShortcutsTouched && dockView.isHighestPriorityView())
                     value: tasks.configuration.isPreferredForPositionShortcuts
 
                     onClicked: {
@@ -288,7 +288,7 @@ PlasmaComponents.Page {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Bounce launchers when triggered")
                     value: tasks.configuration.animationLauncherBouncing
-                    enabled: !latteView.indicator.info.providesTaskLauncherAnimation
+                    enabled: !dockView.indicator.info.providesTaskLauncherAnimation
 
                     onClicked: {
                         tasks.configuration.animationLauncherBouncing = !tasks.configuration.animationLauncherBouncing;
@@ -299,7 +299,7 @@ PlasmaComponents.Page {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Bounce tasks that need attention")
                     value: tasks.configuration.animationWindowInAttention
-                    enabled: !latteView.indicator.info.providesInAttentionAnimation
+                    enabled: !dockView.indicator.info.providesInAttentionAnimation
 
                     onClicked: {
                         tasks.configuration.animationWindowInAttention = !tasks.configuration.animationWindowInAttention;
@@ -320,7 +320,7 @@ PlasmaComponents.Page {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Grouped tasks bounce their new windows")
                     value: tasks.configuration.animationWindowAddedInGroup
-                    enabled: !latteView.indicator.info.providesGroupedWindowAddedAnimation
+                    enabled: !dockView.indicator.info.providesGroupedWindowAddedAnimation
 
                     onClicked: {
                         tasks.configuration.animationWindowAddedInGroup = !tasks.configuration.animationWindowAddedInGroup;
@@ -331,7 +331,7 @@ PlasmaComponents.Page {
                     Layout.maximumWidth: dialog.optionsWidth
                     text: i18n("Grouped tasks slide out their closed windows")
                     value: tasks.configuration.animationWindowRemovedFromGroup
-                    enabled: !latteView.indicator.info.providesGroupedWindowRemovedAnimation
+                    enabled: !dockView.indicator.info.providesGroupedWindowRemovedAnimation
 
                     onClicked: {
                         tasks.configuration.animationWindowRemovedFromGroup = !tasks.configuration.animationWindowRemovedFromGroup;
@@ -396,7 +396,7 @@ PlasmaComponents.Page {
                         checked: parent.group === group
                         checkable: false
                         exclusiveGroup: launchersGroup
-                        tooltip: i18n("Use the current layout set of launchers for this latteView. This group provides launchers <b>synchronization</b> between different views in the <b>same layout</b>")
+                        tooltip: i18n("Use the current layout set of launchers for this dockView. This group provides launchers <b>synchronization</b> between different views in the <b>same layout</b>")
                         //! it is shown only when the user has activated that option manually from the text layout file
                         visible: tasks.configuration.launchersGroup === group
 
@@ -416,7 +416,7 @@ PlasmaComponents.Page {
                         checked: parent.group === group
                         checkable: false
                         exclusiveGroup: launchersGroup
-                        tooltip: i18n("Use the global set of launchers for this latteView. This group provides launchers <b>synchronization</b> between different views and between <b>different layouts</b>")
+                        tooltip: i18n("Use the global set of launchers for this dockView. This group provides launchers <b>synchronization</b> between different views and between <b>different layouts</b>")
 
                         readonly property int group: LatteCore.Types.GlobalLaunchers
 
@@ -742,11 +742,11 @@ PlasmaComponents.Page {
                 Layout.topMargin: units.smallSpacing
 
                 text: i18n("Remove Latte Tasks Applet")
-                enabled: latteView.latteTasksArePresent
+                enabled: dockView.latteTasksArePresent
                 tooltip: i18n("Remove Latte Tasks plasmoid")
 
                 onClicked: {
-                    latteView.removeTasksPlasmoid();
+                    dockView.removeTasksPlasmoid();
                 }
             }
         }*/

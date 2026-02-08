@@ -1,9 +1,12 @@
-/*
-    SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmaibox.org>
-    SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
-
-    SPDX-License-Identifier: GPL-2.0-or-later
-*/
+/* This file is a part of the Atmo desktop experience's SynDock project for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * Based on Latte Dock:
+ * SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmaibox.org>
+ * SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
 #include "lattecorona.h"
 
@@ -42,7 +45,8 @@
 #include "wm/abstractwindowinterface.h"
 #include "wm/schemecolors.h"
 #include "wm/waylandinterface.h"
-#include "wm/xwindowinterface.h"
+// NOTE: X11 support removed - SynDock is Wayland-only
+// #include "wm/xwindowinterface.h"
 #include "wm/tracker/lastactivewindow.h"
 #include "wm/tracker/schemes.h"
 #include "wm/tracker/windowstracker.h"
@@ -53,7 +57,7 @@
 #include <QScreen>
 #include <QDBusConnection>
 #include <QDebug>
-#include <QDesktopWidget>
+// NOTE: QDesktopWidget removed in Qt 6 - using QScreen instead
 #include <QFile>
 #include <QFontDatabase>
 #include <QQmlContext>
@@ -81,7 +85,7 @@
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/plasmawindowmanagement.h>
 
-namespace Latte {
+namespace NSE {
 
 Corona::Corona(bool defaultLayoutOnStartup, QString layoutNameOnStartUp, QString addViewTemplateName, int userSetMemoryUsage, QObject *parent)
     : Plasma::Corona(parent),
@@ -104,16 +108,15 @@ Corona::Corona(bool defaultLayoutOnStartup, QString layoutNameOnStartUp, QString
 {
     connect(qApp, &QApplication::aboutToQuit, this, &Corona::onAboutToQuit);
 
-    //! create the window manager
-    if (KWindowSystem::isPlatformWayland()) {
-        m_wm = new WindowSystem::WaylandInterface(this);
-    } else {
-        m_wm = new WindowSystem::XWindowInterface(this);
+    //! Create the window manager (Wayland-only for SynDock)
+    if (!KWindowSystem::isPlatformWayland()) {
+        qWarning() << "SynDock requires Wayland. X11 is not supported.";
     }
+    m_wm = new WindowSystem::WaylandInterface(this);
 
     setupWaylandIntegration();
 
-    KPackage::Package package(new Latte::Package(this));
+    KPackage::Package package(new NSE::Package(this));
 
     m_screenPool->load();
 
@@ -147,7 +150,7 @@ Corona::Corona(bool defaultLayoutOnStartup, QString layoutNameOnStartUp, QString
     });
 
     //! Dbus adaptor initialization
-    new LatteDockAdaptor(this);
+    new SynDockAdaptor(this);
     QDBusConnection dbus = QDBusConnection::sessionBus();
     dbus.registerObject(QStringLiteral("/Latte"), this);
 }
@@ -187,7 +190,7 @@ Corona::~Corona()
 
     if (!m_importFullConfigurationFile.isEmpty()) {
         //!NOTE: Restart latte to import the new configuration
-        QString importCommand = "latte-dock --import-full \"" + m_importFullConfigurationFile + "\"";
+        QString importCommand = "syndock --import-full \"" + m_importFullConfigurationFile + "\"";
         qDebug() << "Executing Import Full Configuration command : " << importCommand;
 
         QProcess::startDetached(importCommand);
@@ -208,8 +211,8 @@ void Corona::onAboutToQuit()
         cleanConfig();
     }
 
-    if (m_layoutsManager->memoryUsage() == Latte::MemoryUsage::MultipleLayouts) {
-        m_layoutsManager->importer()->setMultipleLayoutsStatus(Latte::MultipleLayouts::Paused);
+    if (m_layoutsManager->memoryUsage() == NSE::MemoryUsage::MultipleLayouts) {
+        m_layoutsManager->importer()->setMultipleLayoutsStatus(NSE::MultipleLayouts::Paused);
     }
 
     qDebug() << "Latte Corona - unload: containments ...";
@@ -538,9 +541,9 @@ QRegion Corona::availableScreenRegion(int id) const
 {   
     //! ignore modes are added in order for notifications to be placed
     //! in better positioning and not overlap with sidebars or usually hidden views
-    QList<Types::Visibility> ignoremodes({Latte::Types::AutoHide,
-                                          Latte::Types::SidebarOnDemand,
-                                          Latte::Types::SidebarAutoHide});
+    QList<Types::Visibility> ignoremodes({NSE::Types::AutoHide,
+                                          NSE::Types::SidebarOnDemand,
+                                          NSE::Types::SidebarAutoHide});
 
 
     return availableScreenRegionWithCriteria(id,
@@ -564,7 +567,7 @@ QRegion Corona::availableScreenRegionWithCriteria(int id,
 
     QRegion available = ignoreExternalPanels ? screen->geometry() : screen->availableGeometry();
 
-    QList<Latte::View *> views;
+    QList<NSE::View *> views;
 
     if (inCurrentActivity) {
         views = m_layoutsManager->synchronizer()->viewsBasedOnActivityId(m_activitiesConsumer->currentActivity());
@@ -577,12 +580,12 @@ QRegion Corona::availableScreenRegionWithCriteria(int id,
     }
 
     //! blacklist irrelevant visibility modes
-    if (!ignoreModes.contains(Latte::Types::None)) {
-        ignoreModes << Latte::Types::None;
+    if (!ignoreModes.contains(NSE::Types::None)) {
+        ignoreModes << NSE::Types::None;
     }
 
-    if (!ignoreModes.contains(Latte::Types::NormalWindow)) {
-        ignoreModes << Latte::Types::NormalWindow;
+    if (!ignoreModes.contains(NSE::Types::NormalWindow)) {
+        ignoreModes << NSE::Types::NormalWindow;
     }
 
     bool allEdges = ignoreEdges.isEmpty();
@@ -607,16 +610,16 @@ QRegion Corona::availableScreenRegionWithCriteria(int id,
                     int offsetW = view->offset() * view->width();
 
                     switch (view->alignment()) {
-                    case Latte::Types::Left:
+                    case NSE::Types::Left:
                         x = view->x() + offsetW;
                         break;
 
-                    case Latte::Types::Center:
-                    case Latte::Types::Justify:
+                    case NSE::Types::Center:
+                    case NSE::Types::Justify:
                         x = (view->geometry().center().x() - w/2) + 1 + offsetW;
                         break;
 
-                    case Latte::Types::Right:
+                    case NSE::Types::Right:
                         x = view->geometry().right() + 1 - w - offsetW;
                         break;
                     }
@@ -631,16 +634,16 @@ QRegion Corona::availableScreenRegionWithCriteria(int id,
                     int offsetH = view->offset() * view->height();
 
                     switch (view->alignment()) {
-                    case Latte::Types::Top:
+                    case NSE::Types::Top:
                         y = view->y() + offsetH;
                         break;
 
-                    case Latte::Types::Center:
-                    case Latte::Types::Justify:
+                    case NSE::Types::Center:
+                    case NSE::Types::Justify:
                         y = (view->geometry().center().y() - h/2) + 1 + offsetH;
                         break;
 
-                    case Latte::Types::Bottom:
+                    case NSE::Types::Bottom:
                         y = view->geometry().bottom() - h - offsetH;
                         break;
                     }
@@ -743,9 +746,9 @@ QRect Corona::availableScreenRect(int id) const
 {
     //! ignore modes are added in order for notifications to be placed
     //! in better positioning and not overlap with sidebars or usually hidden views
-    QList<Types::Visibility> ignoremodes({Latte::Types::AutoHide,
-                                          Latte::Types::SidebarOnDemand,
-                                          Latte::Types::SidebarAutoHide});
+    QList<Types::Visibility> ignoremodes({NSE::Types::AutoHide,
+                                          NSE::Types::SidebarOnDemand,
+                                          NSE::Types::SidebarAutoHide});
 
     return availableScreenRectWithCriteria(id,
                                            QString(),
@@ -768,7 +771,7 @@ QRect Corona::availableScreenRectWithCriteria(int id,
 
     QRect available = ignoreExternalPanels ? screen->geometry() : screen->availableGeometry();
 
-    QList<Latte::View *> views;
+    QList<NSE::View *> views;
 
     if (inCurrentActivity) {
         views = m_layoutsManager->synchronizer()->viewsBasedOnActivityId(m_activitiesConsumer->currentActivity());
@@ -781,12 +784,12 @@ QRect Corona::availableScreenRectWithCriteria(int id,
     }
 
     //! blacklist irrelevant visibility modes
-    if (!ignoreModes.contains(Latte::Types::None)) {
-        ignoreModes << Latte::Types::None;
+    if (!ignoreModes.contains(NSE::Types::None)) {
+        ignoreModes << NSE::Types::None;
     }
 
-    if (!ignoreModes.contains(Latte::Types::NormalWindow)) {
-        ignoreModes << Latte::Types::NormalWindow;
+    if (!ignoreModes.contains(NSE::Types::NormalWindow)) {
+        ignoreModes << NSE::Types::NormalWindow;
     }
 
     bool allEdges = ignoreEdges.isEmpty();
@@ -988,7 +991,7 @@ void Corona::showAlternativesForApplet(Plasma::Applet *applet)
         return;
     }
 
-    Latte::View *latteView =  m_layoutsManager->synchronizer()->viewForContainment(applet->containment());
+    NSE::View *latteView =  m_layoutsManager->synchronizer()->viewForContainment(applet->containment());
 
     KDeclarative::QmlObjectSharedEngine *qmlObj{nullptr};
 
@@ -1093,7 +1096,7 @@ void Corona::windowColorScheme(QString windowIdAndScheme)
         QTimer::singleShot(200, [this, schemeStr]() {
             //! [Wayland Case] - give the time to be informed correctly for the active window id
             //! otherwise the active window id may not be the same with the one triggered
-            //! the color scheme dbus signal
+            //! the colour scheme dbus signal
             QString windowIdStr = m_wm->activeWindow().toString();
             m_wm->schemesTracker()->setColorSchemeForWindow(windowIdStr.toUInt(), schemeStr);
         });
@@ -1193,7 +1196,7 @@ QStringList Corona::contextMenuData(const uint &containmentId)
 
     for(const auto &layoutName : m_layoutsManager->synchronizer()->menuLayouts()) {
         if (m_layoutsManager->synchronizer()->centralLayout(layoutName)
-                || m_layoutsManager->memoryUsage() == Latte::MemoryUsage::SingleLayout) {
+                || m_layoutsManager->memoryUsage() == NSE::MemoryUsage::SingleLayout) {
             QStringList layoutdata;
             Data::LayoutIcon layouticon = m_layoutsManager->iconForLayout(layoutName);
             layoutdata << layoutName;
@@ -1210,7 +1213,7 @@ QStringList Corona::contextMenuData(const uint &containmentId)
     viewtype << QString::number((int)viewType); //Selected View type
 
     if (view && view->isOriginal()) { /*View*/
-        auto originalview = qobject_cast<Latte::OriginalView *>(view);
+        auto originalview = qobject_cast<NSE::OriginalView *>(view);
         viewtype << "0";              //original view
         viewtype <<  QString::number(originalview->clonesCount());
     } else if (view && view->isCloned()) {
@@ -1230,7 +1233,7 @@ QStringList Corona::viewTemplatesData()
 {
     QStringList data;
 
-    Latte::Data::GenericTable<Data::Generic> viewtemplates = m_templatesManager->viewTemplates();
+    NSE::Data::GenericTable<Data::Generic> viewtemplates = m_templatesManager->viewTemplates();
 
     for(int i=0; i<viewtemplates.rowCount(); ++i) {
         data << viewtemplates[i].name;
@@ -1275,14 +1278,14 @@ void Corona::moveViewToLayout(const uint &containmentId, const QString &layoutNa
 {
     auto view = m_layoutsManager->synchronizer()->viewForContainment((int)containmentId);
     if (view && !layoutName.isEmpty() && view->layout()->name() != layoutName) {
-        Latte::Types::ScreensGroup screensgroup{Latte::Types::SingleScreenGroup};
+        NSE::Types::ScreensGroup screensgroup{NSE::Types::SingleScreenGroup};
 
         if (view->isOriginal()) {
-            auto originalview = qobject_cast<Latte::OriginalView *>(view);
+            auto originalview = qobject_cast<NSE::OriginalView *>(view);
             screensgroup = originalview->screensGroup();
         }
 
-        view->positioner()->setNextLocation(layoutName, screensgroup, "", Plasma::Types::Floating, Latte::Types::NoneAlignment);
+        view->positioner()->setNextLocation(layoutName, screensgroup, "", Plasma::Types::Floating, NSE::Types::NoneAlignment);
     }
 }
 
@@ -1331,23 +1334,23 @@ void Corona::importFullConfiguration(const QString &file)
 
 inline void Corona::qmlRegisterTypes() const
 {   
-    qmlRegisterUncreatableMetaObject(Latte::Settings::staticMetaObject,
+    qmlRegisterUncreatableMetaObject(NSE::Settings::staticMetaObject,
                                      "org.kde.latte.private.app",          // import statement
                                      0, 1,                                 // major and minor version of the import
                                      "Settings",                           // name in QML
                                      "Error: only enums of latte app settings");
 
-    qmlRegisterType<Latte::BackgroundTracker>("org.kde.latte.private.app", 0, 1, "BackgroundTracker");
-    qmlRegisterType<Latte::Interfaces>("org.kde.latte.private.app", 0, 1, "Interfaces");
-    qmlRegisterType<Latte::ContextMenuLayerQuickItem>("org.kde.latte.private.app", 0, 1, "ContextMenuLayer");
-    qmlRegisterAnonymousType<QScreen>("latte-dock", 1);
-    qmlRegisterAnonymousType<Latte::View>("latte-dock", 1);
-    qmlRegisterAnonymousType<Latte::ViewPart::WindowsTracker>("latte-dock", 1);
-    qmlRegisterAnonymousType<Latte::ViewPart::TrackerPart::CurrentScreenTracker>("latte-dock", 1);
-    qmlRegisterAnonymousType<Latte::ViewPart::TrackerPart::AllScreensTracker>("latte-dock", 1);
-    qmlRegisterAnonymousType<Latte::WindowSystem::SchemeColors>("latte-dock", 1);
-    qmlRegisterAnonymousType<Latte::WindowSystem::Tracker::LastActiveWindow>("latte-dock", 1);
-    qmlRegisterAnonymousType<Latte::Types>("latte-dock", 1);
+    qmlRegisterType<NSE::BackgroundTracker>("org.kde.latte.private.app", 0, 1, "BackgroundTracker");
+    qmlRegisterType<NSE::Interfaces>("org.kde.latte.private.app", 0, 1, "Interfaces");
+    qmlRegisterType<NSE::ContextMenuLayerQuickItem>("org.kde.latte.private.app", 0, 1, "ContextMenuLayer");
+    qmlRegisterAnonymousType<QScreen>("syndock", 1);
+    qmlRegisterAnonymousType<NSE::View>("syndock", 1);
+    qmlRegisterAnonymousType<NSE::ViewPart::WindowsTracker>("syndock", 1);
+    qmlRegisterAnonymousType<NSE::ViewPart::TrackerPart::CurrentScreenTracker>("syndock", 1);
+    qmlRegisterAnonymousType<NSE::ViewPart::TrackerPart::AllScreensTracker>("syndock", 1);
+    qmlRegisterAnonymousType<NSE::WindowSystem::SchemeColors>("syndock", 1);
+    qmlRegisterAnonymousType<NSE::WindowSystem::Tracker::LastActiveWindow>("syndock", 1);
+    qmlRegisterAnonymousType<NSE::Types>("syndock", 1);
 
 }
 

@@ -28,7 +28,7 @@
 #include <Plasma/Corona>
 #include <PlasmaQuick/AppletQuickItem>
 
-namespace Latte {
+namespace NSE {
 
 ContextMenuLayerQuickItem::ContextMenuLayerQuickItem(QQuickItem *parent) :
     QQuickItem(parent)
@@ -56,7 +56,7 @@ void ContextMenuLayerQuickItem::setView(QObject *view)
         return;
     }
 
-    m_latteView = qobject_cast<Latte::View *>(view);
+    m_latteView = qobject_cast<NSE::View *>(view);
     emit viewChanged();
 }
 

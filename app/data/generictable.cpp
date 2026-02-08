@@ -15,7 +15,7 @@
 // Qt
 #include <QDebug>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 template <class T>

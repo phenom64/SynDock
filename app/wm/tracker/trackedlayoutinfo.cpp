@@ -9,18 +9,18 @@
 #include "windowstracker.h"
 #include "../../layout/genericlayout.h"
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 namespace Tracker {
 
 
-TrackedLayoutInfo::TrackedLayoutInfo(Tracker::Windows *tracker, Latte::Layout::GenericLayout *layout)
+TrackedLayoutInfo::TrackedLayoutInfo(Tracker::Windows *tracker, NSE::Layout::GenericLayout *layout)
     : TrackedGeneralInfo(tracker),
       m_layout(layout)
 {
     m_activities = m_layout->appliedActivities();
 
-    connect(m_layout, &Latte::Layout::GenericLayout::activitiesChanged, this, [&]() {
+    connect(m_layout, &NSE::Layout::GenericLayout::activitiesChanged, this, [&]() {
         m_activities = m_layout->appliedActivities();
         updateTrackingCurrentActivity();
     });
@@ -30,7 +30,7 @@ TrackedLayoutInfo::~TrackedLayoutInfo()
 {
 }
 
-Latte::Layout::GenericLayout *TrackedLayoutInfo::layout() const
+NSE::Layout::GenericLayout *TrackedLayoutInfo::layout() const
 {
     return m_layout;
 }

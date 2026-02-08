@@ -3,16 +3,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
 MouseArea {
     id: __originArea
     enabled: visible
     hoverEnabled: true
-    visible: root.latteView && root.latteView.sink.originParentItem !== originParentItem && width>0 && height>0
+    visible: root.dockView && root.dockView.sink.originParentItem !== originParentItem && width>0 && height>0
 
     onEntered: {
-        root.latteView.sink.setSink(originParentItem, destination);
+        root.dockView.sink.setSink(originParentItem, destination);
     }
 
     Loader{

@@ -4,19 +4,19 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.0
-import QtQuick.Controls 1.4
-import QtQuick.Layouts 1.3
-import QtGraphicalEffects 1.0
-import QtQuick.Dialogs 1.2
+import QtQuick
+import QtQuick.Controls
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
+import QtQuick.Dialogs
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.components 3.0 as PlasmaComponents3
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.components as PlasmaComponents3
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.components 1.0 as LatteComponents
+import org.kde.syndock.private.containment 0.1 as LatteContainment
 
 PlasmaComponents.Page {
     id: page
@@ -122,7 +122,7 @@ PlasmaComponents.Page {
                         Layout.fillWidth: true
                         value: plasmoid.configuration.proportionIconSize
                         from: 1.0
-                        to: (latteView.visibility.mode === LatteCore.Types.SidebarOnDemand || latteView.visibility.mode === LatteCore.Types.SidebarAutoHide)  ? 25 : 12
+                        to: (dockView.visibility.mode === LatteCore.Types.SidebarOnDemand || dockView.visibility.mode === LatteCore.Types.SidebarAutoHide)  ? 25 : 12
                         stepSize: 0.1
                         wheelEnabled: false
 
@@ -156,7 +156,7 @@ PlasmaComponents.Page {
 
                         text: proportionSizeSlider.value !== proportionSizeSlider.from ?
                                   (absoluteSizeLblMouseArea.containsMouse ?
-                                       i18nc("number in pixels, e.g. 64 px.","%1 px.", latteView.metrics.maxIconSize) :
+                                       i18nc("number in pixels, e.g. 64 px.","%1 px.", dockView.metrics.maxIconSize) :
                                        i18nc("number in percentage, e.g. 85 %","%1 %", proportionSizeSlider.value.toFixed(1))) :
                                   i18nc("no value in percentage","--- %")
                         horizontalAlignment: Text.AlignRight
@@ -643,7 +643,7 @@ PlasmaComponents.Page {
                         Layout.minimumWidth: theme.mSize(theme.defaultFont).width * 4
                         Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
 
-                        readonly property int currentValueInPixels: (lengthExtMarginSlider.value/100) * latteView.metrics.maxIconSize
+                        readonly property int currentValueInPixels: (lengthExtMarginSlider.value/100) * dockView.metrics.maxIconSize
 
                         MouseArea {
                             id: lengthMarginLblMouseArea
@@ -672,7 +672,7 @@ PlasmaComponents.Page {
                         to: 60
                         stepSize: 1
                         wheelEnabled: false
-                        minimumInternalValue: latteView.indicator.info.minThicknessPadding * 100
+                        minimumInternalValue: dockView.indicator.info.minThicknessPadding * 100
 
                         onPressedChanged: {
                             if (!pressed) {
@@ -690,7 +690,7 @@ PlasmaComponents.Page {
                         Layout.maximumWidth: theme.mSize(theme.defaultFont).width * 4
 
                         readonly property int currentValue: Math.max(thickMarginSlider.minimumInternalValue, thickMarginSlider.value)
-                        readonly property int currentValueInPixels: (currentValue/100) * latteView.metrics.maxIconSize
+                        readonly property int currentValueInPixels: (currentValue/100) * dockView.metrics.maxIconSize
 
                         MouseArea {
                             id: thickMarginLblMouseArea

@@ -6,13 +6,13 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.4
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Layouts
 
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.draganddrop 2.0
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.plasma.core as PlasmaCore
+import org.kde.draganddrop
 
 Item {
     id: delegate
@@ -49,7 +49,7 @@ Item {
             onDoubleClicked: {
                 if (!delegate.pendingUninstall) {
                     widgetExplorer.addApplet(pluginName);
-                    latteView.extendedInterface.appletCreated(pluginName);
+                    dockView.extendedInterface.appletCreated(pluginName);
                 }
             }
             onEntered: delegate.GridView.view.currentIndex = index

@@ -3,11 +3,11 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import org.kde.plasma.plasmoid 2.0
+import QtQuick
+import org.kde.plasma.plasmoid
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.abilities.host 0.1 as AbilityHost
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.abilities.host 0.1 as AbilityHost
 
 import "./metrics" as MetricsPrivateTypes
 
@@ -30,10 +30,10 @@ AbilityHost.Metrics {
 
     //! Private Properties
     readonly property int portionIconSize: { //icon size based on screen height
-        if ((plasmoid.configuration.proportionIconSize===-1) || !latteView)
+        if ((plasmoid.configuration.proportionIconSize===-1) || !dockView)
             return -1;
 
-        var basedOnScreenHeight = Math.max(16,Math.round(latteView.screenGeometry.height * plasmoid.configuration.proportionIconSize/100))
+        var basedOnScreenHeight = Math.max(16,Math.round(dockView.screenGeometry.height * plasmoid.configuration.proportionIconSize/100))
 
         //! round to nearest odd number
         return 2 * Math.round(basedOnScreenHeight/2);

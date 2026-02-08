@@ -4,17 +4,17 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.0
+import QtQuick
 
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.plasmoid
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.activities 0.1 as Activities
-import org.kde.taskmanager 0.1 as TaskManager
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.activities as Activities
+import org.kde.taskmanager as TaskManager
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.tasks 0.1 as LatteTasks
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.private.tasks 0.1 as LatteTasks
 
 import "../code/activitiesTools.js" as ActivitiesTools
 

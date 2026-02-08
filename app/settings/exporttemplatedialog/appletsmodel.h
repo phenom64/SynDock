@@ -14,7 +14,7 @@
 #include <QModelIndex>
 #include <QList>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Model {
 
@@ -55,10 +55,10 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    void setData(const Latte::Data::AppletsTable &applets);
-    void setSelected(const Latte::Data::AppletsTable &applets);
+    void setData(const NSE::Data::AppletsTable &applets);
+    void setSelected(const NSE::Data::AppletsTable &applets);
 
-    Latte::Data::AppletsTable selectedApplets();
+    NSE::Data::AppletsTable selectedApplets();
 
     void deselectAll();
     void reset();
@@ -73,8 +73,8 @@ private:
     void clear();
 
 private:
-    Latte::Data::AppletsTable o_applets;
-    Latte::Data::AppletsTable c_applets;
+    NSE::Data::AppletsTable o_applets;
+    NSE::Data::AppletsTable c_applets;
 
     QList<QString> m_appletsWithNoPersonalData;
 };

@@ -35,18 +35,18 @@ class PlasmaShellSurface;
 }
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 class PrimaryConfigView;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 class SecondaryConfigView : public SubConfigView
@@ -54,7 +54,7 @@ class SecondaryConfigView : public SubConfigView
     Q_OBJECT
 
 public:
-    SecondaryConfigView(Latte::View *view, PrimaryConfigView *parent);
+    SecondaryConfigView(NSE::View *view, PrimaryConfigView *parent);
 
     QRect geometryWhenVisible() const;
 
@@ -72,7 +72,7 @@ protected:
     void focusOutEvent(QFocusEvent *ev) override;
 
     void init() override;
-    void initParentView(Latte::View *view) override;
+    void initParentView(NSE::View *view) override;
     void updateEnabledBorders() override;
 
 private:

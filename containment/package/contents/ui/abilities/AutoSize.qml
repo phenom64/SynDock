@@ -3,12 +3,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.8
+import QtQuick
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.syndock.core 0.2 as LatteCore
 
 Item {
     id: sizer
@@ -20,9 +20,9 @@ Item {
                                      && !root.containsOnlyPlasmaTasks
                                      && layouter.fillApplets<=0
                                      && !(root.inConfigureAppletsMode && plasmoid.configuration.alignment === LatteCore.Types.Justify) /*block shrinking for justify splitters*/
-                                     && latteView
-                                     && latteView.visibility.mode !== LatteCore.Types.SidebarOnDemand
-                                     && latteView.visibility.mode !== LatteCore.Types.SidebarAutoHide
+                                     && dockView
+                                     && dockView.visibility.mode !== LatteCore.Types.SidebarOnDemand
+                                     && dockView.visibility.mode !== LatteCore.Types.SidebarAutoHide
 
     property int iconSize: -1 //it is not set, this is the default
 
@@ -61,7 +61,7 @@ Item {
         target: root
         onContainsOnlyPlasmaTasksChanged: sizer.updateIconSize();
         onMaxLengthChanged: {
-            if (latteView && latteView.positioner && !latteView.positioner.isOffScreen) {
+            if (dockView && dockView.positioner && !dockView.positioner.isOffScreen) {
                 sizer.updateIconSize();
             }
         }
@@ -78,7 +78,7 @@ Item {
     }
 
     Connections {
-        target: latteView
+        target: dockView
         onWidthChanged:{
             if (root.isHorizontal && metrics.portionIconSize!==-1) {
                 sizer.updateIconSize();
@@ -93,9 +93,9 @@ Item {
     }
 
     Connections {
-        target: latteView && latteView.positioner ? latteView.positioner : null
+        target: dockView && dockView.positioner ? dockView.positioner : null
         onIsOffScreenChanged: {
-            if (!latteView.positioner.isOffScreen) {
+            if (!dockView.positioner.isOffScreen) {
                 sizer.updateIconSize();
             }
         }

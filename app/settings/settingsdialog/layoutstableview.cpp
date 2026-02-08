@@ -14,7 +14,7 @@
 
 #define MARGIN 15
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace View {
 

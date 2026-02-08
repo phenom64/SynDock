@@ -1,9 +1,12 @@
-/*
-    SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
-    SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
-
-    SPDX-License-Identifier: GPL-2.0-or-later
-*/
+/* This file is a part of the Atmo desktop experience's SynDock project for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * Based on Latte Dock:
+ * SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
+ * SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
 #ifndef LATTECORONA_H
 #define LATTECORONA_H
@@ -48,7 +51,7 @@ class PlasmaShell;
 }
 }
 
-namespace Latte {
+namespace NSE {
 class CentralLayout;
 class ScreenPool;
 class GlobalShortcuts;
@@ -77,12 +80,12 @@ class AbstractWindowInterface;
 }
 }
 
-namespace Latte {
+namespace NSE {
 
 class Corona : public Plasma::Corona
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.LatteDock")
+    Q_CLASSINFO("D-Bus Interface", "org.kde.SynDock")
 
 public:
     Corona(bool defaultLayoutOnStartup = false,
@@ -179,8 +182,8 @@ signals:
     void configurationShown(PlasmaQuick::ConfigView *configView);
     void viewLocationChanged();
     void raiseViewsTemporaryChanged();
-    void availableScreenRectChangedFrom(Latte::View *origin);
-    void availableScreenRegionChangedFrom(Latte::View *origin);
+    void availableScreenRectChangedFrom(NSE::View *origin);
+    void availableScreenRegionChangedFrom(NSE::View *origin);
     void verticalUnityViewHasFocus();
 
 private slots:

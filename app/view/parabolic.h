@@ -14,11 +14,11 @@
 #include <QPointF>
 #include <QTimer>
 
-namespace Latte {
+namespace NSE {
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 class Parabolic: public QObject
@@ -28,7 +28,7 @@ class Parabolic: public QObject
     Q_PROPERTY(QQuickItem *currentItem READ currentParabolicItem WRITE setCurrentParabolicItem NOTIFY currentParabolicItemChanged)
 
 public:
-    Parabolic(Latte::View *parent);
+    Parabolic(NSE::View *parent);
     virtual ~Parabolic();
 
     QQuickItem *currentParabolicItem() const;
@@ -42,7 +42,7 @@ private slots:
     void onEvent(QEvent *e);
 
 private:
-    QPointer<Latte::View> m_view;
+    QPointer<NSE::View> m_view;
     QPointer<QQuickItem> m_currentParabolicItem;
 
     QPointF m_lastOrphanParabolicMove;

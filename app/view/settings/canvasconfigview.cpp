@@ -23,10 +23,10 @@
 // Plasma
 #include <Plasma/Package>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-CanvasConfigView::CanvasConfigView(Latte::View *view, PrimaryConfigView *parent)
+CanvasConfigView::CanvasConfigView(NSE::View *view, PrimaryConfigView *parent)
     : SubConfigView(view, QString("#canvasconfigview#"), false),
       m_parent(parent)
 {
@@ -58,7 +58,7 @@ QRect CanvasConfigView::geometryWhenVisible() const
     return m_geometryWhenVisible;
 }
 
-void CanvasConfigView::initParentView(Latte::View *view)
+void CanvasConfigView::initParentView(NSE::View *view)
 {
     SubConfigView::initParentView(view);
 

@@ -19,7 +19,7 @@
 //! KActivities
 #include <KActivities/Info>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class Activity : public Generic
@@ -49,7 +49,7 @@ typedef GenericTable<Data::Activity> ActivitiesTable;
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::Activity)
-Q_DECLARE_METATYPE(Latte::Data::ActivitiesTable)
+Q_DECLARE_METATYPE(NSE::Data::Activity)
+Q_DECLARE_METATYPE(NSE::Data::ActivitiesTable)
 
 #endif

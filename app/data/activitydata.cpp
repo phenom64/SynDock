@@ -5,7 +5,7 @@
 
 #include "activitydata.h"
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 Activity::Activity()

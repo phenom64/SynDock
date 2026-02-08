@@ -3,8 +3,8 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import org.kde.plasma.plasmoid 2.0
+import QtQuick
+import org.kde.plasma.plasmoid
 
 import "./privates" as Ability
 
@@ -13,14 +13,14 @@ Ability.LaunchersPrivate {
     updateIsBlocked: (root.dragOverlay && root.dragOverlay.pressed)
                      || layouter.appletsInParentChange
 
-    readonly property bool isReady: latteView && latteView.layout && universalSettings && root.layoutsManager !== null
-    readonly property bool isCapableOfLayoutLaunchers: latteView && latteView.layout
-    readonly property bool isCapableOfUniversalLaunchers: latteView && universalSettings
+    readonly property bool isReady: dockView && dockView.layout && universalSettings && root.layoutsManager !== null
+    readonly property bool isCapableOfLayoutLaunchers: dockView && dockView.layout
+    readonly property bool isCapableOfUniversalLaunchers: dockView && universalSettings
 
     property string layoutName: ""
 
-    readonly property var layoutLaunchers: latteView && latteView.layout ? latteView.layout.launchers : []
-    readonly property var universalLaunchers: latteView && universalSettings ? universalSettings.launchers : []
+    readonly property var layoutLaunchers: dockView && dockView.layout ? dockView.layout.launchers : []
+    readonly property var universalLaunchers: dockView && universalSettings ? universalSettings.launchers : []
 
     function addAbilityClient(client) {
         layoutsManager.syncedLaunchers.addAbilityClient(client);
@@ -100,7 +100,7 @@ Ability.LaunchersPrivate {
 
     function setLayoutLaunchers(launchers) {
         if (isCapableOfLayoutLaunchers) {
-            latteView.layout.launchers = launchers;
+            dockView.layout.launchers = launchers;
         }
     }
 

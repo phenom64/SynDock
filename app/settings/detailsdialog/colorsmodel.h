@@ -15,7 +15,7 @@
 #include <QModelIndex>
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Model {
 
@@ -32,7 +32,7 @@ public:
         TEXTCOLORROLE
     };
 
-    explicit Colors(QObject *parent, Latte::Corona *corona);
+    explicit Colors(QObject *parent, NSE::Corona *corona);
     ~Colors();
 
     int rowCount() const;
@@ -52,9 +52,9 @@ private:
 private:
     QString m_colorsPath;
 
-    QList<Latte::Data::LayoutColor> m_colorsTable;
+    QList<NSE::Data::LayoutColor> m_colorsTable;
 
-    Latte::Corona *m_corona{nullptr};
+    NSE::Corona *m_corona{nullptr};
 };
 
 }

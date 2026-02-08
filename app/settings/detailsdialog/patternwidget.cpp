@@ -19,7 +19,7 @@
 //! KDE
 #include <KLocalizedString>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Widget {
 
@@ -88,7 +88,7 @@ void PatternWidget::setTextColor(const QString &color)
     }
 
     m_textColor = color;
-    m_textColorBrightness = Latte::colorBrightness(QColor(color));
+    m_textColorBrightness = NSE::colorBrightness(QColor(color));
 
     emit textColorChanged();
 }

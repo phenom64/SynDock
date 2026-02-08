@@ -24,10 +24,10 @@
 
 #define PUBLISHINTERVAL 1000
 
-namespace Latte {
+namespace NSE {
 namespace PlasmaExtended {
 
-ScreenGeometries::ScreenGeometries(Latte::Corona *parent)
+ScreenGeometries::ScreenGeometries(NSE::Corona *parent)
     : QObject(parent),
       m_corona(parent),
       m_plasmaServiceWatcher(new QDBusServiceWatcher(this))
@@ -68,17 +68,17 @@ void ScreenGeometries::init()
         qDebug() << "PLASMA STRUTS MANAGER :: interface availability :: " << QDBusConnection::sessionBus().interface()->isServiceRegistered(PLASMASERVICE).value();
     }
 
-    connect(m_corona->universalSettings(), &Latte::UniversalSettings::isAvailableGeometryBroadcastedToPlasmaChanged, this, &ScreenGeometries::onBroadcastToPlasmaChanged);
+    connect(m_corona->universalSettings(), &NSE::UniversalSettings::isAvailableGeometryBroadcastedToPlasmaChanged, this, &ScreenGeometries::onBroadcastToPlasmaChanged);
 
     if (serviceavailable) {
         m_plasmaInterfaceAvailable = true;
 
         qDebug() << " PLASMA STRUTS MANAGER :: is available...";
 
-        connect(m_corona, &Latte::Corona::availableScreenRectChangedFrom, this, &ScreenGeometries::availableScreenGeometryChangedFrom);
-        connect(m_corona, &Latte::Corona::availableScreenRegionChangedFrom, this, &ScreenGeometries::availableScreenGeometryChangedFrom);
+        connect(m_corona, &NSE::Corona::availableScreenRectChangedFrom, this, &ScreenGeometries::availableScreenGeometryChangedFrom);
+        connect(m_corona, &NSE::Corona::availableScreenRegionChangedFrom, this, &ScreenGeometries::availableScreenGeometryChangedFrom);
 
-        connect(m_corona->layoutsManager()->synchronizer(), &Latte::Layouts::Synchronizer::centralLayoutsChanged, this, [&]() {
+        connect(m_corona->layoutsManager()->synchronizer(), &NSE::Layouts::Synchronizer::centralLayoutsChanged, this, [&]() {
             m_publishTimer.start();
         });
 
@@ -260,7 +260,7 @@ void ScreenGeometries::updateGeometries()
     m_lastScreenNames = availableScreenNames;
 }
 
-void ScreenGeometries::availableScreenGeometryChangedFrom(Latte::View *origin)
+void ScreenGeometries::availableScreenGeometryChangedFrom(NSE::View *origin)
 {
     if (m_corona->universalSettings()->isAvailableGeometryBroadcastedToPlasma() &&  origin && origin->layout() && origin->layout()->isCurrent()) {
         m_publishTimer.start();

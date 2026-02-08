@@ -3,10 +3,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
-import org.kde.latte.abilities.host 0.1 as AbilityHost
-import org.kde.latte.abilities.bridge 0.1 as AbilityBridge
+import org.kde.syndock.abilities.host 0.1 as AbilityHost
+import org.kde.syndock.abilities.bridge 0.1 as AbilityBridge
 
 Item{
     id: settings
@@ -31,7 +31,7 @@ Item{
     // NAME: inEditMode
     //   USAGE: read-only
     //   EXPLANATION: Latte sets it to true when this applet is in a Latte containment and Latte
-    //       is also in EditMode, that means when the user is altering applets and Latte latteView settings
+    //       is also in EditMode, that means when the user is altering applets and Latte dockView settings
     // @since: 0.9
     readonly property bool inEditMode: appletItem.isLattePlasmoid ? root.editMode : root.inConfigureAppletsMode
 
@@ -123,8 +123,8 @@ Item{
     //   USE CASE: it can be used from applets that want windows tracking in order
     //       to update their appearance or their behavior accordingly
     // @since: 0.9
-    readonly property QtObject windowsTracker: applet.windowsTrackingEnabled && latteView && latteView.windowsTracker ?
-                                                   latteView.windowsTracker : null
+    readonly property QtObject windowsTracker: applet.windowsTrackingEnabled && dockView && dockView.windowsTracker ?
+                                                   dockView.windowsTracker : null
 
     readonly property Item actions: Actions{}
     readonly property Item applet: mainCommunicator.requires

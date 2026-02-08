@@ -35,7 +35,7 @@
 #include <Plasma/Applet>
 #include <Plasma/Containment>
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 
 const int Storage::IDNULL = -1;
@@ -1592,7 +1592,7 @@ Data::View Storage::view(const KConfigGroup &containmentGroup)
     vdata.id = containmentGroup.name();
     vdata.name = containmentGroup.readEntry("name", QString());
     vdata.isActive = false;
-    vdata.screensGroup = static_cast<Latte::Types::ScreensGroup>(containmentGroup.readEntry("screensGroup", (int)Latte::Types::SingleScreenGroup));
+    vdata.screensGroup = static_cast<NSE::Types::ScreensGroup>(containmentGroup.readEntry("screensGroup", (int)NSE::Types::SingleScreenGroup));
     vdata.onPrimary = containmentGroup.readEntry("onPrimary", true);
     vdata.screen = containmentGroup.readEntry("lastScreen", IDNULL);
     vdata.isClonedFrom = containmentGroup.readEntry("isClonedFrom", Data::View::ISCLONEDNULL);
@@ -1603,8 +1603,8 @@ Data::View Storage::view(const KConfigGroup &containmentGroup)
 
     vdata.maxLength = containmentGroup.group("General").readEntry("maxLength", (float)100.0);
 
-    int alignment = containmentGroup.group("General").readEntry("alignment", (int)Latte::Types::Center) ;
-    vdata.alignment = (Latte::Types::Alignment)alignment;
+    int alignment = containmentGroup.group("General").readEntry("alignment", (int)NSE::Types::Center) ;
+    vdata.alignment = (NSE::Types::Alignment)alignment;
 
     vdata.subcontainments = subcontainments(containmentGroup);
     vdata.setState(Data::View::IsCreated);
@@ -1792,7 +1792,7 @@ QString Storage::storedView(const Layout::GenericLayout *layout, const int &cont
     return nextTmpStoredViewAbsolutePath;
 }
 
-int Storage::expectedViewScreenId(const Latte::Corona *corona, const KConfigGroup &containmentGroup) const
+int Storage::expectedViewScreenId(const NSE::Corona *corona, const KConfigGroup &containmentGroup) const
 {
     return expectedViewScreenId(corona, self()->view(containmentGroup));
 }
@@ -1800,28 +1800,28 @@ int Storage::expectedViewScreenId(const Latte::Corona *corona, const KConfigGrou
 int Storage::expectedViewScreenId(const Layout::GenericLayout *layout, const Plasma::Containment *lattecontainment) const
 {
     if (!layout || !layout->corona()) {
-        return Latte::ScreenPool::NOSCREENID;
+        return NSE::ScreenPool::NOSCREENID;
     }
 
     return expectedViewScreenId(layout->corona(), self()->view(layout, lattecontainment));
 }
 
-int Storage::expectedViewScreenId(const Latte::Corona *corona, const Data::View &view) const
+int Storage::expectedViewScreenId(const NSE::Corona *corona, const Data::View &view) const
 {
     if (!corona || !view.isValid()) {
-        return Latte::ScreenPool::NOSCREENID;
+        return NSE::ScreenPool::NOSCREENID;
     }
 
-    if (view.screensGroup == Latte::Types::SingleScreenGroup || view.isCloned()) {
+    if (view.screensGroup == NSE::Types::SingleScreenGroup || view.isCloned()) {
         return view.onPrimary ? corona->screenPool()->primaryScreenId() : view.screen;
-    } else if (view.screensGroup == Latte::Types::AllScreensGroup) {
+    } else if (view.screensGroup == NSE::Types::AllScreensGroup) {
         return corona->screenPool()->primaryScreenId();
-    } else if (view.screensGroup == Latte::Types::AllSecondaryScreensGroup) {
+    } else if (view.screensGroup == NSE::Types::AllSecondaryScreensGroup) {
         QList<int> secondaryscreens = corona->screenPool()->secondaryScreenIds();
         return secondaryscreens.contains(view.screen) || secondaryscreens.isEmpty() ? view.screen : secondaryscreens[0];
     }
 
-    return Latte::ScreenPool::NOSCREENID;
+    return NSE::ScreenPool::NOSCREENID;
 }
 
 Data::ViewsTable Storage::views(const Layout::GenericLayout *layout)
@@ -1839,7 +1839,7 @@ Data::ViewsTable Storage::views(const Layout::GenericLayout *layout)
             continue;
         }
 
-        Latte::View *vw = layout->viewForContainment(containment);
+        NSE::View *vw = layout->viewForContainment(containment);
 
         if (vw) {
             vtable << vw->data();

@@ -22,7 +22,7 @@
 #define GLOBALSHORTCUTSCONFIG "kglobalshortcutsrc"
 #define APPLETSHORTCUTKEY "activate widget "
 
-namespace Latte {
+namespace NSE {
 namespace ShortcutsPart {
 
 ShortcutsTracker::ShortcutsTracker(QObject *parent)
@@ -44,7 +44,7 @@ void ShortcutsTracker::initGlobalShortcutsWatcher()
         m_badgesForActivate << QString();
     }
 
-    const QString globalShortcutsFilePath = Latte::configPath() + "/" + GLOBALSHORTCUTSCONFIG;
+    const QString globalShortcutsFilePath = NSE::configPath() + "/" + GLOBALSHORTCUTSCONFIG;
     m_shortcutsConfigPtr = KSharedConfig::openConfig(globalShortcutsFilePath);
 
     KDirWatch::self()->addFile(globalShortcutsFilePath);

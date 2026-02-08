@@ -3,14 +3,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import QtGraphicalEffects 1.0
-import QtQuick.Layouts 1.1
+import QtQuick
+import Qt5Compat.GraphicalEffects
+import QtQuick.Layouts
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.syndock.core 0.2 as LatteCore
 
 import "controls" as SettingsControls
 import "maxlength" as MaximumLength
@@ -39,12 +39,12 @@ Item{
 
     readonly property color bestContrastedTextColor: {
         if (imageTiler.opacity <= 0.4 && !universalSettings.inConfigureAppletsMode && themeExtended) {
-            return latteView.colorizer.currentBackgroundBrightness > 127.5 ?
+            return dockView.colorizer.currentBackgroundBrightness > 127.5 ?
                         themeExtended.lightTheme.textColor :
                         themeExtended.darkTheme.textColor;
         }
 
-        return latteView && latteView.layout ? latteView.layout.textColor : "#D7E3FF";
+        return dockView && dockView.layout ? dockView.layout.textColor : "#D7E3FF";
     }
 
     readonly property color textColor: bestContrastedTextColor

@@ -9,7 +9,7 @@
 #include "../data/viewdata.h"
 #include "../layouts/storage.h"
 
-namespace Latte {
+namespace NSE {
 
 const int ClonedView::ERRORAPPLETID;
 
@@ -18,7 +18,7 @@ QStringList ClonedView::CONTAINMENTMANUALSYNCEDPROPERTIES = QStringList()
         << QString("lockedZoomApplets")
         << QString("userBlocksColorizingApplets");  
 
-ClonedView::ClonedView(Plasma::Corona *corona, Latte::OriginalView *originalView, QScreen *targetScreen, bool byPassX11WM)
+ClonedView::ClonedView(Plasma::Corona *corona, NSE::OriginalView *originalView, QScreen *targetScreen, bool byPassX11WM)
     : View(corona, targetScreen, byPassX11WM),
       m_originalView(originalView)
 {
@@ -35,62 +35,62 @@ void ClonedView::initSync()
     connect(m_originalView, &View::containmentChanged, this, &View::groupIdChanged);
 
     //! Update Visibility From Original
-    connect(m_originalView->visibility(), &Latte::ViewPart::VisibilityManager::modeChanged, this, [&]() {
+    connect(m_originalView->visibility(), &NSE::ViewPart::VisibilityManager::modeChanged, this, [&]() {
         visibility()->setMode(m_originalView->visibility()->mode());
     });
 
-    connect(m_originalView->visibility(), &Latte::ViewPart::VisibilityManager::raiseOnDesktopChanged, this, [&]() {
+    connect(m_originalView->visibility(), &NSE::ViewPart::VisibilityManager::raiseOnDesktopChanged, this, [&]() {
         visibility()->setRaiseOnDesktop(m_originalView->visibility()->raiseOnDesktop());
     });
 
-    connect(m_originalView->visibility(), &Latte::ViewPart::VisibilityManager::raiseOnActivityChanged, this, [&]() {
+    connect(m_originalView->visibility(), &NSE::ViewPart::VisibilityManager::raiseOnActivityChanged, this, [&]() {
         visibility()->setRaiseOnActivity(m_originalView->visibility()->raiseOnActivity());
     });
 
-    connect(m_originalView->visibility(), &Latte::ViewPart::VisibilityManager::enableKWinEdgesChanged, this, [&]() {
+    connect(m_originalView->visibility(), &NSE::ViewPart::VisibilityManager::enableKWinEdgesChanged, this, [&]() {
         visibility()->setEnableKWinEdges(m_originalView->visibility()->enableKWinEdges());
     });
 
-    connect(m_originalView->visibility(), &Latte::ViewPart::VisibilityManager::timerShowChanged, this, [&]() {
+    connect(m_originalView->visibility(), &NSE::ViewPart::VisibilityManager::timerShowChanged, this, [&]() {
         visibility()->setTimerShow(m_originalView->visibility()->timerShow());
     });
 
-    connect(m_originalView->visibility(), &Latte::ViewPart::VisibilityManager::timerHideChanged, this, [&]() {
+    connect(m_originalView->visibility(), &NSE::ViewPart::VisibilityManager::timerHideChanged, this, [&]() {
         visibility()->setTimerHide(m_originalView->visibility()->timerHide());
     });
 
 
     //! Update Applets from Clone -> OriginalView
-    connect(extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletConfigPropertyChanged, this, &ClonedView::updateOriginalAppletConfigProperty);
-    connect(extendedInterface(), &Latte::ViewPart::ContainmentInterface::initializationCompleted, this, &ClonedView::updateAppletIdsHash);
-    connect(extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletsOrderChanged, this, &ClonedView::updateAppletIdsHash);
-    connect(extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletDataCreated, this, &ClonedView::updateAppletIdsHash);
-    connect(extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletCreated, this, [&](const QString &pluginId) {
+    connect(extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletConfigPropertyChanged, this, &ClonedView::updateOriginalAppletConfigProperty);
+    connect(extendedInterface(), &NSE::ViewPart::ContainmentInterface::initializationCompleted, this, &ClonedView::updateAppletIdsHash);
+    connect(extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletsOrderChanged, this, &ClonedView::updateAppletIdsHash);
+    connect(extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletDataCreated, this, &ClonedView::updateAppletIdsHash);
+    connect(extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletCreated, this, [&](const QString &pluginId) {
         m_originalView->addApplet(pluginId, containment()->id());
     });
 
-    connect(extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletDropped, this, [&](QObject *data, int x, int y) {
+    connect(extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletDropped, this, [&](QObject *data, int x, int y) {
         m_originalView->addApplet(data, x, y, containment()->id());
     });
 
     //! Update Applets and Containment from OrigalView -> Clone
-    connect(m_originalView->extendedInterface(), &Latte::ViewPart::ContainmentInterface::containmentConfigPropertyChanged, this, &ClonedView::updateContainmentConfigProperty);
-    connect(m_originalView->extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletConfigPropertyChanged, this, &ClonedView::onOriginalAppletConfigPropertyChanged);
-    connect(m_originalView->extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletInScheduledDestructionChanged, this, &ClonedView::onOriginalAppletInScheduledDestructionChanged);
-    connect(m_originalView->extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletRemoved, this, &ClonedView::onOriginalAppletRemoved);
-    connect(m_originalView->extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletsOrderChanged, this, &ClonedView::onOriginalAppletsOrderChanged);
-    connect(m_originalView->extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletsInLockedZoomChanged, this, &ClonedView::onOriginalAppletsInLockedZoomChanged);
-    connect(m_originalView->extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletsDisabledColoringChanged, this, &ClonedView::onOriginalAppletsDisabledColoringChanged);
-    connect(m_originalView->extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletDataCreated, this, &ClonedView::updateAppletIdsHash);
-    connect(m_originalView->extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletCreated, this->extendedInterface(), [&](const QString &pluginId) {
+    connect(m_originalView->extendedInterface(), &NSE::ViewPart::ContainmentInterface::containmentConfigPropertyChanged, this, &ClonedView::updateContainmentConfigProperty);
+    connect(m_originalView->extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletConfigPropertyChanged, this, &ClonedView::onOriginalAppletConfigPropertyChanged);
+    connect(m_originalView->extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletInScheduledDestructionChanged, this, &ClonedView::onOriginalAppletInScheduledDestructionChanged);
+    connect(m_originalView->extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletRemoved, this, &ClonedView::onOriginalAppletRemoved);
+    connect(m_originalView->extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletsOrderChanged, this, &ClonedView::onOriginalAppletsOrderChanged);
+    connect(m_originalView->extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletsInLockedZoomChanged, this, &ClonedView::onOriginalAppletsInLockedZoomChanged);
+    connect(m_originalView->extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletsDisabledColoringChanged, this, &ClonedView::onOriginalAppletsDisabledColoringChanged);
+    connect(m_originalView->extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletDataCreated, this, &ClonedView::updateAppletIdsHash);
+    connect(m_originalView->extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletCreated, this->extendedInterface(), [&](const QString &pluginId) {
         extendedInterface()->addApplet(pluginId);
     });
-    connect(m_originalView->extendedInterface(), &Latte::ViewPart::ContainmentInterface::appletDropped, this->extendedInterface(), [&](QObject *data, int x, int y) {
+    connect(m_originalView->extendedInterface(), &NSE::ViewPart::ContainmentInterface::appletDropped, this->extendedInterface(), [&](QObject *data, int x, int y) {
         extendedInterface()->addApplet(data, x, y);
     });
 
     //! Indicator
-    connect(m_originalView, &Latte::View::indicatorChanged, this, &ClonedView::indicatorChanged);
+    connect(m_originalView, &NSE::View::indicatorChanged, this, &ClonedView::indicatorChanged);
 }
 
 bool ClonedView::isSingle() const
@@ -122,9 +122,9 @@ int ClonedView::groupId() const
     return m_originalView->containment()->id();
 }
 
-Latte::Types::ScreensGroup ClonedView::screensGroup() const
+NSE::Types::ScreensGroup ClonedView::screensGroup() const
 {
-    return Latte::Types::SingleScreenGroup;
+    return NSE::Types::SingleScreenGroup;
 }
 
 ViewPart::Indicator *ClonedView::indicator() const
@@ -186,9 +186,9 @@ bool ClonedView::isTranslatableToClonesOrder(const QList<int> &originalOrder)
     return true;
 }
 
-Latte::Data::View ClonedView::data() const
+NSE::Data::View ClonedView::data() const
 {
-    Latte::Data::View vdata = View::data();
+    NSE::Data::View vdata = View::data();
     vdata.isClonedFrom = m_originalView->containment()->id();
     return vdata;
 }

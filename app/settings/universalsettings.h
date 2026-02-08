@@ -27,13 +27,13 @@
 #include <KConfigGroup>
 #include <KSharedConfig>
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 class Manager;
 }
 }
 
-namespace Latte {
+namespace NSE {
 //width_scale, height_scale
 typedef QPair<float, float> ScreenScales;
 
@@ -57,7 +57,7 @@ class UniversalSettings : public QObject
     Q_PROPERTY(QStringList launchers READ launchers WRITE setLaunchers NOTIFY launchersChanged)
     Q_PROPERTY(QStringList contextMenuActionsAlwaysShown READ contextMenuActionsAlwaysShown WRITE setContextMenuActionsAlwaysShown NOTIFY actionsChanged)
 
-    Q_PROPERTY(Latte::Settings::MouseSensitivity sensitivity READ sensitivity WRITE setSensitivity NOTIFY sensitivityChanged)
+    Q_PROPERTY(NSE::Settings::MouseSensitivity sensitivity READ sensitivity WRITE setSensitivity NOTIFY sensitivityChanged)
 
     Q_PROPERTY(QQmlListProperty<QScreen> screens READ screens)
 
@@ -214,7 +214,7 @@ private:
     //! ScreenName, <width_scale, height_scale>
     QHash<QString, ScreenScales> m_screenScales;
 
-    QPointer<Latte::Corona> m_corona;
+    QPointer<NSE::Corona> m_corona;
 
     KConfigGroup m_screenScalesGroup;
     KConfigGroup m_universalGroup;
@@ -228,7 +228,7 @@ private:
     KConfigGroup m_kwinrcWindowsGroup;
 
     friend class Layouts::Manager;
-    friend class Latte::Corona;
+    friend class NSE::Corona;
 };
 
 }

@@ -1,9 +1,28 @@
-/*
-    SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
-    SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
-
-    SPDX-License-Identifier: GPL-2.0-or-later
-*/
+/* This file is a part of the Atmo desktop experience's SynDock project for SynOS .
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or 
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of 
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock:
+ * SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
+ * SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ *
+ * NOTE: This file is deprecated and will be replaced by nsewaylandinterface.cpp
+ * in a future update. It is kept for backwards compatibility during migration.
+ */
 
 #include "waylandinterface.h"
 
@@ -19,7 +38,6 @@
 #include <QDebug>
 #include <QTimer>
 #include <QApplication>
-#include <QtX11Extras/QX11Info>
 #include <QQuickView>
 #include <QLatin1String>
 
@@ -27,16 +45,11 @@
 #include <KWindowSystem>
 #include <KWindowInfo>
 #include <KWayland/Client/surface.h>
-
 #include <KWayland/Client/plasmavirtualdesktop.h>
-
-
-// X11
-#include <NETWM>
 
 using namespace KWayland::Client;
 
-namespace Latte {
+namespace NSE {
 
 class Private::GhostWindow : public QQuickView
 {
@@ -109,7 +122,7 @@ public:
 public slots:
     void identifyWinId() {
         if (m_winId.isNull()) {
-            m_winId = m_waylandInterface->winIdFor("latte-dock", m_validGeometry);
+            m_winId = m_waylandInterface->winIdFor("syndock", m_validGeometry);
             m_waylandInterface->registerIgnoredWindow(m_winId);
         }
     }
@@ -120,7 +133,7 @@ namespace WindowSystem {
 WaylandInterface::WaylandInterface(QObject *parent)
     : AbstractWindowInterface(parent)
 {
-    m_corona = qobject_cast<Latte::Corona *>(parent);
+    m_corona = qobject_cast<NSE::Corona *>(parent);
 }
 
 WaylandInterface::~WaylandInterface()
@@ -232,11 +245,11 @@ void WaylandInterface::unregisterIgnoredWindow(WindowId wid)
     }
 }
 
-void WaylandInterface::setViewExtraFlags(QObject *view, bool isPanelWindow, Latte::Types::Visibility mode)
+void WaylandInterface::setViewExtraFlags(QObject *view, bool isPanelWindow, NSE::Types::Visibility mode)
 {
     KWayland::Client::PlasmaShellSurface *surface = qobject_cast<KWayland::Client::PlasmaShellSurface *>(view);
-    Latte::View *latteView = qobject_cast<Latte::View *>(view);
-    Latte::ViewPart::SubConfigView *configView = qobject_cast<Latte::ViewPart::SubConfigView *>(view);
+    NSE::View *latteView = qobject_cast<NSE::View *>(view);
+    NSE::ViewPart::SubConfigView *configView = qobject_cast<NSE::ViewPart::SubConfigView *>(view);
 
     WindowId winId;
 
@@ -255,7 +268,7 @@ void WaylandInterface::setViewExtraFlags(QObject *view, bool isPanelWindow, Latt
     surface->setSkipTaskbar(true);
     surface->setSkipSwitcher(true);
 
-    bool atBottom{!isPanelWindow && (mode == Latte::Types::WindowsCanCover || mode == Latte::Types::WindowsAlwaysCover)};
+    bool atBottom{!isPanelWindow && (mode == NSE::Types::WindowsCanCover || mode == NSE::Types::WindowsAlwaysCover)};
 
     if (isPanelWindow) {
         surface->setRole(PlasmaShellSurface::Role::Panel);
@@ -271,9 +284,9 @@ void WaylandInterface::setViewExtraFlags(QObject *view, bool isPanelWindow, Latt
         }
 
         //! Layer to be applied
-        if (mode == Latte::Types::WindowsCanCover || mode == Latte::Types::WindowsAlwaysCover) {
+        if (mode == NSE::Types::WindowsCanCover || mode == NSE::Types::WindowsAlwaysCover) {
             setKeepBelow(winId, true);
-        } else if (mode == Latte::Types::NormalWindow) {
+        } else if (mode == NSE::Types::NormalWindow) {
             setKeepBelow(winId, false);
             setKeepAbove(winId, false);
         } else {
@@ -850,7 +863,7 @@ bool WaylandInterface::isAcceptableWindow(const KWayland::Client::PlasmaWindow *
             registerPlasmaIgnoredWindow(w->internalId());
             return false;
         }
-    } else if ((w->appId() == QLatin1String("latte-dock"))
+    } else if ((w->appId() == QLatin1String("syndock"))
                || (w->appId().startsWith(QLatin1String("ksmserver")))) {
         if (isFullScreenWindow(w)) {
             registerIgnoredWindow(w->internalId());
@@ -936,7 +949,7 @@ void WaylandInterface::windowCreatedProxy(KWayland::Client::PlasmaWindow *w)
     trackWindow(w);
     emit windowAdded(w->internalId());
 
-    if (w->appId() == QLatin1String("latte-dock")) {
+    if (w->appId() == QLatin1String("syndock")) {
         emit latteWindowAdded();
     }
 }

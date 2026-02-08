@@ -4,16 +4,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.1
-import QtQuick.Layouts 1.1
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.components 1.0 as LatteComponents
 
 import "../../code/MathTools.js" as MathTools
 
@@ -276,7 +276,7 @@ Item{
     Binding {
         target: wrapper
         property: "layoutThickness"
-        when: latteView && (wrapper.zoomScale === 1 || communicator.parabolicEffectIsSupported)
+        when: dockView && (wrapper.zoomScale === 1 || communicator.parabolicEffectIsSupported)
         value: {
             if (appletItem.isInternalViewSplitter){
                 return !root.inConfigureAppletsMode ? 0 : proposedItemThickness;
@@ -294,7 +294,7 @@ Item{
     Binding {
         target: wrapper
         property: "layoutLength"
-        when: latteView && !appletItem.isAutoFillApplet && (wrapper.zoomScale === 1)
+        when: dockView && !appletItem.isAutoFillApplet && (wrapper.zoomScale === 1)
         value: {
             if (applet && ( appletMaximumLength < appletItem.metrics.iconSize
                            || appletPreferredLength > appletItem.metrics.iconSize
@@ -318,7 +318,7 @@ Item{
     Binding {
         target: wrapper
         property: "disableLengthScale"
-        when: latteView && !(appletItem.isAutoFillApplet || appletItem.indexerIsSupported)
+        when: dockView && !(appletItem.isAutoFillApplet || appletItem.indexerIsSupported)
         value: {
             var blockParabolicEffectInLength = false;
 
@@ -356,7 +356,7 @@ Item{
     Binding {
         target: wrapper
         property: "marginsLength"
-        when: latteView && (!root.inStartup || visibilityManager.inRelocationHiding)
+        when: dockView && (!root.inStartup || visibilityManager.inRelocationHiding)
         value: localLengthMargins
     }
 
@@ -375,7 +375,7 @@ Item{
         property bool showVisualIndicatorRequested: false
 
         Connections {
-            target: root.latteView ? root.latteView.extendedInterface : null
+            target: root.dockView ? root.dockView.extendedInterface : null
             onAppletRequestedVisualIndicator: {
                 if (plasmoidId === appletItem.applet.id) {
                     visualIndicator.showVisualIndicatorRequested = true;

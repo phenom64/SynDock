@@ -3,14 +3,14 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
+import QtQuick
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.app 0.1 as LatteApp
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.private.app 0.1 as LatteApp
+import org.kde.syndock.private.containment 0.1 as LatteContainment
 
 import "../../code/ColorizerTools.js" as ColorizerTools
 
@@ -45,38 +45,38 @@ Loader{
     }
 
     readonly property bool editModeTextColorIsBright: ColorizerTools.colorBrightness(editModeTextColor) > 127.5
-    readonly property color editModeTextColor: latteView && latteView.layout ? latteView.layout.textColor : "white"
+    readonly property color editModeTextColor: dockView && dockView.layout ? dockView.layout.textColor : "white"
 
     readonly property bool mustBeShown: (applyTheme && applyTheme !== theme)
                                         || (root.inConfigureAppletsMode && (root.themeColors === LatteContainment.Types.SmartThemeColors))
 
     readonly property real currentBackgroundBrightness: item ? item.currentBrightness : -1000
 
-    readonly property bool applyingWindowColors: (root.windowColors === LatteContainment.Types.ActiveWindowColors && latteView && latteView.windowsTracker
+    readonly property bool applyingWindowColors: (root.windowColors === LatteContainment.Types.ActiveWindowColors && dockView && dockView.windowsTracker
                                                   && selectedWindowsTracker.activeWindowScheme)
-                                                 || (root.windowColors === LatteContainment.Types.TouchingWindowColors && latteView && latteView.windowsTracker
-                                                     && latteView.windowsTracker.currentScreen.touchingWindowScheme)
+                                                 || (root.windowColors === LatteContainment.Types.TouchingWindowColors && dockView && dockView.windowsTracker
+                                                     && dockView.windowsTracker.currentScreen.touchingWindowScheme)
 
     property QtObject applyTheme: {
         if (!root.environment.isGraphicsSystemAccelerated) {
             return theme;
         }
 
-        if (latteView && latteView.windowsTracker && !(root.plasmaBackgroundForPopups && root.hasExpandedApplet)) {
+        if (dockView && dockView.windowsTracker && !(root.plasmaBackgroundForPopups && root.hasExpandedApplet)) {
             if (root.windowColors === LatteContainment.Types.ActiveWindowColors && selectedWindowsTracker.activeWindowScheme) {
                 return selectedWindowsTracker.activeWindowScheme;
             }
 
-            if (root.windowColors === LatteContainment.Types.TouchingWindowColors && latteView.windowsTracker.currentScreen.touchingWindowScheme) {
+            if (root.windowColors === LatteContainment.Types.TouchingWindowColors && dockView.windowsTracker.currentScreen.touchingWindowScheme) {
                 //! we must track touching windows and when they are not active
                 //! the active window scheme is used for convenience
-                if (latteView.windowsTracker.currentScreen.existsWindowTouching || latteView.windowsTracker.currentScreen.existsWindowTouchingEdge
-                        && !(latteView.windowsTracker.currentScreen.activeWindowTouching || latteView.windowsTracker.currentScreen.activeWindowTouchingEdge)
-                        && latteView.windowsTracker.currentScreen.activeWindowScheme) {
-                    return latteView.windowsTracker.currentScreen.activeWindowScheme;
+                if (dockView.windowsTracker.currentScreen.existsWindowTouching || dockView.windowsTracker.currentScreen.existsWindowTouchingEdge
+                        && !(dockView.windowsTracker.currentScreen.activeWindowTouching || dockView.windowsTracker.currentScreen.activeWindowTouchingEdge)
+                        && dockView.windowsTracker.currentScreen.activeWindowScheme) {
+                    return dockView.windowsTracker.currentScreen.activeWindowScheme;
                 }
 
-                return latteView.windowsTracker.currentScreen.touchingWindowScheme;
+                return dockView.windowsTracker.currentScreen.touchingWindowScheme;
             }
         }
 
@@ -96,8 +96,8 @@ Loader{
                 return themeExtended.lightTheme;
             } else if (root.themeColors === LatteContainment.Types.ReverseThemeColors) {
                 return themeExtended.isLightTheme ? themeExtended.darkTheme : themeExtended.lightTheme;
-            } else if (root.themeColors === LatteContainment.Types.LayoutThemeColors && latteView && latteView.layout) {
-                return latteView.layout.scheme;
+            } else if (root.themeColors === LatteContainment.Types.LayoutThemeColors && dockView && dockView.layout) {
+                return dockView.layout.scheme;
             }
 
             if (root.themeColors === LatteContainment.Types.SmartThemeColors) {
@@ -131,12 +131,12 @@ Loader{
 
     readonly property color backgroundColor:applyTheme.backgroundColor
     readonly property color textColor: {
-        if (latteView && latteView.layout
+        if (dockView && dockView.layout
                 && root.inConfigureAppletsMode
                 && LatteCore.WindowSystem.compositingActive
                 && root.myView.backgroundStoredOpacity<0.40
                 && (root.themeColors === LatteContainment.Types.SmartThemeColors)) {
-            return latteView.layout.textColor;
+            return dockView.layout.textColor;
         }
 
         return applyTheme.textColor;
@@ -193,6 +193,6 @@ Loader{
     sourceComponent: LatteApp.BackgroundTracker {
         activity: root.myView.isReady ? root.myView.lastUsedActivity : ""
         location: plasmoid.location
-        screenName: latteView && latteView.positioner ? latteView.positioner.currentScreenName : ""
+        screenName: dockView && dockView.positioner ? dockView.positioner.currentScreenName : ""
     }
 }

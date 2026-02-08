@@ -4,8 +4,8 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick.Window 2.6
-import org.kde.taskmanager 0.1 as TaskManager
+import QtQuick.Window
+import org.kde.taskmanager as TaskManager
 
 TaskManager.PipeWireSourceItem {
     visible: waylandItem.nodeId > 0

@@ -17,7 +17,7 @@
 // KDE
 #include <KSharedConfig>
 
-namespace Latte {
+namespace NSE {
 namespace Layout {
 
 AbstractLayout::AbstractLayout(QObject *parent, QString layoutFile, QString assignedName)

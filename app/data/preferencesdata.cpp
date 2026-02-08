@@ -5,7 +5,7 @@
 
 #include "preferencesdata.h"
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 const bool Preferences::BADGE3DSTYLE;

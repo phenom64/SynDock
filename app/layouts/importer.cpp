@@ -36,7 +36,7 @@ enum SessionType
     AlternativeSession
 };
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 
 Importer::Importer(QObject *parent)
@@ -53,17 +53,17 @@ Importer::~Importer()
 
 bool Importer::updateOldConfiguration()
 {
-    QFile oldAppletsFile(Latte::configPath() + "/lattedock-appletsrc");
+    QFile oldAppletsFile(NSE::configPath() + "/lattedock-appletsrc");
 
     if (!oldAppletsFile.exists()) {
         return false;
     }
 
     //! import standard old configuration and create the relevant layouts
-    importOldLayout(Latte::configPath() + "/lattedock-appletsrc", i18n("My Layout"));
-    importOldLayout(Latte::configPath() + "/lattedock-appletsrc", i18n("Alternative"), true);
+    importOldLayout(NSE::configPath() + "/lattedock-appletsrc", i18n("My Layout"));
+    importOldLayout(NSE::configPath() + "/lattedock-appletsrc", i18n("Alternative"), true);
 
-    QFile extFile(Latte::configPath() + "/lattedockextrc");
+    QFile extFile(NSE::configPath() + "/lattedockextrc");
 
     //! import also the old user layouts into the new architecture
     if (extFile.exists()) {
@@ -258,7 +258,7 @@ QString Importer::layoutCanBeImported(QString oldAppletsPath, QString newName, Q
     QDir layoutDir(exportDirectory.isNull() ? layoutUserDir() : exportDirectory);
 
     if (!layoutDir.exists() && exportDirectory.isNull()) {
-        QDir(Latte::configPath()).mkdir("latte");
+        QDir(NSE::configPath()).mkdir("latte");
     }
 
     //! set up the new layout name
@@ -389,14 +389,14 @@ bool Importer::exportFullConfiguration(QString file)
         return false;
     }
 
-    archive.addLocalFile(QString(Latte::configPath() + "/lattedockrc"), QStringLiteral("lattedockrc"));
+    archive.addLocalFile(QString(NSE::configPath() + "/lattedockrc"), QStringLiteral("lattedockrc"));
 
     for(const auto &layoutName : availableLayouts()) {
         archive.addLocalFile(layoutUserFilePath(layoutName), QString("latte/" + layoutName + ".layout.latte"));
     }
 
     //! custom templates
-    QDir templatesDir(Latte::configPath() + "/latte/templates");
+    QDir templatesDir(NSE::configPath() + "/latte/templates");
     QStringList filters;
     filters.append(QString("*.layout.latte"));
     QStringList templates = templatesDir.entryList(filters, QDir::Files | QDir::Hidden | QDir::NoSymLinks);
@@ -527,29 +527,29 @@ bool Importer::importHelper(QString fileName)
         latteDir.removeRecursively();
     }
 
-    archive.directory()->copyTo(Latte::configPath());
+    archive.directory()->copyTo(NSE::configPath());
 
     return true;
 }
 
 bool Importer::isAutostartEnabled()
 {
-    QFile autostartFile(Latte::configPath() + "/autostart/org.kde.latte-dock.desktop");
+    QFile autostartFile(NSE::configPath() + "/autostart/org.kde.syndock.desktop");
     return autostartFile.exists();
 }
 
 void Importer::enableAutostart()
 {
     //! deprecated old file
-    QFile oldAutostartFile(Latte::configPath() + "/autostart/latte-dock.desktop");
+    QFile oldAutostartFile(NSE::configPath() + "/autostart/syndock.desktop");
 
     if (oldAutostartFile.exists()) {
         //! remove deprecated file
         oldAutostartFile.remove();
     }
 
-    QFile autostartFile(Latte::configPath() + "/autostart/org.kde.latte-dock.desktop");
-    QFile metaFile(standardPath("applications/org.kde.latte-dock.desktop", false));
+    QFile autostartFile(NSE::configPath() + "/autostart/org.kde.syndock.desktop");
+    QFile metaFile(standardPath("applications/org.kde.syndock.desktop", false));
 
     if (autostartFile.exists()) {
         //! if autostart file already exists, do nothing
@@ -558,9 +558,9 @@ void Importer::enableAutostart()
 
     if (metaFile.exists()) {
         //! check if autostart folder exists and create otherwise
-        QDir autostartDir(Latte::configPath() + "/autostart");
+        QDir autostartDir(NSE::configPath() + "/autostart");
         if (!autostartDir.exists()) {
-            QDir configDir(Latte::configPath());
+            QDir configDir(NSE::configPath());
             configDir.mkdir("autostart");
         }
 
@@ -570,14 +570,14 @@ void Importer::enableAutostart()
 
 void Importer::disableAutostart()
 {
-    QFile oldAutostartFile(Latte::configPath() + "/autostart/latte-dock.desktop");
+    QFile oldAutostartFile(NSE::configPath() + "/autostart/syndock.desktop");
 
     if (oldAutostartFile.exists()) {
         //! remove deprecated file
         oldAutostartFile.remove();
     }
 
-    QFile autostartFile(Latte::configPath() + "/autostart/org.kde.latte-dock.desktop");
+    QFile autostartFile(NSE::configPath() + "/autostart/org.kde.syndock.desktop");
 
     if (autostartFile.exists()) {
         autostartFile.remove();
@@ -616,7 +616,7 @@ QString Importer::importLayoutHelper(const QString &fileName, const QString &sug
     QDir localLayoutsDir(layoutUserDir());
 
     if (!localLayoutsDir.exists()) {
-        QDir(Latte::configPath()).mkdir("latte");
+        QDir(NSE::configPath()).mkdir("latte");
     }
 
     QFile(fileName).copy(newPath);
@@ -718,7 +718,7 @@ bool Importer::layoutExists(QString layoutName)
 
 QString Importer::layoutUserDir()
 {
-    return QString(Latte::configPath() + "/latte");
+    return QString(NSE::configPath() + "/latte");
 }
 
 QString Importer::layoutUserFilePath(QString layoutName)
@@ -758,19 +758,19 @@ QString Importer::uniqueLayoutName(QString name)
     return name;
 }
 
-Latte::MultipleLayouts::Status Importer::multipleLayoutsStatus()
+NSE::MultipleLayouts::Status Importer::multipleLayoutsStatus()
 {
     QString linkedFilePath = layoutUserFilePath(Layout::MULTIPLELAYOUTSHIDDENNAME);
     if (!QFileInfo(linkedFilePath).exists()) {
-        return Latte::MultipleLayouts::Uninitialized;
+        return NSE::MultipleLayouts::Uninitialized;
     }
 
     KSharedConfigPtr filePtr = KSharedConfig::openConfig(linkedFilePath);
     KConfigGroup multipleSettings = KConfigGroup(filePtr, "MultipleLayoutsSettings");
-    return static_cast<Latte::MultipleLayouts::Status>(multipleSettings.readEntry("status", (int)Latte::MultipleLayouts::Uninitialized));
+    return static_cast<NSE::MultipleLayouts::Status>(multipleSettings.readEntry("status", (int)NSE::MultipleLayouts::Uninitialized));
 }
 
-void Importer::setMultipleLayoutsStatus(const Latte::MultipleLayouts::Status &status)
+void Importer::setMultipleLayoutsStatus(const NSE::MultipleLayouts::Status &status)
 {
     QString linkedFilePath = layoutUserFilePath(Layout::MULTIPLELAYOUTSHIDDENNAME);
 

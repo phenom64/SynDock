@@ -22,7 +22,7 @@ namespace Ui {
 class SettingsDialog;
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 
 namespace Settings {
@@ -37,7 +37,7 @@ class SettingsDialog;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 
@@ -58,7 +58,7 @@ public:
 
     bool isViewsDialogVisible() const;
 
-    Latte::Corona *corona() const;
+    NSE::Corona *corona() const;
     Dialog::SettingsDialog *dialog() const;
     Ui::SettingsDialog *ui() const;
     Controller::Layouts *layoutsController() const;
@@ -114,7 +114,7 @@ private:
 private:
     Settings::Dialog::SettingsDialog *m_parentDialog{nullptr};
     Ui::SettingsDialog *m_ui{nullptr};
-    Latte::Corona *m_corona{nullptr};
+    NSE::Corona *m_corona{nullptr};
 
     Settings::Controller::Layouts *m_layoutsController{nullptr};
 

@@ -39,7 +39,7 @@
 #include <KArchive/KArchiveDirectory>
 #include <KMessageWidget>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Controller {
 
@@ -57,8 +57,8 @@ Layouts::Layouts(Settings::Handler::TabLayouts *parent)
     loadConfig();
     m_proxyModel->setSourceModel(m_model);
 
-    connect(m_handler->corona()->layoutsManager()->synchronizer(), &Latte::Layouts::Synchronizer::newLayoutAdded, this, &Layouts::onLayoutAddedExternally);
-    connect(m_handler->corona()->layoutsManager()->synchronizer(), &Latte::Layouts::Synchronizer::layoutActivitiesChanged, this, &Layouts::onLayoutActivitiesChangedExternally);
+    connect(m_handler->corona()->layoutsManager()->synchronizer(), &NSE::Layouts::Synchronizer::newLayoutAdded, this, &Layouts::onLayoutAddedExternally);
+    connect(m_handler->corona()->layoutsManager()->synchronizer(), &NSE::Layouts::Synchronizer::layoutActivitiesChanged, this, &Layouts::onLayoutActivitiesChangedExternally);
 
     connect(m_model, &QAbstractItemModel::dataChanged, this, &Layouts::dataChanged);
     connect(m_model, &Model::Layouts::rowsInserted, this, &Layouts::dataChanged);
@@ -214,9 +214,9 @@ QString Layouts::iconsPath() const
     return m_iconsPath;
 }
 
-const Latte::Data::ViewsTable Layouts::selectedLayoutViews()
+const NSE::Data::ViewsTable Layouts::selectedLayoutViews()
 {
-    Latte::Data::ViewsTable views;
+    NSE::Data::ViewsTable views;
     int selectedRow = m_view->currentIndex().row();
 
     if (selectedRow < 0) {
@@ -246,7 +246,7 @@ const Latte::Data::ViewsTable Layouts::selectedLayoutViews()
     return selectedCurrentData.views;
 }
 
-const Latte::Data::LayoutIcon Layouts::selectedLayoutIcon() const
+const NSE::Data::LayoutIcon Layouts::selectedLayoutIcon() const
 {
     int selectedRow = m_view->currentIndex().row();
 
@@ -255,22 +255,22 @@ const Latte::Data::LayoutIcon Layouts::selectedLayoutIcon() const
         return m_model->currentLayoutIcon(selectedId);
     }
 
-    return Latte::Data::LayoutIcon();
+    return NSE::Data::LayoutIcon();
 
 }
 
-const Latte::Data::Layout Layouts::selectedLayoutCurrentData() const
+const NSE::Data::Layout Layouts::selectedLayoutCurrentData() const
 {
     int selectedRow = m_view->currentIndex().row();
     if (selectedRow >= 0) {
         QString selectedId = m_proxyModel->data(m_proxyModel->index(selectedRow, Model::Layouts::IDCOLUMN), Qt::UserRole).toString();
         return m_model->currentData(selectedId);
     } else {
-        return Latte::Data::Layout();
+        return NSE::Data::Layout();
     }
 }
 
-const Latte::Data::Layout Layouts::selectedLayoutOriginalData() const
+const NSE::Data::Layout Layouts::selectedLayoutOriginalData() const
 {
     int selectedRow = m_view->currentIndex().row();
     QString selectedId = m_proxyModel->data(m_proxyModel->index(selectedRow, Model::Layouts::IDCOLUMN), Qt::UserRole).toString();
@@ -278,19 +278,19 @@ const Latte::Data::Layout Layouts::selectedLayoutOriginalData() const
     return m_model->originalData(selectedId);
 }
 
-const Latte::Data::Layout Layouts::currentData(const QString &currentLayoutId) const
+const NSE::Data::Layout Layouts::currentData(const QString &currentLayoutId) const
 {
     return m_model->currentData(currentLayoutId);
 }
 
-const Latte::Data::Layout Layouts::originalData(const QString &currentLayoutId) const
+const NSE::Data::Layout Layouts::originalData(const QString &currentLayoutId) const
 {
     return m_model->originalData(currentLayoutId);
 }
 
-const Latte::Data::ScreensTable Layouts::screensData()
+const NSE::Data::ScreensTable Layouts::screensData()
 {
-    Latte::Data::ScreensTable scrtable = m_handler->corona()->screenPool()->screensTable();
+    NSE::Data::ScreensTable scrtable = m_handler->corona()->screenPool()->screensTable();
 
     QList<int> expscreens;
 
@@ -305,9 +305,9 @@ const Latte::Data::ScreensTable Layouts::screensData()
     }
 
     //! retrieve all layouts data
-    Latte::Data::LayoutsTable originalLayouts = m_model->originalLayoutsData();
-    Latte::Data::LayoutsTable currentLayouts = m_model->currentLayoutsData();
-    Latte::Data::LayoutsTable removedLayouts = originalLayouts.subtracted(currentLayouts);
+    NSE::Data::LayoutsTable originalLayouts = m_model->originalLayoutsData();
+    NSE::Data::LayoutsTable currentLayouts = m_model->currentLayoutsData();
+    NSE::Data::LayoutsTable removedLayouts = originalLayouts.subtracted(currentLayouts);
 
     //! temp removed layouts should be considered because they may not be deleted in the end
     for (int i=0; i<removedLayouts.rowCount(); ++i) {
@@ -370,7 +370,7 @@ CentralLayout *Layouts::centralLayout(const QString &currentLayoutId)
     auto activelayout = isLayoutOriginal(currentLayoutId) ?
                 m_handler->corona()->layoutsManager()->synchronizer()->centralLayout(originlayoutdata.name) : nullptr;
 
-    Latte::CentralLayout *centrallayout = activelayout ? activelayout : new Latte::CentralLayout(this, currentLayoutId);
+    NSE::CentralLayout *centrallayout = activelayout ? activelayout : new NSE::CentralLayout(this, currentLayoutId);
 
     return centrallayout;
 }
@@ -491,7 +491,7 @@ void Layouts::removeSelected()
         return;
     }
 
-    Latte::Data::Layout selectedOriginal = selectedLayoutOriginalData();
+    NSE::Data::Layout selectedOriginal = selectedLayoutOriginalData();
 
     if (m_handler->corona()->layoutsManager()->synchronizer()->layout(selectedOriginal.name)) {
         return;
@@ -501,7 +501,7 @@ void Layouts::removeSelected()
     row = qMin(row, m_proxyModel->rowCount() - 1);
     m_view->selectRow(row);
 
-    Latte::Data::Layout selected = selectedLayoutCurrentData();
+    NSE::Data::Layout selected = selectedLayoutCurrentData();
     m_model->removeLayout(selected.id);
 }
 
@@ -511,7 +511,7 @@ void Layouts::toggleEnabledForSelected()
         return;
     }
 
-    Latte::Data::Layout selected = selectedLayoutCurrentData();
+    NSE::Data::Layout selected = selectedLayoutCurrentData();
 
     if (!selected.activities.isEmpty()) {
         m_proxyModel->setData(m_proxyModel->index(m_view->currentIndex().row(), Model::Layouts::ACTIVITYCOLUMN), QStringList(), Qt::UserRole);
@@ -540,7 +540,7 @@ void Layouts::toggleLockedForSelected()
         return;
     }
 
-    Latte::Data::Layout selected = selectedLayoutCurrentData();
+    NSE::Data::Layout selected = selectedLayoutCurrentData();
 
     m_proxyModel->setData(m_proxyModel->index(m_view->currentIndex().row(), Model::Layouts::NAMECOLUMN), !selected.isLocked, Settings::Model::Layouts::ISLOCKEDROLE);
 }
@@ -550,7 +550,7 @@ void Layouts::selectRow(const QString &id)
     m_view->selectRow(rowForId(id));
 }
 
-void Layouts::setLayoutProperties(const Latte::Data::Layout &layout)
+void Layouts::setLayoutProperties(const NSE::Data::Layout &layout)
 {
     m_model->setLayoutProperties(layout);
 }
@@ -573,7 +573,7 @@ void Layouts::initLayouts()
     setInMultipleMode(inMultiple);
 
     m_handler->corona()->layoutsManager()->synchronizer()->updateLayoutsTable();
-    Latte::Data::LayoutsTable layouts = m_handler->corona()->layoutsManager()->synchronizer()->layoutsTable();
+    NSE::Data::LayoutsTable layouts = m_handler->corona()->layoutsManager()->synchronizer()->layoutsTable();
 
     //! Send original loaded data to model
     m_model->setOriginalInMultipleMode(inMultiple);
@@ -681,7 +681,7 @@ void Layouts::showInitialErrorWarningMessages()
     if (!m_hasShownInitialErrorWarningMessages) {
         m_hasShownInitialErrorWarningMessages = true;
 
-        Latte::Data::LayoutsTable layouts = m_handler->corona()->layoutsManager()->synchronizer()->layoutsTable();
+        NSE::Data::LayoutsTable layouts = m_handler->corona()->layoutsManager()->synchronizer()->layoutsTable();
 
         int erroredlayouts{0};
         int warninglayouts{0};
@@ -707,7 +707,7 @@ void Layouts::onCurrentRowChanged()
     }
 
     if (!m_handler->isViewsDialogVisible()) {
-        Latte::Data::Layout selectedlayout = selectedLayoutCurrentData();
+        NSE::Data::Layout selectedlayout = selectedLayoutCurrentData();
 
         if (selectedlayout.hasErrors() || selectedlayout.hasWarnings()) {
             messageForErroredLayout(selectedlayout);
@@ -727,7 +727,7 @@ void Layouts::onLayoutAddedExternally(const Data::Layout &layout)
 
 void Layouts::setLayoutCurrentErrorsWarnings(const QString &layoutCurrentId, const int &errors, const int &warnings)
 {
-    Latte::Data::Layout layout = m_model->currentData(layoutCurrentId);
+    NSE::Data::Layout layout = m_model->currentData(layoutCurrentId);
 
     if (!layout.isNull()) {
         layout.errors = errors;
@@ -742,7 +742,7 @@ void Layouts::sortByColumn(int column, Qt::SortOrder order)
     m_view->sortByColumn(column, order);
 }
 
-const Latte::Data::Layout Layouts::addLayoutForFile(QString file, QString layoutName, bool newTempDirectory)
+const NSE::Data::Layout Layouts::addLayoutForFile(QString file, QString layoutName, bool newTempDirectory)
 {
     if (layoutName.isEmpty()) {
         layoutName = CentralLayout::layoutName(file);
@@ -750,7 +750,7 @@ const Latte::Data::Layout Layouts::addLayoutForFile(QString file, QString layout
 
     layoutName = uniqueLayoutName(layoutName);
 
-    Latte::Data::Layout copied;
+    NSE::Data::Layout copied;
 
     if (newTempDirectory) {
         copied.id = uniqueTempDirectory() + "/" + layoutName + ".layout.latte";
@@ -776,7 +776,7 @@ const Latte::Data::Layout Layouts::addLayoutForFile(QString file, QString layout
     return copied;
 }
 
-const Latte::Data::Layout Layouts::addLayoutByText(QString rawLayoutText)
+const NSE::Data::Layout Layouts::addLayoutByText(QString rawLayoutText)
 {
     QTemporaryFile tempFile;
     tempFile.open();
@@ -785,7 +785,7 @@ const Latte::Data::Layout Layouts::addLayoutByText(QString rawLayoutText)
     stream.flush();
     tempFile.close();
 
-    Latte::Data::Layout newLayout = addLayoutForFile(tempFile.fileName(),i18n("Dropped Raw Layout"));
+    NSE::Data::Layout newLayout = addLayoutForFile(tempFile.fileName(),i18n("Dropped Raw Layout"));
 
     int selectedRow = m_view->currentIndex().row();
     QModelIndex tIndex = m_proxyModel->index(selectedRow, Model::Layouts::NAMECOLUMN);
@@ -807,20 +807,20 @@ void Layouts::duplicateSelectedLayout()
         return;
     }
 
-    Latte::Data::Layout selectedLayoutCurrent = selectedLayoutCurrentData();
-    Latte::Data::Layout selectedLayoutOriginal = selectedLayoutOriginalData();
+    NSE::Data::Layout selectedLayoutCurrent = selectedLayoutCurrentData();
+    NSE::Data::Layout selectedLayoutOriginal = selectedLayoutOriginalData();
     selectedLayoutOriginal = selectedLayoutOriginal.isEmpty() ? selectedLayoutCurrent : selectedLayoutOriginal;
 
 
     //! Update original layout before duplicating if this layout is active
     if (m_handler->corona()->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts) {
-        Latte::CentralLayout *central = m_handler->corona()->layoutsManager()->synchronizer()->centralLayout(selectedLayoutOriginal.name);
+        NSE::CentralLayout *central = m_handler->corona()->layoutsManager()->synchronizer()->centralLayout(selectedLayoutOriginal.name);
         if (central) {
             central->syncToLayoutFile();
         }
     }
 
-    Latte::Data::Layout copied = selectedLayoutCurrent;
+    NSE::Data::Layout copied = selectedLayoutCurrent;
 
     copied.name = uniqueLayoutName(selectedLayoutCurrent.name);
     copied.id = uniqueTempDirectory() + "/" + copied.name + ".layout.latte";;
@@ -861,7 +861,7 @@ bool Layouts::importLayoutsFromV1ConfigFile(QString file)
             fileEntry->copyTo(tempDir.absolutePath());
         }
 
-        QString name = Latte::Layouts::Importer::nameOfConfigFile(file);
+        QString name = NSE::Layouts::Importer::nameOfConfigFile(file);
 
         QString applets(tempDir.absolutePath() + "/" + "lattedock-appletsrc");
 
@@ -869,14 +869,14 @@ bool Layouts::importLayoutsFromV1ConfigFile(QString file)
             QStringList importedlayouts;
 
             if (m_handler->corona()->layoutsManager()->importer()->importOldLayout(applets, name, false, tempDir.absolutePath())) {
-                Latte::Data::Layout imported = addLayoutForFile(tempDir.absolutePath() + "/" + name + ".layout.latte", name);
+                NSE::Data::Layout imported = addLayoutForFile(tempDir.absolutePath() + "/" + name + ".layout.latte", name);
                 importedlayouts << imported.name;
             }
 
             QString alternativeName = name + "-" + i18nc("layout", "Alternative");
 
             if (m_handler->corona()->layoutsManager()->importer()->importOldLayout(applets, alternativeName, false, tempDir.absolutePath())) {
-                Latte::Data::Layout imported = addLayoutForFile(tempDir.absolutePath() + "/" + alternativeName + ".layout.latte", alternativeName, false);
+                NSE::Data::Layout imported = addLayoutForFile(tempDir.absolutePath() + "/" + alternativeName + ".layout.latte", alternativeName, false);
                 importedlayouts << imported.name;
             }
 
@@ -918,11 +918,11 @@ void Layouts::save()
 
     QString switchToLayout;
 
-    QHash<QString, Latte::CentralLayout *> activeLayoutsToRename;
+    QHash<QString, NSE::CentralLayout *> activeLayoutsToRename;
 
-    Latte::Data::LayoutsTable originalLayouts = m_model->originalLayoutsData();
-    Latte::Data::LayoutsTable currentLayouts = m_model->currentLayoutsData();
-    Latte::Data::LayoutsTable removedLayouts = originalLayouts.subtracted(currentLayouts);
+    NSE::Data::LayoutsTable originalLayouts = m_model->originalLayoutsData();
+    NSE::Data::LayoutsTable currentLayouts = m_model->currentLayoutsData();
+    NSE::Data::LayoutsTable removedLayouts = originalLayouts.subtracted(currentLayouts);
 
     //! remove layouts that have been removed from the user
     for (int i=0; i<removedLayouts.rowCount(); ++i) {
@@ -931,18 +931,18 @@ void Layouts::save()
 
     QList<Data::UniqueIdInfo> alteredIdsInfo;
 
-    QList<Latte::Data::Layout> alteredLayouts = m_model->alteredLayouts();
+    QList<NSE::Data::Layout> alteredLayouts = m_model->alteredLayouts();
 
     for (int i = 0; i < alteredLayouts.count(); ++i) {
-        Latte::Data::Layout iLayoutCurrentData = alteredLayouts[i];
-        Latte::Data::Layout iLayoutOriginalData = m_model->originalData(iLayoutCurrentData.id);
+        NSE::Data::Layout iLayoutCurrentData = alteredLayouts[i];
+        NSE::Data::Layout iLayoutOriginalData = m_model->originalData(iLayoutCurrentData.id);
         iLayoutOriginalData = iLayoutOriginalData.isEmpty() ? iLayoutCurrentData : iLayoutOriginalData;
 
         //qDebug() << i << ". " << id << " - " << color << " - " << name << " - " << menu << " - " << lActivities;
         //! update the generic parts of the layouts
         bool isOriginalLayout = m_model->originalLayoutsData().containsId(iLayoutCurrentData.id);
-        Latte::CentralLayout *centralActive= isOriginalLayout ? m_handler->corona()->layoutsManager()->synchronizer()->centralLayout(iLayoutOriginalData.name) : nullptr;
-        Latte::CentralLayout *central = centralActive ? centralActive : new Latte::CentralLayout(this, iLayoutCurrentData.id);
+        NSE::CentralLayout *centralActive= isOriginalLayout ? m_handler->corona()->layoutsManager()->synchronizer()->centralLayout(iLayoutOriginalData.name) : nullptr;
+        NSE::CentralLayout *central = centralActive ? centralActive : new NSE::CentralLayout(this, iLayoutCurrentData.id);
 
         //! unlock read-only layout
         if (!central->isWritable()) {
@@ -996,13 +996,13 @@ void Layouts::save()
     for (int i = 0; i < alteredIdsInfo.count(); ++i) {
         Data::UniqueIdInfo idInfo = alteredIdsInfo[i];
 
-        QString newFile = Latte::Layouts::Importer::layoutUserFilePath(idInfo.newName);
+        QString newFile = NSE::Layouts::Importer::layoutUserFilePath(idInfo.newName);
         QFile(idInfo.newId).rename(newFile);
 
 
         //! updating the #SETTINGSID in the model for the layout that was renamed
         for (int j = 0; j < m_model->rowCount(); ++j) {
-            Latte::Data::Layout jLayout = m_model->at(j);
+            NSE::Data::Layout jLayout = m_model->at(j);
 
             if (jLayout.id == idInfo.oldId) {
                 m_model->setData(m_model->index(j, Model::Layouts::IDCOLUMN), newFile, Qt::UserRole);
@@ -1012,7 +1012,7 @@ void Layouts::save()
 
     if (m_handler->corona()->layoutsManager()->memoryUsage() == MemoryUsage::MultipleLayouts) {
         for (const auto &newLayoutName : activeLayoutsToRename.keys()) {
-            Latte::CentralLayout *layoutPtr = activeLayoutsToRename[newLayoutName];
+            NSE::CentralLayout *layoutPtr = activeLayoutsToRename[newLayoutName];
             qDebug() << " Active Layout of Type: " << layoutPtr->type() << " Is Renamed From : " << activeLayoutsToRename[newLayoutName]->name() << " TO :: " << newLayoutName;
             layoutPtr->renameLayout(newLayoutName);
         }
@@ -1020,14 +1020,14 @@ void Layouts::save()
 
     //! lock layouts in the end when the user has chosen it
     for (int i = 0; i < alteredLayouts.count(); ++i) {
-        Latte::Data::Layout layoutCurrentData = alteredLayouts[i];
-        Latte::Data::Layout layoutOriginalData = m_model->originalData(layoutCurrentData.id);
+        NSE::Data::Layout layoutCurrentData = alteredLayouts[i];
+        NSE::Data::Layout layoutOriginalData = m_model->originalData(layoutCurrentData.id);
         layoutOriginalData = layoutOriginalData.isEmpty() ? layoutCurrentData : layoutOriginalData;
 
-        Latte::CentralLayout *layoutPtr = m_handler->corona()->layoutsManager()->synchronizer()->centralLayout(layoutOriginalData.name);
+        NSE::CentralLayout *layoutPtr = m_handler->corona()->layoutsManager()->synchronizer()->centralLayout(layoutOriginalData.name);
 
         if (!layoutPtr) {
-            layoutPtr = new Latte::CentralLayout(this, layoutCurrentData.id);
+            layoutPtr = new NSE::CentralLayout(this, layoutCurrentData.id);
         }
 
         if (layoutCurrentData.isLocked && layoutPtr && layoutPtr->isWritable()) {
@@ -1040,7 +1040,7 @@ void Layouts::save()
 
     //! make sure that there is a layout for free activities
     //! send to layout manager in which layout to switch
-    MemoryUsage::LayoutsMemory inMemoryOption = inMultipleMode() ? Latte::MemoryUsage::MultipleLayouts : Latte::MemoryUsage::SingleLayout;
+    MemoryUsage::LayoutsMemory inMemoryOption = inMultipleMode() ? NSE::MemoryUsage::MultipleLayouts : NSE::MemoryUsage::SingleLayout;
 
     if (inMemoryOption == MemoryUsage::SingleLayout) {
         bool inrenamingsingleactivelayout = (activeLayoutsToRename.count() > 0);
@@ -1092,7 +1092,7 @@ void Layouts::onNameDuplicatedFrom(const QString &provenId, const QString &trial
     int tRow = rowForId(trialId);
 
     int originalRow = m_model->rowForId(provenId);
-    Latte::Data::Layout provenLayout = m_model->at(originalRow);
+    NSE::Data::Layout provenLayout = m_model->at(originalRow);
 
     m_handler->showInlineMessage(i18nc("settings: layout name used","Layout <b>%1</b> is already used, please provide a different name...", provenLayout.name),
                                  KMessageWidget::Error);

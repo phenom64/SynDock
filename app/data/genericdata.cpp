@@ -5,7 +5,7 @@
 
 #include "genericdata.h"
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 Generic::Generic(Generic &&o)

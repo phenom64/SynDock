@@ -34,7 +34,7 @@
 // Plasma
 #include <Plasma/Containment>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 
@@ -67,10 +67,10 @@ ExportTemplateHandler::ExportTemplateHandler(Dialog::ExportTemplateDialog *dialo
     setFilepath(o_filepath);
 }
 
-ExportTemplateHandler::ExportTemplateHandler(Dialog::ExportTemplateDialog *dialog, Latte::View *view)
+ExportTemplateHandler::ExportTemplateHandler(Dialog::ExportTemplateDialog *dialog, NSE::View *view)
     : ExportTemplateHandler(dialog)
 {
-    QString type = (view->type() == Latte::Types::PanelView ? i18n("Panel") : i18n("Dock"));
+    QString type = (view->type() == NSE::Types::PanelView ? i18n("Panel") : i18n("Dock"));
 
     QString temporiginfile = view->layout()->storedView(view->containment()->id());
 
@@ -134,7 +134,7 @@ void ExportTemplateHandler::setFilepath(const QString &filepath)
 void ExportTemplateHandler::loadApplets(const QString &file)
 {
     m_originFilePath = file;
-    Data::AppletsTable c_data = Latte::Layouts::Storage::self()->plugins(file);
+    Data::AppletsTable c_data = NSE::Layouts::Storage::self()->plugins(file);
     m_appletsModel->setData(c_data);
 }
 

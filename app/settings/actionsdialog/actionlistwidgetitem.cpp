@@ -6,7 +6,7 @@
 #include "actionlistwidgetitem.h"
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace ActionsDialog {
 

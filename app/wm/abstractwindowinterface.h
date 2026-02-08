@@ -38,7 +38,7 @@
 #include <Plasma>
 
 
-namespace Latte {
+namespace NSE {
 class Corona;
 namespace WindowSystem {
 namespace Tracker {
@@ -48,7 +48,7 @@ class Windows;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 
 class AbstractWindowInterface : public QObject
@@ -68,7 +68,7 @@ public:
     explicit AbstractWindowInterface(QObject *parent = nullptr);
     virtual ~AbstractWindowInterface();
 
-    virtual void setViewExtraFlags(QObject *view,bool isPanelWindow = true, Latte::Types::Visibility mode = Latte::Types::WindowsGoBelow) = 0;
+    virtual void setViewExtraFlags(QObject *view,bool isPanelWindow = true, NSE::Types::Visibility mode = NSE::Types::WindowsGoBelow) = 0;
     virtual void setViewStruts(QWindow &view, const QRect &rect
                                , Plasma::Types::Location location) = 0;
     virtual void setWindowOnActivities(const WindowId &wid, const QStringList &activities) = 0;
@@ -130,7 +130,7 @@ public:
     virtual void setFrameExtents(QWindow *view, const QMargins &margins) = 0;
     virtual void setInputMask(QWindow *window, const QRect &rect) = 0;
 
-    Latte::Corona *corona();
+    NSE::Corona *corona();
     Tracker::Schemes *schemesTracker();
     Tracker::Windows *windowsTracker() const;
 
@@ -150,7 +150,7 @@ protected:
     QString m_currentDesktop;
     QString m_currentActivity;
 
-    //! windows that must be ignored from tracking, a good example are Latte::Views and
+    //! windows that must be ignored from tracking, a good example are NSE::Views and
     //! their Configuration windows
     QList<WindowId> m_ignoredWindows;
     //! identified plasma panels
@@ -196,7 +196,7 @@ private:
     bool m_isKWinInterfaceAvailable{false};
     bool m_isVirtualDesktopNavigationWrappingAround{true};
 
-    Latte::Corona *m_corona;
+    NSE::Corona *m_corona;
     Tracker::Schemes *m_schemesTracker;
     Tracker::Windows *m_windowsTracker;
 

@@ -14,7 +14,7 @@
 // KDE
 #include <KMessageWidget>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Dialog {
 class GenericDialog;
@@ -23,7 +23,7 @@ class GenericDialog;
 }
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 

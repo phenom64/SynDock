@@ -1,22 +1,27 @@
 /*
-    SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
-    SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
-    SPDX-License-Identifier: GPL-2.0-or-later
-*/
+ * This file is a part of the Atmo desktop experience's SynDock project for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * Based on Latte Dock:
+ * SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
+ * SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
 
-import QtQuick 2.7
-import QtQuick.Layouts 1.1
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.kquickcontrolsaddons 2.0
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kquickcontrolsaddons
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.components 1.0 as LatteComponents
 
-import org.kde.latte.abilities.items 0.1 as AbilityItem
+import org.kde.syndock.abilities.items 0.1 as AbilityItem
 
 import "colorizer" as Colorizer
 import "communicator" as Communicator
@@ -99,8 +104,8 @@ Item {
     property bool isPlaceHolder: false
     property bool isPressed: viewSignalsConnector.pressed
     property bool isSeparator: applet && (applet.pluginName === "audoban.applet.separator"
-                                          || applet.pluginName === "org.kde.latte.separator")
-    property bool isSpacer: applet && (applet.pluginName === "org.kde.latte.spacer")
+                                          || applet.pluginName === "org.kde.syndock.separator")
+    property bool isSpacer: applet && (applet.pluginName === "org.kde.syndock.spacer")
     property bool isSystray: applet && (applet.pluginName === "org.kde.plasma.systemtray" || applet.pluginName === "org.nomad.systemtray" )
 
     property bool firstChildOfStartLayout: index === appletItem.layouter.startLayout.firstVisibleIndex
@@ -121,15 +126,15 @@ Item {
 
             if (root.isHorizontal) {
                 if (firstChildOfStartLayout) {
-                    return latteView && latteView.x === latteView.screenGeometry.x;
+                    return dockView && dockView.x === dockView.screenGeometry.x;
                 } else if (lastChildOfEndLayout) {
-                    return latteView && ((latteView.x + latteView.width) === (latteView.screenGeometry.x + latteView.screenGeometry.width));
+                    return dockView && ((dockView.x + dockView.width) === (dockView.screenGeometry.x + dockView.screenGeometry.width));
                 }
             } else {
                 if (firstChildOfStartLayout) {
-                    return latteView && latteView.y === latteView.screenGeometry.y;
+                    return dockView && dockView.y === dockView.screenGeometry.y;
                 } else if (lastChildOfEndLayout) {
-                    return latteView && ((latteView.y + latteView.height) === (latteView.screenGeometry.y + latteView.screenGeometry.height));
+                    return dockView && ((dockView.y + dockView.height) === (dockView.screenGeometry.y + dockView.screenGeometry.height));
                 }
             }
 
@@ -145,9 +150,9 @@ Item {
         }
 
         if (appletItem.myView.alignment === LatteCore.Types.Top && plasmoid.configuration.offset===0) {
-            return firstChildOfMainLayout && latteView && latteView.y === latteView.screenGeometry.y;
+            return firstChildOfMainLayout && dockView && dockView.y === dockView.screenGeometry.y;
         } else if (appletItem.myView.alignment === LatteCore.Types.Bottom && plasmoid.configuration.offset===0) {
-            return lastChildOfMainLayout && latteView && ((latteView.y + latteView.height) === (latteView.screenGeometry.y + latteView.screenGeometry.height));
+            return lastChildOfMainLayout && dockView && ((dockView.y + dockView.height) === (dockView.screenGeometry.y + dockView.screenGeometry.height));
         }
 
         return false;
@@ -290,7 +295,7 @@ Item {
     property int internalWidthMargins: root.isVertical ? metrics.totals.thicknessEdges : 2 * lengthAppletPadding
     property int internalHeightMargins: root.isHorizontal ? root.metrics.totals.thicknessEdges : 2 * lengthAppletPadding
 
-    readonly property string pluginName: isInternalViewSplitter ? "org.kde.latte.splitter" : (applet ? applet.pluginName : "")
+    readonly property string pluginName: isInternalViewSplitter ? "org.kde.syndock.splitter" : (applet ? applet.pluginName : "")
 
     //! are set by the indicator
     readonly property int iconOffsetX: indicatorBackLayer.level.requested.iconOffsetX
@@ -307,7 +312,7 @@ Item {
                                                    wrapper.height
 
     property Item applet: null
-    property Item latteStyleApplet: applet && ((applet.pluginName === "org.kde.latte.spacer") || (applet.pluginName === "org.kde.latte.separator")) ?
+    property Item latteStyleApplet: applet && ((applet.pluginName === "org.kde.syndock.spacer") || (applet.pluginName === "org.kde.syndock.separator")) ?
                                         (applet.children[0] ? applet.children[0] : null) : null
 
     property Item appletWrapper: wrapper.wrapperContainer
@@ -462,7 +467,7 @@ Item {
 
         if (appletItemContainsMouse && !wrapperContainsMouse && appletNeutralAreaEnabled) {
             //console.log("PASSED");
-            latteView.extendedInterface.toggleAppletExpanded(applet.id);
+            dockView.extendedInterface.toggleAppletExpanded(applet.id);
         } else {
             //console.log("REJECTED");
         }
@@ -634,7 +639,7 @@ Item {
             var visibleIndex = appletItem.indexer.visibleIndex(appletItem.index);
 
             if (visibleIndex === entryIndex && !communicator.positionShortcutsAreSupported) {
-                latteView.extendedInterface.toggleAppletExpanded(applet.id);
+                dockView.extendedInterface.toggleAppletExpanded(applet.id);
             }
         }
 
@@ -646,14 +651,14 @@ Item {
             var visibleIndex = appletItem.indexer.visibleIndex(appletItem.index);
 
             if (visibleIndex === entryIndex && !communicator.positionShortcutsAreSupported) {
-                latteView.extendedInterface.toggleAppletExpanded(applet.id);
+                dockView.extendedInterface.toggleAppletExpanded(applet.id);
             }
         }
     }
 
     Connections {
         id: viewSignalsConnector
-        target: root.latteView ? root.latteView : null
+        target: root.dockView ? root.dockView : null
         enabled: !appletItem.indexerIsSupported && !appletItem.isSeparator && !appletItem.isSpacer && !appletItem.isHidden
 
         property bool pressed: false
@@ -685,27 +690,27 @@ Item {
             scrollDelayer.start();
 
             if (appletItem.containsPos(pos)
-                    && (root.latteView.extendedInterface.appletIsExpandable(applet.id)
-                        || (root.latteView.extendedInterface.appletIsActivationTogglesExpanded(applet.id)))) {
+                    && (root.dockView.extendedInterface.appletIsExpandable(applet.id)
+                        || (root.dockView.extendedInterface.appletIsActivationTogglesExpanded(applet.id)))) {
                 var angle = angleDelta.y / 8;
-                var expanded = root.latteView.extendedInterface.appletIsExpanded(applet.id);
+                var expanded = root.dockView.extendedInterface.appletIsExpanded(applet.id);
 
                 if ((angle > 12 && !expanded) /*positive direction*/
                         || (angle < -12 && expanded) /*negative direction*/) {
-                    latteView.extendedInterface.toggleAppletExpanded(applet.id);
+                    dockView.extendedInterface.toggleAppletExpanded(applet.id);
                 }
             }
         }
     }
 
     Connections {
-        target: root.latteView ? root.latteView.extendedInterface : null
+        target: root.dockView ? root.dockView.extendedInterface : null
         enabled: !appletItem.indexerIsSupported && !appletItem.isSeparator && !appletItem.isSpacer && !appletItem.isHidden
 
         onExpandedAppletStateChanged: {
-            if (latteView.extendedInterface.hasExpandedApplet && appletItem.applet) {
-                appletItem.isExpanded = latteView.extendedInterface.appletIsExpandable(appletItem.applet.id)
-                        && latteView.extendedInterface.appletIsExpanded(appletItem.applet.id);
+            if (dockView.extendedInterface.hasExpandedApplet && appletItem.applet) {
+                appletItem.isExpanded = dockView.extendedInterface.appletIsExpandable(appletItem.applet.id)
+                        && dockView.extendedInterface.appletIsExpanded(appletItem.applet.id);
             } else {
                 appletItem.isExpanded = false;
             }

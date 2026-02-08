@@ -13,7 +13,7 @@
 #include <QRect>
 #include <QVariant>
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 
 using WindowId = QVariant;

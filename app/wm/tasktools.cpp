@@ -4,7 +4,6 @@
 */
 
 #include "tasktools.h"
-#include <config-latte.h>
 
 #include <KActivities/ResourceInstance>
 #include <KApplicationTrader>
@@ -23,11 +22,8 @@
 #include <QRegularExpression>
 #include <QScreen>
 #include <QUrlQuery>
-#if HAVE_X11
-#include <QX11Info>
-#endif
 
-namespace Latte
+namespace NSE
 {
 namespace WindowSystem
 {

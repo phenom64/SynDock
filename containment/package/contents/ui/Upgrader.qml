@@ -3,12 +3,12 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.1
+import QtQuick
 
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.plasmoid
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
 
 Item{
     Component.onCompleted:  {
@@ -38,7 +38,7 @@ Item{
         id: v010_tasksUpgrader
         Repeater {
             id: v010_tasksRepeater
-            model: latteView && !plasmoid.configuration.tasksUpgraded ? latteView.extendedInterface.latteTasksModel : null
+            model: dockView && !plasmoid.configuration.tasksUpgraded ? dockView.extendedInterface.latteTasksModel : null
             Item {
                 id: tasksApplet
                 Component.onCompleted: {

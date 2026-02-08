@@ -13,14 +13,14 @@
 #include <QObject>
 
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 class AbstractWindowInterface;
 class SchemeColors;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 namespace Tracker {
 
@@ -50,7 +50,7 @@ private:
      AbstractWindowInterface *m_wm;
 
      //! scheme file and its loaded colors
-     QMap<QString, Latte::WindowSystem::SchemeColors *> m_schemes;
+     QMap<QString, NSE::WindowSystem::SchemeColors *> m_schemes;
 
      //! window id and its corresponding scheme file
      QMap<WindowId, QString> m_windowScheme;

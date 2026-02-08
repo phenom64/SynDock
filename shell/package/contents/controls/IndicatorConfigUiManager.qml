@@ -3,10 +3,10 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.7
-import QtQuick.Layouts 1.3
+import QtQuick
+import QtQuick.Layouts
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.core as PlasmaCore
 
 Item {
     id: uiManager
@@ -29,7 +29,7 @@ Item {
 
             //var pageShown = stackView.currentItem ? 1 : 0;
             //var total = page1.children.length + page2.children.length + hiddenPages.children.length + pageShown;
-            //console.log(" org.kde.latte >>>>>>>>>>>>>>>>> ALL PAGES :: " + total);
+            //console.log(" org.kde.syndock >>>>>>>>>>>>>>>>> ALL PAGES :: " + total);
 
             if (children.length > 0) {
                 nextIndicator = children[0];
@@ -47,7 +47,7 @@ Item {
                 nextIndicator.parent = nextPage;
                 nextIndicator.visible = true;
                 stackView.Layout.minimumHeight = nextIndicator.height;
-                nextPage.type = latteView.indicator.type;
+                nextPage.type = dockView.indicator.type;
 
                 var currentIndex = -1;
 
@@ -55,7 +55,7 @@ Item {
                     currentIndex = viewConfig.indicatorUiManager.index(stackView.currentItem.type);
                 }
 
-                var nextIndex = viewConfig.indicatorUiManager.index(latteView.indicator.type);
+                var nextIndex = viewConfig.indicatorUiManager.index(dockView.indicator.type);
 
                 stackView.forwardSliding = (nextIndex<currentIndex);
                 stackView.replace(stackView.currentItem, nextPage);
@@ -74,16 +74,16 @@ Item {
 
         Component.onCompleted: {
             viewConfig.indicatorUiManager.setParentItem(hiddenIndicatorPage);
-            tabBar.selectTab(latteView.indicator.type);
-            viewConfig.indicatorUiManager.ui(latteView.indicator.type, latteView);
+            tabBar.selectTab(dockView.indicator.type);
+            viewConfig.indicatorUiManager.ui(dockView.indicator.type, dockView);
         }
 
         Connections {
-            target: latteView.indicator
+            target: dockView.indicator
             onPluginChanged: {
                 if (viewConfig.isReady) {
-                    tabBar.selectTab(latteView.indicator.type);
-                    viewConfig.indicatorUiManager.ui(latteView.indicator.type, latteView);
+                    tabBar.selectTab(dockView.indicator.type);
+                    viewConfig.indicatorUiManager.ui(dockView.indicator.type, dockView);
                 }
             }
         }
@@ -92,8 +92,8 @@ Item {
             target: viewConfig
             onIsReadyChanged: {
                 if (viewConfig.isReady) {
-                    tabBar.selectTab(latteView.indicator.type);
-                    viewConfig.indicatorUiManager.ui(latteView.indicator.type, latteView);
+                    tabBar.selectTab(dockView.indicator.type);
+                    viewConfig.indicatorUiManager.ui(dockView.indicator.type, dockView);
                 }
             }
         }
@@ -105,7 +105,7 @@ Item {
         ColumnLayout {
             id: page1
             width: stackView.width
-            readonly property bool isCurrent: latteView.indicator.type === type && viewConfig.isReady/*update flag*/
+            readonly property bool isCurrent: dockView.indicator.type === type && viewConfig.isReady/*update flag*/
             readonly property bool deprecatedOptionsAreHidden: true // @since 0.10.0
             readonly property int optionsWidth: dialog.optionsWidth
 
@@ -115,7 +115,7 @@ Item {
         ColumnLayout {
             id: page2
             width: stackView.width
-            readonly property bool isCurrent: latteView.indicator.type === type && viewConfig.isReady/*update flag*/
+            readonly property bool isCurrent: dockView.indicator.type === type && viewConfig.isReady/*update flag*/
             readonly property bool deprecatedOptionsAreHidden: true // @since 0.10.0
             readonly property int optionsWidth: dialog.optionsWidth
 
@@ -125,7 +125,7 @@ Item {
         ColumnLayout {
             id: hiddenPages
             width: stackView.width
-            readonly property bool isCurrent: latteView.indicator.type === type && viewConfig.isReady/*update flag*/
+            readonly property bool isCurrent: dockView.indicator.type === type && viewConfig.isReady/*update flag*/
             readonly property bool deprecatedOptionsAreHidden: true // @since 0.10.0
             readonly property int optionsWidth: dialog.optionsWidth
 

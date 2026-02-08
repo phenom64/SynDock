@@ -3,13 +3,13 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.1
+import QtQuick
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.plasmoid
+import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.components 1.0 as LatteComponents
 
 LatteComponents.ComboBoxButton{
     id: custom
@@ -21,7 +21,7 @@ LatteComponents.ComboBoxButton{
     comboBoxTextRole: "name"
     comboBoxMinimumPopUpWidth: width
     comboBoxBlankSpaceForEmptyIcons: false
-    comboBoxForcePressed: checked // latteView.visibility.mode === mode
+    comboBoxForcePressed: checked // dockView.visibility.mode === mode
     comboBoxPopUpAlignRight: Qt.application.layoutDirection !== Qt.RightToLeft
     comboBoxPopupTextHorizontalAlignment: Text.AlignHCenter
 
@@ -54,7 +54,7 @@ LatteComponents.ComboBoxButton{
     Connections{
         target: custom.button
         onClicked: {
-            latteView.visibility.mode = custom.mode;
+            dockView.visibility.mode = custom.mode;
         }
     }
 
@@ -68,10 +68,10 @@ LatteComponents.ComboBoxButton{
     }
 
     Connections {
-        target: latteView.visibility
+        target: dockView.visibility
         onModeChanged: {
             for (var i=0; i<custom.modes.length; ++i) {
-                if (custom.modes[i].pluginId === latteView.visibility.mode) {
+                if (custom.modes[i].pluginId === dockView.visibility.mode) {
                     custom.viewRelevantVisibilityModeChanged();
                     return;
                 }
@@ -85,7 +85,7 @@ LatteComponents.ComboBoxButton{
         onActivated: {
             if (index>=0) {
                 var item = actionsModel.get(index);
-                latteView.visibility.mode = item.pluginId;
+                dockView.visibility.mode = item.pluginId;
             }
         }
     }

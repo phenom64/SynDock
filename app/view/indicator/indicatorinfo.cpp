@@ -11,7 +11,7 @@
 // Plasma
 #include <Plasma/Svg>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 namespace IndicatorPart {
 

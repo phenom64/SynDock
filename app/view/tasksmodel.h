@@ -12,7 +12,7 @@ namespace PlasmaQuick {
 class AppletQuickItem;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 class TasksModel : public QAbstractListModel

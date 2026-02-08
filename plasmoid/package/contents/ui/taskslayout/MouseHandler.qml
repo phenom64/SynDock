@@ -5,12 +5,12 @@
 */
 
 
-import QtQuick 2.0
+import QtQuick
 
-import org.kde.plasma.plasmoid 2.0
-import org.kde.draganddrop 2.0
+import org.kde.plasma.plasmoid
+import org.kde.draganddrop
 
-import org.kde.taskmanager 0.1 as TaskManager
+import org.kde.taskmanager as TaskManager
 
 import "../../code/tools.js" as TaskTools
 
@@ -69,7 +69,7 @@ Item {
 
         function isDroppingSeparator(event) {
             var appletName = String(event.mimeData.getDataAsByteArray("text/x-plasmoidservicename"));
-            var isSeparator = (appletName === "audoban.applet.separator" || appletName === "org.kde.latte.separator");
+            var isSeparator = (appletName === "audoban.applet.separator" || appletName === "org.kde.syndock.separator");
 
             return ((event.mimeData.formats.indexOf("text/x-plasmoidservicename") === 0) && isSeparator);
         }

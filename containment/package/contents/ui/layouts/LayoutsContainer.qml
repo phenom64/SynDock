@@ -4,16 +4,16 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.1
-import QtQuick.Layouts 1.1
+import QtQuick
+import QtQuick.Layouts
 
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.plasmoid
 
-import org.kde.plasma.core 2.0 as PlasmaCore
+import org.kde.plasma.core as PlasmaCore
 
-import org.kde.latte.private.app 0.1 as LatteApp
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.containment 0.1 as LatteContainment
+import org.kde.syndock.private.app 0.1 as LatteApp
+import org.kde.syndock.core 0.2 as LatteCore
+import org.kde.syndock.private.containment 0.1 as LatteContainment
 
 import "../debugger" as Debugger
 
@@ -22,10 +22,10 @@ Item{
     //! WorkAround: Do not use "visible" because when it becomes "false" the contained applets can hide/show their elements.
     //! That approach can create a conflict with Latte Tasks that after showing the view they reshow windows
     //! that were already shown before hiding.
-    //! visible: !(latteView && latteView.visibility.isHidden)
-    opacity: !(latteView && latteView.visibility.isHidden) ? 1 : 0
+    //! visible: !(dockView && dockView.visibility.isHidden)
+    opacity: !(dockView && dockView.visibility.isHidden) ? 1 : 0
 
-    readonly property bool isHidden: root.inStartup || (latteView && latteView.visibility && latteView.visibility.isHidden)
+    readonly property bool isHidden: root.inStartup || (dockView && dockView.visibility && dockView.visibility.isHidden)
 
     property int currentSpot: -1000
 
@@ -45,8 +45,8 @@ Item{
                 return 0;
             }
 
-            if ( latteView && root.isHorizontal && root.myView.alignment === LatteCore.Types.Justify ){
-                return ((latteView.width/2) - (root.maxLength/2) + background.offset);
+            if ( dockView && root.isHorizontal && root.myView.alignment === LatteCore.Types.Justify ){
+                return ((dockView.width/2) - (root.maxLength/2) + background.offset);
             } else {
                 if ((root.myView.inSlidingIn || root.myView.inSlidingOut) && root.isVertical){
                     return;
@@ -78,8 +78,8 @@ Item{
                 return 0;
             }
 
-            if ( latteView && root.isVertical && root.myView.alignment === LatteCore.Types.Justify ) {
-                return ((latteView.height/2) - (root.maxLength/2) + background.offset);
+            if ( dockView && root.isVertical && root.myView.alignment === LatteCore.Types.Justify ) {
+                return ((dockView.height/2) - (root.maxLength/2) + background.offset);
             } else {
                 if ((root.myView.inSlidingIn || root.myView.inSlidingOut) && root.isHorizontal){
                     return;
@@ -209,7 +209,7 @@ Item{
                 secondHalfExited = ( (_endLayout.width + _mainLayout.width/2) >= root.maxLength/2 );
             }
 
-            if (latteView && ((contentsWidth >= root.maxLength) || firstHalfExited || secondHalfExited)) {
+            if (dockView && ((contentsWidth >= root.maxLength) || firstHalfExited || secondHalfExited)) {
                 autosize.updateIconSize();
             }
 
@@ -234,7 +234,7 @@ Item{
                 secondHalfExited = ( (_endLayout.height + _mainLayout.height/2) >= root.maxLength/2 );
             }
 
-            if (latteView && ((contentsHeight >= root.maxLength) || firstHalfExited || secondHalfExited)) {
+            if (dockView && ((contentsHeight >= root.maxLength) || firstHalfExited || secondHalfExited)) {
                 autosize.updateIconSize();
             }
 
@@ -261,7 +261,7 @@ Item{
     LatteApp.ContextMenuLayer {
         id: contextMenuLayer
         anchors.fill: parent
-        view: latteView
+        view: dockView
     }
 
     AppletsContainer {

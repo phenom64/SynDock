@@ -7,19 +7,19 @@
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
 
-import QtQuick 2.6
-import QtQuick.Layouts 1.1
-import QtGraphicalEffects 1.0
-import QtQml.Models 2.2
+import QtQuick
+import QtQuick.Layouts
+import Qt5Compat.GraphicalEffects
+import QtQml.Models
 
-import org.kde.draganddrop 2.0
+import org.kde.draganddrop
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.plasma.extras 2.0 as PlasmaExtras
-import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.plasma.extras as PlasmaExtras
+import org.kde.kquickcontrolsaddons as KQuickControlsAddons
 
-import org.kde.taskmanager 0.1 as TaskManager
+import org.kde.taskmanager as TaskManager
 
 PlasmaExtras.ScrollArea {
     id: mainToolTip

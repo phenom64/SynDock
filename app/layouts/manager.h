@@ -29,7 +29,7 @@ class Containment;
 class Types;
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class CentralLayout;
 namespace Layouts {
@@ -39,12 +39,12 @@ class Synchronizer;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 
 //! Layouts::Manager is a very IMPORTANT class which is responsible to
 //! to provide the qml accessible Layouts manipulation API and at the
-//! same time to interact with Latte::Corona in order
+//! same time to interact with NSE::Corona in order
 //! to update correctly the underlying Layouts files by using also
 //! its Importer object
 //!
@@ -64,7 +64,7 @@ public:
     Manager(QObject *parent = nullptr);
     ~Manager() override;
 
-    Latte::Corona *corona();
+    NSE::Corona *corona();
     Importer *importer();
 
     void init();
@@ -76,8 +76,8 @@ public:
 
     QStringList currentLayoutsNames() const;
 
-    Latte::Data::LayoutIcon iconForLayout(const QString &storedLayoutName) const;
-    Latte::Data::LayoutIcon iconForLayout(const Data::Layout &layout) const;
+    NSE::Data::LayoutIcon iconForLayout(const QString &storedLayoutName) const;
+    NSE::Data::LayoutIcon iconForLayout(const Data::Layout &layout) const;
 
     MemoryUsage::LayoutsMemory memoryUsage() const;
     void setMemoryUsage(MemoryUsage::LayoutsMemory memoryUsage);
@@ -109,7 +109,7 @@ signals:
     void currentLayoutIsSwitching(QString layoutName);
 
     //! used from ConfigView(s) in order to be informed which is one should be shown
-    void lastConfigViewChangedFrom(Latte::View *view);
+    void lastConfigViewChangedFrom(NSE::View *view);
 
 private:
     void cleanupOnStartup(QString path); //!remove deprecated or oldstyle config options
@@ -120,14 +120,14 @@ private:
     void setMenuLayouts(QStringList layouts);
 
 private:
-    QPointer<Latte::Settings::Dialog::SettingsDialog> m_latteSettingsDialog;
+    QPointer<NSE::Settings::Dialog::SettingsDialog> m_latteSettingsDialog;
 
-    Latte::Corona *m_corona{nullptr};
+    NSE::Corona *m_corona{nullptr};
     Importer *m_importer{nullptr};
     SyncedLaunchers *m_syncedLaunchers{nullptr};
     Synchronizer *m_synchronizer{nullptr};
 
-    friend class Latte::Settings::Dialog::SettingsDialog;
+    friend class NSE::Settings::Dialog::SettingsDialog;
     friend class Synchronizer;
 };
 

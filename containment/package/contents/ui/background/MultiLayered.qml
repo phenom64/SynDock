@@ -4,18 +4,18 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.1
-import QtQuick.Layouts 1.1
-import QtQuick.Window 2.2
-import QtGraphicalEffects 1.0
+import QtQuick
+import QtQuick.Layouts
+import QtQuick.Window
+import Qt5Compat.GraphicalEffects
 
-import org.kde.plasma.plasmoid 2.0
+import org.kde.plasma.plasmoid
 
-import org.kde.plasma.core 2.0 as PlasmaCore
-import org.kde.plasma.components 2.0 as PlasmaComponents
-import org.kde.kquickcontrolsaddons 2.0
+import org.kde.plasma.core as PlasmaCore
+import org.kde.plasma.components as PlasmaComponents
+import org.kde.kquickcontrolsaddons
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.kde.syndock.core 0.2 as LatteCore
 
 import "../colorizer" as Colorizer
 
@@ -326,7 +326,7 @@ BackgroundProperties{
         id: shadowsSvgItem
         width: root.isVertical ?  background.thickness + totals.shadowsThickness : totals.visualLength
         height: root.isVertical ? totals.visualLength : background.thickness + totals.shadowsThickness
-        enabledBorders: latteView && latteView.effects ? latteView.effects.enabledBorders : PlasmaCore.FrameSvg.NoBorder
+        enabledBorders: dockView && dockView.effects ? dockView.effects.enabledBorders : PlasmaCore.FrameSvg.NoBorder
         imagePath: "widgets/panel-background"
         prefix: "shadow"
         opacity: hideShadow || !root.useThemePanel || (root.forceTransparentPanel && !root.forcePanelForBusyBackground) ? 0 : 1
@@ -439,7 +439,7 @@ BackgroundProperties{
         }
 
         Connections {
-            target: latteView ? latteView.visibility : null
+            target: dockView ? dockView.visibility : null
             onIsHiddenChanged: solidBackground.updateEffectsArea();
         }
 
@@ -457,7 +457,7 @@ BackgroundProperties{
         }
 
         function invUpdateEffectsArea(){
-            if (!latteView)
+            if (!dockView)
                 return;
 
             if (!LatteCore.WindowSystem.compositingActive) {
@@ -469,7 +469,7 @@ BackgroundProperties{
                 efGeometry.width = width;
                 efGeometry.height = height;
             } else {
-                if (latteView.visibility.isHidden) {
+                if (dockView.visibility.isHidden) {
                     //! valid hide mask
                     efGeometry.x = -1;
                     efGeometry.y = -1;
@@ -490,7 +490,7 @@ BackgroundProperties{
                 }
             }
 
-            latteView.effects.rect = efGeometry;
+            dockView.effects.rect = efGeometry;
         }
 
         Timer {
@@ -504,7 +504,7 @@ BackgroundProperties{
                 adjustPrefix();
         }
 
-        enabledBorders: latteView && latteView.effects ? latteView.effects.enabledBorders : PlasmaCore.FrameSvg.NoBorder
+        enabledBorders: dockView && dockView.effects ? dockView.effects.enabledBorders : PlasmaCore.FrameSvg.NoBorder
 
         Behavior on opacity{
             enabled: LatteCore.WindowSystem.compositingActive && !solidBackground.paintInstantly

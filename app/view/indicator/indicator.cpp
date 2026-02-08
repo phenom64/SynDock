@@ -25,16 +25,16 @@
 #include <KDeclarative/QmlObjectSharedEngine>
 
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-Indicator::Indicator(Latte::View *parent)
+Indicator::Indicator(NSE::View *parent)
     : QObject(parent),
       m_view(parent),
       m_info(new IndicatorPart::Info(this)),
       m_resources(new IndicatorPart::Resources(this))
 {
-    m_corona = qobject_cast<Latte::Corona *>(m_view->corona());
+    m_corona = qobject_cast<NSE::Corona *>(m_view->corona());
     loadConfig();
 
     connect(this, &Indicator::enabledChanged, this, &Indicator::saveConfig);
@@ -42,13 +42,13 @@ Indicator::Indicator(Latte::View *parent)
 
     connect(m_view->extendedInterface(), &ContainmentInterface::hasLatteTasksChanged, this, &Indicator::latteTasksArePresentChanged);
 
-    connect(m_view, &Latte::View::indicatorPluginChanged, [this](const QString &indicatorId) {
+    connect(m_view, &NSE::View::indicatorPluginChanged, [this](const QString &indicatorId) {
         if (m_corona && m_corona->indicatorFactory()->isCustomType(indicatorId)) {
             emit customPluginsChanged();
         }
     });
 
-    connect(m_view, &Latte::View::indicatorPluginRemoved, [this](const QString &indicatorId) {
+    connect(m_view, &NSE::View::indicatorPluginRemoved, [this](const QString &indicatorId) {
         if (m_corona && m_type == indicatorId && !m_corona->indicatorFactory()->pluginExists(indicatorId)) {
             setType("org.kde.latte.default");
         }

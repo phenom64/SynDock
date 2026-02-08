@@ -13,7 +13,7 @@
 #include <QPainter>
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Layouts {
 

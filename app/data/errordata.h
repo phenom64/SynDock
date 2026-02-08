@@ -16,7 +16,7 @@
 #include <QMetaType>
 #include <QString>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class Error : public Data::Generic
@@ -51,7 +51,7 @@ typedef QList<Warning> WarningsList;
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::Error)
-Q_DECLARE_METATYPE(Latte::Data::ErrorsList)
+Q_DECLARE_METATYPE(NSE::Data::Error)
+Q_DECLARE_METATYPE(NSE::Data::ErrorsList)
 
 #endif

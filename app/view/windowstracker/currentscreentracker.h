@@ -12,7 +12,7 @@
 // Qt
 #include <QObject>
 
-namespace Latte{
+namespace NSE{
 class View;
 
 namespace ViewPart {
@@ -28,7 +28,7 @@ class LastActiveWindow;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 namespace TrackerPart {
 
@@ -42,10 +42,10 @@ class CurrentScreenTracker : public QObject {
     Q_PROPERTY(bool existsWindowTouching READ existsWindowTouching NOTIFY existsWindowTouchingChanged)
     Q_PROPERTY(bool existsWindowTouchingEdge READ existsWindowTouchingEdge NOTIFY existsWindowTouchingEdgeChanged)
     Q_PROPERTY(bool isTouchingBusyVerticalView READ isTouchingBusyVerticalView NOTIFY isTouchingBusyVerticalViewChanged)
-    Q_PROPERTY(Latte::WindowSystem::SchemeColors *activeWindowScheme READ activeWindowScheme NOTIFY activeWindowSchemeChanged)
-    Q_PROPERTY(Latte::WindowSystem::SchemeColors *touchingWindowScheme READ touchingWindowScheme NOTIFY touchingWindowSchemeChanged)
+    Q_PROPERTY(NSE::WindowSystem::SchemeColors *activeWindowScheme READ activeWindowScheme NOTIFY activeWindowSchemeChanged)
+    Q_PROPERTY(NSE::WindowSystem::SchemeColors *touchingWindowScheme READ touchingWindowScheme NOTIFY touchingWindowSchemeChanged)
 
-    Q_PROPERTY(Latte::WindowSystem::Tracker::LastActiveWindow *lastActiveWindow READ lastActiveWindow NOTIFY lastActiveWindowChanged)
+    Q_PROPERTY(NSE::WindowSystem::Tracker::LastActiveWindow *lastActiveWindow READ lastActiveWindow NOTIFY lastActiveWindowChanged)
 
 public:
     explicit CurrentScreenTracker(WindowsTracker *parent);
@@ -91,7 +91,7 @@ private:
     void init();
 
 private:
-    Latte::View *m_latteView{nullptr};
+    NSE::View *m_latteView{nullptr};
     WindowSystem::AbstractWindowInterface *m_wm{nullptr};
 };
 

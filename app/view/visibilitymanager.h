@@ -21,7 +21,7 @@
 #include <Plasma/Containment>
 
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 namespace ViewPart {
@@ -33,7 +33,7 @@ class AbstractWindowInterface;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 class VisibilityManager : public QObject
@@ -41,7 +41,7 @@ class VisibilityManager : public QObject
     Q_OBJECT
     Q_PROPERTY(bool hidingIsBlocked READ hidingIsBlocked NOTIFY hidingIsBlockedChanged)
 
-    Q_PROPERTY(Latte::Types::Visibility mode READ mode WRITE setMode NOTIFY modeChanged)
+    Q_PROPERTY(NSE::Types::Visibility mode READ mode WRITE setMode NOTIFY modeChanged)
     Q_PROPERTY(bool raiseOnDesktop READ raiseOnDesktop WRITE setRaiseOnDesktop NOTIFY raiseOnDesktopChanged)
     Q_PROPERTY(bool raiseOnActivity READ raiseOnActivity WRITE setRaiseOnActivity NOTIFY raiseOnActivityChanged)    
     Q_PROPERTY(bool isHidden READ isHidden WRITE setIsHidden NOTIFY isHiddenChanged)
@@ -70,8 +70,8 @@ public:
     explicit VisibilityManager(PlasmaQuick::ContainmentView *view);
     virtual ~VisibilityManager();
 
-    Latte::Types::Visibility mode() const;
-    void setMode(Latte::Types::Visibility mode);
+    NSE::Types::Visibility mode() const;
+    void setMode(NSE::Types::Visibility mode);
 
     void applyActivitiesToHiddenWindows(const QStringList &activities);
 
@@ -262,8 +262,8 @@ private:
     //! Floating Gap
     FloatingGapWindow *m_floatingGapWindow{nullptr};
 
-    Latte::Corona *m_corona{nullptr};
-    Latte::View *m_latteView{nullptr};
+    NSE::Corona *m_corona{nullptr};
+    NSE::View *m_latteView{nullptr};
 
 };
 

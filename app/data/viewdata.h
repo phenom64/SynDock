@@ -19,7 +19,7 @@
 #include <Plasma>
 
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class View : public Generic
@@ -43,12 +43,12 @@ public:
     bool isActive{false};
     bool onPrimary{true};
     int isClonedFrom{ISCLONEDNULL};
-    int screen{Latte::ScreenPool::FIRSTSCREENID};
+    int screen{NSE::ScreenPool::FIRSTSCREENID};
     int screenEdgeMargin{0};
     float maxLength{1.0};
     Plasma::Types::Location edge{Plasma::Types::BottomEdge};
-    Latte::Types::Alignment alignment{Latte::Types::Center};
-    Latte::Types::ScreensGroup screensGroup{Latte::Types::SingleScreenGroup};
+    NSE::Types::Alignment alignment{NSE::Types::Center};
+    NSE::Types::ScreensGroup screensGroup{NSE::Types::SingleScreenGroup};
     GenericTable<Data::Generic> subcontainments;
 
     int errors{0};
@@ -97,6 +97,6 @@ protected:
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::View)
+Q_DECLARE_METATYPE(NSE::Data::View)
 
 #endif

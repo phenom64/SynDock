@@ -3,9 +3,9 @@
     SPDX-License-Identifier: GPL-2.0-or-later
 */
 
-import QtQuick 2.0
+import QtQuick
 
-import org.kde.latte.abilities.definition 0.1 as AbilityDefinition
+import org.kde.syndock.abilities.definition 0.1 as AbilityDefinition
 
 import "./indicators" as LocalIndicator
 
@@ -26,7 +26,7 @@ AbilityDefinition.Indicators {
 
     readonly property AbilityDefinition.Indicators local: AbilityDefinition.Indicators {
         isEnabled: false
-        type: "org.kde.latte.default"
+        type: "org.kde.syndock.default"
 
         info.needsIconColors: false
         info.needsMouseEventCoordinates: false
