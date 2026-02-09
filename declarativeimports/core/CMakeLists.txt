@@ -19,12 +19,16 @@ target_link_libraries(syndockcoreplugin
     Qt6::Quick
     Qt6::Qml
     KF6::CoreAddons
-    KF6::Declarative
+    ${SYNDOCK_KF6_DECLARATIVE_LINK}
     KF6::IconThemes
     KF6::WindowSystem
     Plasma::Plasma
     Plasma::PlasmaQuick
 )
+
+if(NOT "${SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIRS}" STREQUAL "")
+    target_include_directories(syndockcoreplugin PRIVATE ${SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIRS})
+endif()
 
 install(TARGETS syndockcoreplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/syndock/core)
 install(FILES qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/syndock/core)

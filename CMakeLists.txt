@@ -77,14 +77,69 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     XmlGui
 )
 
-# Some distributions expose KDeclarative as KF6::KDeclarative instead of KF6::Declarative.
+# Some distributions expose KDeclarative with different target exports.
 find_package(KF6Declarative REQUIRED)
-if(NOT TARGET KF6::Declarative AND TARGET KF6::KDeclarative)
-    add_library(KF6::Declarative ALIAS KF6::KDeclarative)
+set(SYNDOCK_KF6_DECLARATIVE_LINK "")
+set(SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIRS "")
+
+if(TARGET KF6::Declarative)
+    set(SYNDOCK_KF6_DECLARATIVE_LINK KF6::Declarative)
+elseif(TARGET KF6::KDeclarative)
+    set(SYNDOCK_KF6_DECLARATIVE_LINK KF6::KDeclarative)
+else()
+    # Some distro packages export a different imported target name.
+    get_property(_syndock_all_targets GLOBAL PROPERTY TARGETS)
+    foreach(_syndock_target IN LISTS _syndock_all_targets)
+        if(_syndock_target MATCHES "^KF6::.*Declarative.*$")
+            set(SYNDOCK_KF6_DECLARATIVE_LINK ${_syndock_target})
+            break()
+        endif()
+    endforeach()
 endif()
-if(NOT TARGET KF6::Declarative)
-    message(FATAL_ERROR "KF6 Declarative target not found. Install libkf6declarative-dev (or distro equivalent).")
+
+if("${SYNDOCK_KF6_DECLARATIVE_LINK}" STREQUAL "" AND DEFINED KF6Declarative_LIBRARIES AND NOT "${KF6Declarative_LIBRARIES}" STREQUAL "")
+    set(SYNDOCK_KF6_DECLARATIVE_LINK ${KF6Declarative_LIBRARIES})
+    if(DEFINED KF6Declarative_INCLUDE_DIRS)
+        set(SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIRS ${KF6Declarative_INCLUDE_DIRS})
+    endif()
 endif()
+
+if("${SYNDOCK_KF6_DECLARATIVE_LINK}" STREQUAL "")
+    # Last-resort manual discovery for environments with incomplete CMake metadata.
+    find_path(SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIR
+        NAMES
+            KDeclarative/KDeclarative
+            KDeclarative/ConfigPropertyMap
+        PATH_SUFFIXES
+            KF6
+            include
+            include/KF6
+    )
+    find_library(SYNDOCK_KF6_DECLARATIVE_LIBRARY
+        NAMES
+            KF6Declarative
+            KDeclarative
+            kdeclarative
+    )
+
+    if(SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIR AND SYNDOCK_KF6_DECLARATIVE_LIBRARY)
+        set(SYNDOCK_KF6_DECLARATIVE_LINK ${SYNDOCK_KF6_DECLARATIVE_LIBRARY})
+        set(SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIRS ${SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIR})
+    endif()
+endif()
+
+if("${SYNDOCK_KF6_DECLARATIVE_LINK}" STREQUAL "")
+    message(STATUS "KF6Declarative_FOUND=${KF6Declarative_FOUND}")
+    message(STATUS "KF6Declarative_LIBRARIES=${KF6Declarative_LIBRARIES}")
+    message(STATUS "KF6Declarative_INCLUDE_DIRS=${KF6Declarative_INCLUDE_DIRS}")
+    message(STATUS "SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIR=${SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIR}")
+    message(STATUS "SYNDOCK_KF6_DECLARATIVE_LIBRARY=${SYNDOCK_KF6_DECLARATIVE_LIBRARY}")
+    message(FATAL_ERROR "KF6 Declarative linkage not found. Install libkf6declarative-dev (or distro equivalent).")
+endif()
+
+# Share resolved declarative linkage with subdirectories.
+set(SYNDOCK_KF6_DECLARATIVE_LINK "${SYNDOCK_KF6_DECLARATIVE_LINK}" CACHE INTERNAL "Resolved KF6 Declarative linkage")
+set(SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIRS "${SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIRS}" CACHE INTERNAL "Resolved KF6 Declarative include dirs")
 
 # ============================================================================
 # Plasma 6 - Deep integration with KDE Plasma

@@ -19,10 +19,14 @@ target_link_libraries(syndockcontainmentplugin
     Qt6::Core
     Qt6::Qml
     Qt6::Quick
-    KF6::Declarative
+    ${SYNDOCK_KF6_DECLARATIVE_LINK}
     Plasma::Plasma
     Plasma::PlasmaQuick
 )
+
+if(NOT "${SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIRS}" STREQUAL "")
+    target_include_directories(syndockcontainmentplugin PRIVATE ${SYNDOCK_KF6_DECLARATIVE_INCLUDE_DIRS})
+endif()
 
 install(TARGETS syndockcontainmentplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/syndock/private/containment)
 install(FILES plugin/qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/syndock/private/containment)
