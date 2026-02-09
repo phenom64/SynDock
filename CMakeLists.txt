@@ -40,6 +40,7 @@ include(ECMQtDeclareLoggingCategory)
 include(CMakePackageConfigHelpers)
 include(CheckIncludeFiles)
 include(FeatureSummary)
+include(FindPkgConfig)
 
 # ============================================================================
 # Qt 6 - Wayland-only build (no X11 dependencies)
@@ -93,6 +94,7 @@ find_package(PlasmaWaylandProtocols 1.6 REQUIRED)
 find_package(Wayland REQUIRED COMPONENTS Client)
 find_package(KWayland QUIET)
 find_package(KF6WaylandClient QUIET)
+find_package(PkgConfig QUIET)
 
 # Wayland-only build - explicitly disable X11
 set(HAVE_X11 OFF)

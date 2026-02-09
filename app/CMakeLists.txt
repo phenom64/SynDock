@@ -82,9 +82,49 @@ elseif(DEFINED KWayland_LIBRARIES AND NOT "${KWayland_LIBRARIES}" STREQUAL "")
     if(DEFINED KWayland_INCLUDE_DIRS)
         set(SYNDOCK_KWAYLAND_CLIENT_INCLUDE_DIRS ${KWayland_INCLUDE_DIRS})
     endif()
+elseif(PkgConfig_FOUND)
+    pkg_check_modules(KWAYLANDCLIENT QUIET IMPORTED_TARGET KWaylandClient)
+    if(NOT TARGET PkgConfig::KWAYLANDCLIENT)
+        pkg_check_modules(KWAYLANDCLIENT QUIET IMPORTED_TARGET kwaylandclient)
+    endif()
+
+    if(TARGET PkgConfig::KWAYLANDCLIENT)
+        set(SYNDOCK_KWAYLAND_CLIENT_TARGET PkgConfig::KWAYLANDCLIENT)
+    elseif(DEFINED KWAYLANDCLIENT_LIBRARIES AND NOT "${KWAYLANDCLIENT_LIBRARIES}" STREQUAL "")
+        set(SYNDOCK_KWAYLAND_CLIENT_LIBRARIES ${KWAYLANDCLIENT_LIBRARIES})
+        if(DEFINED KWAYLANDCLIENT_INCLUDE_DIRS)
+            set(SYNDOCK_KWAYLAND_CLIENT_INCLUDE_DIRS ${KWAYLANDCLIENT_INCLUDE_DIRS})
+        endif()
+    endif()
+endif()
+
+# Last-resort manual discovery for distros that do not expose CMake/pkg-config metadata.
+if(SYNDOCK_KWAYLAND_CLIENT_TARGET STREQUAL "" AND "${SYNDOCK_KWAYLAND_CLIENT_LIBRARIES}" STREQUAL "")
+    find_path(SYNDOCK_KWAYLAND_INCLUDE_DIR
+        NAMES
+            KWayland/Client/connection_thread.h
+            KWayland/KWayland/Client/connection_thread.h
+    )
+    find_library(SYNDOCK_KWAYLAND_CLIENT_LIBRARY
+        NAMES
+            KWaylandClient
+            KF6WaylandClient
+            KF5WaylandClient
+    )
+
+    if(SYNDOCK_KWAYLAND_INCLUDE_DIR AND SYNDOCK_KWAYLAND_CLIENT_LIBRARY)
+        set(SYNDOCK_KWAYLAND_CLIENT_LIBRARIES ${SYNDOCK_KWAYLAND_CLIENT_LIBRARY})
+        set(SYNDOCK_KWAYLAND_CLIENT_INCLUDE_DIRS ${SYNDOCK_KWAYLAND_INCLUDE_DIR})
+    endif()
 endif()
 
 if(SYNDOCK_KWAYLAND_CLIENT_TARGET STREQUAL "" AND "${SYNDOCK_KWAYLAND_CLIENT_LIBRARIES}" STREQUAL "")
+    message(STATUS "KWayland_FOUND=${KWayland_FOUND}")
+    message(STATUS "KF6WaylandClient_FOUND=${KF6WaylandClient_FOUND}")
+    message(STATUS "KWayland_LIBRARIES=${KWayland_LIBRARIES}")
+    message(STATUS "KWayland_INCLUDE_DIRS=${KWayland_INCLUDE_DIRS}")
+    message(STATUS "KWAYLANDCLIENT_LIBRARIES=${KWAYLANDCLIENT_LIBRARIES}")
+    message(STATUS "KWAYLANDCLIENT_INCLUDE_DIRS=${KWAYLANDCLIENT_INCLUDE_DIRS}")
     message(FATAL_ERROR "SynDock requires KWayland client development files (target KWayland::Client/KF6::WaylandClient or KWayland_LIBRARIES from find_package).")
 endif()
 
