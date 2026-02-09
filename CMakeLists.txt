@@ -77,6 +77,15 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     XmlGui
 )
 
+# Some distributions expose KDeclarative as KF6::KDeclarative instead of KF6::Declarative.
+find_package(KF6Declarative REQUIRED)
+if(NOT TARGET KF6::Declarative AND TARGET KF6::KDeclarative)
+    add_library(KF6::Declarative ALIAS KF6::KDeclarative)
+endif()
+if(NOT TARGET KF6::Declarative)
+    message(FATAL_ERROR "KF6 Declarative target not found. Install libkf6declarative-dev (or distro equivalent).")
+endif()
+
 # ============================================================================
 # Plasma 6 - Deep integration with KDE Plasma
 # ============================================================================
