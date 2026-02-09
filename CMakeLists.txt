@@ -92,7 +92,6 @@ find_package(LayerShellQt REQUIRED)
 find_package(PlasmaWaylandProtocols 1.6 REQUIRED)
 find_package(Wayland REQUIRED COMPONENTS Client)
 find_package(KWayland QUIET)
-find_package(KF6Wayland QUIET)
 find_package(KF6WaylandClient QUIET)
 
 # Wayland-only build - explicitly disable X11
