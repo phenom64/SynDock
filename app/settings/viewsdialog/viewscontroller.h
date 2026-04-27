@@ -25,7 +25,7 @@
 // KDE
 #include <KMessageWidget>
 
-namespace Latte {
+namespace NSE {
 class CentralLayout;
 class Corona;
 class ViewsDialog;
@@ -40,7 +40,7 @@ class ViewsTableView;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Controller {
 
@@ -64,10 +64,10 @@ public:
 
     bool hasSelectedView() const;
     int selectedViewsCount() const;
-    const Latte::Data::View currentData(const QString &id);
+    const NSE::Data::View currentData(const QString &id);
     const Data::ViewsTable selectedViewsCurrentData() const;
 
-    const Latte::Data::View appendViewFromViewTemplate(const Data::View &view);
+    const NSE::Data::View appendViewFromViewTemplate(const Data::View &view);
 
     void selectRow(const QString &id);
 
@@ -98,7 +98,7 @@ private:
     Data::ViewsTable selectedViewsForClipboard();
 
     //! errors/warnings
-    void messagesForErrorsWarnings(const Latte::CentralLayout *centralLayout, const bool &showNoErrorsMessage = false);
+    void messagesForErrorsWarnings(const NSE::CentralLayout *centralLayout, const bool &showNoErrorsMessage = false);
     void messageForErrorAppletsWithSameId(const Data::Error &error);
     void messageForErrorOrphanedParentAppletOfSubContainment(const Data::Error &error);
     void messageForWarningOrphanedSubContainments(const Data::Warning &warning);

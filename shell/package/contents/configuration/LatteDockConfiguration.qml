@@ -8,7 +8,7 @@ import QtQuick 2.7
 import QtQuick.Controls 1.4
 import QtQuick.Controls 2.12 as QtQuickControls212
 import QtQuick.Layouts 1.3
-import Qt5Compat.GraphicalEffects
+import org.syndromatic.syndock.effects 1.0
 import QtQuick.Window 2.2
 
 import org.kde.ksvg 1.0 as KSvg
@@ -20,8 +20,8 @@ import QtQuick.Controls.Styles.Plasma 2.0 as Styles
 
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlAddons
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.syndromatic.syndock.core 0.2 as LatteCore
+import org.syndromatic.syndock.components 1.0 as LatteComponents
 
 import "pages" as Pages
 import "../controls" as LatteExtraControls

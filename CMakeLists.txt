@@ -1,22 +1,22 @@
-cmake_minimum_required(VERSION 3.16 FATAL_ERROR)
-project(lattedock)
+cmake_minimum_required(VERSION 3.22 FATAL_ERROR)
+project(syndock VERSION 1.0.0 LANGUAGES C CXX)
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(VERSION 0.10.240)
-set(AUTHOR "Michail Vourlakos, Smith Ar")
-set(EMAIL "mvourlakos@gmail.com, audoban@openmailbox.org")
-set(WEBSITE "https://userbase.kde.org/LatteDock")
-set(BUG_ADDRESS "https://bugs.kde.org/enter_bug.cgi?product=lattedock")
-set(FAQS "https://userbase.kde.org/LatteDock/FAQ")
+set(VERSION 1.0.0)
+set(AUTHOR "Syndromatic Ltd.")
+set(EMAIL "support@syndromatic.com")
+set(WEBSITE "https://syndromatic.com/syndock")
+set(BUG_ADDRESS "https://github.com/phenom64/SynDock/issues")
 
 if(DEFINED ENV{GENERATE_COMPILE_COMMANDS})
     set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
 
-set(QT_MIN_VERSION "6.5.0")
-set(KF6_MIN_VERSION "6.0.0")
+set(QT_MIN_VERSION "6.10.2")
+set(KF6_MIN_VERSION "6.24.0")
+set(PLASMA_MIN_VERSION "6.6.0")
 set(KDE_COMPILERSETTINGS_LEVEL "5.84.0")
 
 set(KF6_LOCALE_PREFIX "")
@@ -35,7 +35,7 @@ include(KDEPackageAppTemplates)
 include(WriteBasicConfigVersionFile)
 
 
-find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED NO_MODULE COMPONENTS DBus Gui Qml Quick)
+find_package(Qt6 ${QT_MIN_VERSION} CONFIG REQUIRED NO_MODULE COMPONENTS DBus Gui Qml Quick WaylandClient)
 
 #find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
 #    Activities Archive CoreAddons GuiAddons Crash DBusAddons Declarative GlobalAccel Kirigami2
@@ -62,34 +62,17 @@ find_package(KF6 ${KF6_MIN_VERSION} REQUIRED COMPONENTS
     Config
 )
 
-find_package(Plasma ${KF6_MIN_VERSION} REQUIRED)
-find_package(PlasmaActivities ${KF6_MIN_VERSION} REQUIRED)
-find_package(PlasmaQuick ${KF6_MIN_VERSION} REQUIRED)
-find_package(KWayland ${KF6_MIN_VERSION} REQUIRED)
+find_package(Plasma ${PLASMA_MIN_VERSION} REQUIRED)
+find_package(PlasmaActivities ${PLASMA_MIN_VERSION} REQUIRED)
+find_package(PlasmaQuick ${PLASMA_MIN_VERSION} REQUIRED)
+find_package(KWayland ${PLASMA_MIN_VERSION} REQUIRED)
+find_package(LayerShellQt REQUIRED)
 
 find_package(LibTaskManager REQUIRED)
 add_definitions(-DPLASMA_WORKSPACE_VERSION="${LibTaskManager_VERSION}")
 
-find_package(X11 REQUIRED)
-set_package_properties(X11 PROPERTIES DESCRIPTION "X11 libraries"
-    URL "http://www.x.org"
-    TYPE OPTIONAL
-    PURPOSE "Required for building the X11 based workspace")
-
-if(X11_FOUND)
-    find_package(XCB MODULE REQUIRED COMPONENTS XCB RANDR SHAPE EVENT)
-    set_package_properties(XCB PROPERTIES TYPE REQUIRED)
-
-    if(NOT X11_SM_FOUND)
-        message(FATAL_ERROR "\nThe X11 Session Management (SM) development package could not be found.
-                \nPlease install libSM.\n")
-    endif(NOT X11_SM_FOUND)
-
-endif()
-
-if(X11_FOUND AND XCB_XCB_FOUND)
-    set(HAVE_X11 ON)
-endif()
+set(SYNDOCK_WAYLAND_ONLY ON)
+message(STATUS "SynDock: Wayland-only build; X11 support is disabled")
 
 
 find_package(QtWaylandScanner REQUIRED)
@@ -109,8 +92,8 @@ ecm_find_qmlmodule(org.kde.kquickcontrolsaddons 2.0 REQUIRED)
 ecm_find_qmlmodule(org.kde.plasma.core 2.0 REQUIRED)
 ecm_find_qmlmodule(org.kde.plasma.components 2.0 REQUIRED)
 
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/app/config-latte.h.cmake
-               ${CMAKE_CURRENT_BINARY_DIR}/app/config-latte.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/app/config-syndock.h.cmake
+               ${CMAKE_CURRENT_BINARY_DIR}/app/config-syndock.h)
 
 #hide warnings
 string(REPLACE "-Wall" "" CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
@@ -129,8 +112,8 @@ set(CORETYPESHEADER "LIBCORETYPES_H")
 configure_file(declarativeimports/coretypes.h.in declarativeimports/core/types.h)
 set(CORETYPESHEADER "APPCORETYPES_H")
 configure_file(declarativeimports/coretypes.h.in app/coretypes.h)
-set(CORETYPESHEADER "LATTEGENERALCONTAINMENTTYPES_H")
-configure_file(declarativeimports/coretypes.h.in containment/plugin/lattetypes.h)
+set(CORETYPESHEADER "NSEGENERALCONTAINMENTTYPES_H")
+configure_file(declarativeimports/coretypes.h.in containment/plugin/nsetypes.h)
 
 # Share App::Settings::GenericTools to containment actions
 configure_file(app/settings/generic/generictools.h containmentactions/contextmenu/generictools.h)
@@ -147,4 +130,6 @@ add_subdirectory(icons)
 add_subdirectory(plasmoid)
 add_subdirectory(shell)
 
-ki18n_install(po)
+# Translation catalogs still use Latte domains and must be regenerated after
+# the SynDock message-domain pass.
+# ki18n_install(po)

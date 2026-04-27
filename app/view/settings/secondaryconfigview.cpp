@@ -6,7 +6,7 @@
 #include "secondaryconfigview.h"
 
 // local
-#include <config-latte.h>
+#include <config-syndock.h>
 #include "primaryconfigview.h"
 #include "../panelshadows_p.h"
 #include "../view.h"
@@ -28,10 +28,10 @@
 #include <KX11Extras>
 #include <KPackage/Package>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-SecondaryConfigView::SecondaryConfigView(Latte::View *view, PrimaryConfigView *parent)
+SecondaryConfigView::SecondaryConfigView(NSE::View *view, PrimaryConfigView *parent)
     : SubConfigView(view, QString("#secondaryconfigview#")),
       m_parent(parent)
 {
@@ -54,7 +54,7 @@ void SecondaryConfigView::init()
 {
     SubConfigView::init();
 
-    QByteArray tempFilePath = "lattedocksecondaryconfigurationui";
+    QByteArray tempFilePath = "syndocksecondaryconfigurationui";
 
     updateEnabledBorders();
 
@@ -62,7 +62,7 @@ void SecondaryConfigView::init()
     setSource(source);
     syncGeometry();
 
-    if (m_parent && KWindowSystem::isPlatformX11()) {
+    if (m_parent && false) {
         m_parent->requestActivate();
     }
 }
@@ -72,7 +72,7 @@ QRect SecondaryConfigView::geometryWhenVisible() const
     return m_geometryWhenVisible;
 }
 
-void SecondaryConfigView::initParentView(Latte::View *view)
+void SecondaryConfigView::initParentView(NSE::View *view)
 {   
     SubConfigView::initParentView(view);
 
@@ -159,7 +159,7 @@ void SecondaryConfigView::syncGeometry()
 
     //! after placement request to activate the main config window in order to avoid
     //! rare cases of closing settings window from secondaryConfigView->focusOutEvent
-    if (m_parent && KWindowSystem::isPlatformX11()) {
+    if (m_parent && false) {
         m_parent->requestActivate();
     }
 }
@@ -178,7 +178,7 @@ void SecondaryConfigView::showEvent(QShowEvent *ev)
     }
 
     setFlags(wFlags());
-    m_corona->wm()->setViewExtraFlags(this, false, Latte::Types::NormalWindow);
+    m_corona->wm()->setViewExtraFlags(this, false, NSE::Types::NormalWindow);
 
     syncGeometry();
 

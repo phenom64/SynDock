@@ -4,13 +4,13 @@
 */
 
 import QtQuick 2.7
-import Qt5Compat.GraphicalEffects
+import org.syndromatic.syndock.effects 1.0
 import QtQuick.Layouts 1.1
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.syndromatic.syndock.core 0.2 as LatteCore
 
 import "controls" as SettingsControls
 import "maxlength" as MaximumLength

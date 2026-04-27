@@ -8,7 +8,7 @@
 // Qt
 #include <QDir>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 Layout::Layout()

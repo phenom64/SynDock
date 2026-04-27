@@ -8,7 +8,7 @@
 #include "infoview.h"
 
 // local
-#include <config-latte.h>
+#include <config-syndock.h>
 #include "wm/abstractwindowinterface.h"
 #include "view/panelshadows_p.h"
 
@@ -27,9 +27,9 @@
 #include <KWayland/Client/surface.h>
 #include <KX11Extras>
 
-namespace Latte {
+namespace NSE {
 
-InfoView::InfoView(Latte::Corona *corona, QString message, QScreen *screen, QWindow *parent)
+InfoView::InfoView(NSE::Corona *corona, QString message, QScreen *screen, QWindow *parent)
     : QQuickView(parent),
       m_corona(corona),
       m_message(message),
@@ -50,7 +50,7 @@ InfoView::InfoView(Latte::Corona *corona, QString message, QScreen *screen, QWin
     setScreen(screen);
     setFlags(wFlags());
 
-    if (KWindowSystem::isPlatformX11()) {
+    if (false) {
         m_trackedWindowId = winId();
         m_corona->wm()->registerIgnoredWindow(m_trackedWindowId);
     } else {
@@ -77,7 +77,7 @@ void InfoView::init()
     rootContext()->setContextProperty(QStringLiteral("infoWindow"), this);
 
     KLocalizedContext *context = new KLocalizedContext(engine());
-    context->setTranslationDomain(QStringLiteral("latte-dock"));
+    context->setTranslationDomain(QStringLiteral("syndock"));
     engine()->rootContext()->setContextObject(context);
 
     auto source = QUrl::fromLocalFile(m_corona->kPackage().filePath("infoviewui"));
@@ -141,7 +141,7 @@ void InfoView::showEvent(QShowEvent *ev)
 
 void InfoView::updateWaylandId()
 {
-    Latte::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("latte-dock", validTitle());
+    NSE::WindowSystem::WindowId newId = m_corona->wm()->winIdFor("syndock", validTitle());
 
     if (m_trackedWindowId != newId) {
         if (!m_trackedWindowId.isNull()) {

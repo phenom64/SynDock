@@ -4,7 +4,7 @@
 */
 
 import QtQuick 2.2
-import Qt5Compat.GraphicalEffects
+import org.syndromatic.syndock.effects 1.0
 
 import org.kde.plasma.plasmoid 2.0
 

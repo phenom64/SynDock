@@ -12,6 +12,6 @@ ConfigModel {
     ConfigCategory {
          name: i18n("General")
          icon: "preferences-system-windows"
-         source: "LatteDockConfiguration.qml"
+         source: "SynDockConfiguration.qml"
     }
 }

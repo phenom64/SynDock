@@ -4,10 +4,10 @@
 */
 
 import QtQuick 2.7
-import Qt5Compat.GraphicalEffects
+import org.syndromatic.syndock.effects 1.0
 
 import org.kde.plasma.plasmoid 2.0
-import org.kde.latte.components 1.0 as LatteComponents
+import org.syndromatic.syndock.components 1.0 as LatteComponents
 
 Loader{
     id: shorcutBadge

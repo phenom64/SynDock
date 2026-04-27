@@ -7,7 +7,7 @@
 
 #include <PlasmaQuick/AppletQuickItem>
 
-namespace Latte{
+namespace NSE{
 
 Interfaces::Interfaces(QObject *parent)
     : QObject(parent)

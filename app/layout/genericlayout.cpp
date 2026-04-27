@@ -36,7 +36,7 @@
 #include <KConfigGroup>
 #include <KPackage/Package>
 
-namespace Latte {
+namespace NSE {
 namespace Layout {
 
 GenericLayout::GenericLayout(QObject *parent, QString layoutFile, QString assignedName)
@@ -163,14 +163,14 @@ bool GenericLayout::hasCorona() const
     return (m_corona!=nullptr);
 }
 
-void GenericLayout::setCorona(Latte::Corona *corona)
+void GenericLayout::setCorona(NSE::Corona *corona)
 {
     m_corona = corona;
 }
 
 QString GenericLayout::background() const
 {
-    QString colorsPath = m_corona->kPackage().path() + "../../shells/org.kde.latte.shell/contents/images/canvas/";
+    QString colorsPath = m_corona->kPackage().path() + "../../shells/org.syndromatic.syndock.shell/contents/images/canvas/";
 
     if (backgroundStyle() == Layout::PatternBackgroundStyle) {
         if (customBackground().isEmpty()) {
@@ -325,7 +325,7 @@ QStringList GenericLayout::unloadedContainmentsIds()
     return m_unloadedContainmentsIds;
 }
 
-Latte::Corona *GenericLayout::corona() const
+NSE::Corona *GenericLayout::corona() const
 {
     return m_corona;
 }
@@ -341,19 +341,19 @@ Types::ViewType GenericLayout::latteViewType(uint containmentId) const
     return Types::DockView;
 }
 
-Latte::View *GenericLayout::highestPriorityView()
+NSE::View *GenericLayout::highestPriorityView()
 {
-    QList<Latte::View *> views = sortedLatteViews();
+    QList<NSE::View *> views = sortedLatteViews();
 
     return (views.count() > 0 ? views[0] : nullptr);
 }
 
-Latte::View *GenericLayout::lastConfigViewFor()
+NSE::View *GenericLayout::lastConfigViewFor()
 {
     return m_lastConfigViewFor;
 }
 
-void GenericLayout::setLastConfigViewFor(Latte::View *view)
+void GenericLayout::setLastConfigViewFor(NSE::View *view)
 {
     if (m_lastConfigViewFor == view) {
         return;
@@ -366,14 +366,14 @@ void GenericLayout::setLastConfigViewFor(Latte::View *view)
     }
 }
 
-void GenericLayout::onLastConfigViewChangedFrom(Latte::View *view)
+void GenericLayout::onLastConfigViewChangedFrom(NSE::View *view)
 {
     if (!m_latteViews.values().contains(view)) {
         setLastConfigViewFor(nullptr);
     }
 }
 
-Latte::View *GenericLayout::viewForContainment(uint id) const
+NSE::View *GenericLayout::viewForContainment(uint id) const
 {
     for(auto view : m_latteViews) {
         if (view && view->containment()->id() == id) {
@@ -423,7 +423,7 @@ int GenericLayout::screenForContainment(Plasma::Containment *containment)
     }
 
     //! there is a view present
-    Latte::View *view{nullptr};
+    NSE::View *view{nullptr};
 
     if (m_latteViews.contains(containment)) {
         view = m_latteViews[containment];
@@ -454,7 +454,7 @@ bool GenericLayout::containsView(const int &containmentId) const
     return false;
 }
 
-Latte::View *GenericLayout::viewForContainment(Plasma::Containment *containment) const
+NSE::View *GenericLayout::viewForContainment(Plasma::Containment *containment) const
 {
     if (m_containments.contains(containment) && m_latteViews.contains(containment)) {
         return m_latteViews[containment];
@@ -463,14 +463,14 @@ Latte::View *GenericLayout::viewForContainment(Plasma::Containment *containment)
     return nullptr;
 }
 
-QList<Latte::View *> GenericLayout::latteViews()
+QList<NSE::View *> GenericLayout::latteViews()
 {
     return m_latteViews.values();
 }
 
-QList<Latte::View *> GenericLayout::onlyOriginalViews()
+QList<NSE::View *> GenericLayout::onlyOriginalViews()
 {
-    QList<Latte::View *> viewslist;
+    QList<NSE::View *> viewslist;
 
     for (const auto v : m_latteViews) {
         if (v->isOriginal()) {
@@ -481,15 +481,15 @@ QList<Latte::View *> GenericLayout::onlyOriginalViews()
     return viewslist;
 }
 
-QList<Latte::View *> GenericLayout::sortedLatteViews()
+QList<NSE::View *> GenericLayout::sortedLatteViews()
 {
     QScreen *primaryScreen = (m_corona ? m_corona->screenPool()->primaryScreen() : nullptr);
     return sortedLatteViews(latteViews(), primaryScreen);
 }
 
-QList<Latte::View *> GenericLayout::sortedLatteViews(QList<Latte::View *> views, QScreen *primaryScreen)
+QList<NSE::View *> GenericLayout::sortedLatteViews(QList<NSE::View *> views, QScreen *primaryScreen)
 {
-    QList<Latte::View *> sortedViews = views;
+    QList<NSE::View *> sortedViews = views;
 
     qDebug() << " -------- ";
 
@@ -506,14 +506,14 @@ QList<Latte::View *> GenericLayout::sortedLatteViews(QList<Latte::View *> views,
             if (viewAtLowerScreenPriority(sortedViews[j], sortedViews[j + 1], primaryScreen)
                     || (sortedViews[j]->screen() == sortedViews[j + 1]->screen()
                         && viewAtLowerEdgePriority(sortedViews[j], sortedViews[j + 1]))) {
-                Latte::View *temp = sortedViews[j + 1];
+                NSE::View *temp = sortedViews[j + 1];
                 sortedViews[j + 1] = sortedViews[j];
                 sortedViews[j] = temp;
             }
         }
     }
 
-    Latte::View *highestPriorityView{nullptr};
+    NSE::View *highestPriorityView{nullptr};
 
     for (int i = 0; i < sortedViews.size(); ++i) {
         if (sortedViews[i]->isPreferredForShortcuts()) {
@@ -536,7 +536,7 @@ QList<Latte::View *> GenericLayout::sortedLatteViews(QList<Latte::View *> views,
     return sortedViews;
 }
 
-bool GenericLayout::viewAtLowerScreenPriority(Latte::View *test, Latte::View *base, QScreen *primaryScreen)
+bool GenericLayout::viewAtLowerScreenPriority(NSE::View *test, NSE::View *base, QScreen *primaryScreen)
 {
     if (!base || ! test) {
         return true;
@@ -574,7 +574,7 @@ bool GenericLayout::viewAtLowerScreenPriority(Latte::View *test, Latte::View *ba
     return false;
 }
 
-bool GenericLayout::viewAtLowerEdgePriority(Latte::View *test, Latte::View *base)
+bool GenericLayout::viewAtLowerEdgePriority(NSE::View *test, NSE::View *base)
 {
     if (!base || ! test) {
         return true;
@@ -603,7 +603,7 @@ bool GenericLayout::viewAtLowerEdgePriority(Latte::View *test, Latte::View *base
     }
 }
 
-bool GenericLayout::viewDataAtLowerScreenPriority(const Latte::Data::View &test, const Latte::Data::View &base) const
+bool GenericLayout::viewDataAtLowerScreenPriority(const NSE::Data::View &test, const NSE::Data::View &base) const
 {
     if (test.onPrimary && base.onPrimary) {
         return false;
@@ -616,7 +616,7 @@ bool GenericLayout::viewDataAtLowerScreenPriority(const Latte::Data::View &test,
     }
 }
 
-bool GenericLayout::viewDataAtLowerStatePriority(const Latte::Data::View &test, const Latte::Data::View &base) const
+bool GenericLayout::viewDataAtLowerStatePriority(const NSE::Data::View &test, const NSE::Data::View &base) const
 {
     if (test.isActive == base.isActive) {
         return false;
@@ -629,7 +629,7 @@ bool GenericLayout::viewDataAtLowerStatePriority(const Latte::Data::View &test, 
     return false;
 }
 
-bool GenericLayout::viewDataAtLowerEdgePriority(const Latte::Data::View &test, const Latte::Data::View &base) const
+bool GenericLayout::viewDataAtLowerEdgePriority(const NSE::Data::View &test, const NSE::Data::View &base) const
 {
     QList<Plasma::Types::Location> edges{Plasma::Types::RightEdge, Plasma::Types::TopEdge,
                 Plasma::Types::LeftEdge, Plasma::Types::BottomEdge};
@@ -654,9 +654,9 @@ bool GenericLayout::viewDataAtLowerEdgePriority(const Latte::Data::View &test, c
     }
 }
 
-QList<Latte::Data::View> GenericLayout::sortedViewsData(const QList<Latte::Data::View> &viewsData)
+QList<NSE::Data::View> GenericLayout::sortedViewsData(const QList<NSE::Data::View> &viewsData)
 {
-    QList<Latte::Data::View> sortedData = viewsData;
+    QList<NSE::Data::View> sortedData = viewsData;
 
     //! sort the views based on screens and edges priorities
     //! views on primary screen have higher priority and
@@ -668,7 +668,7 @@ QList<Latte::Data::View> GenericLayout::sortedViewsData(const QList<Latte::Data:
                     || viewDataAtLowerScreenPriority(sortedData[j], sortedData[j + 1])
                     || (!viewDataAtLowerScreenPriority(sortedData[j], sortedData[j + 1])
                         && viewDataAtLowerEdgePriority(sortedData[j], sortedData[j + 1])) ) {
-                Latte::Data::View temp = sortedData[j + 1];
+                NSE::Data::View temp = sortedData[j + 1];
                 sortedData[j + 1] = sortedData[j];
                 sortedData[j] = temp;
             }
@@ -684,9 +684,9 @@ const QList<Plasma::Containment *> *GenericLayout::containments() const
     return &m_containments;
 }
 
-QList<Latte::View *> GenericLayout::viewsWithPlasmaShortcuts()
+QList<NSE::View *> GenericLayout::viewsWithPlasmaShortcuts()
 {
-    QList<Latte::View *> views;
+    QList<NSE::View *> views;
 
     if (!m_corona) {
         return views;
@@ -817,7 +817,7 @@ void GenericLayout::destroyedChanged(bool destroyed)
         return;
     }
 
-    Latte::View *view;
+    NSE::View *view;
 
     if (destroyed) {
         view = m_latteViews.take(static_cast<Plasma::Containment *>(sender));
@@ -918,10 +918,10 @@ void GenericLayout::addView(Plasma::Containment *containment)
         byPassWM = containment->config().readEntry("byPassWM", false);
     }
 
-    Latte::View *latteView;
+    NSE::View *latteView;
 
     if (!viewdata.isCloned()) {
-        latteView = new Latte::OriginalView(m_corona, nextScreen, byPassWM);
+        latteView = new NSE::OriginalView(m_corona, nextScreen, byPassWM);
     } else {
         auto view = viewForContainment((uint)viewdata.isClonedFrom);
 
@@ -930,8 +930,8 @@ void GenericLayout::addView(Plasma::Containment *containment)
             return;
         }
 
-        auto originalview = qobject_cast<Latte::OriginalView *>(view);
-        latteView = new Latte::ClonedView(m_corona, originalview, nextScreen, byPassWM);
+        auto originalview = qobject_cast<NSE::OriginalView *>(view);
+        latteView = new NSE::ClonedView(m_corona, originalview, nextScreen, byPassWM);
     }
 
     qDebug().noquote() << "Adding View:" << viewdata.id << "- Passed ALL checks !!!";
@@ -996,7 +996,7 @@ bool GenericLayout::initCorona()
     //! signals
     connect(this, &GenericLayout::activitiesChanged, this, &GenericLayout::updateLastUsedActivity);
     connect(m_corona->activitiesConsumer(), &KActivities::Consumer::currentActivityChanged, this, &GenericLayout::updateLastUsedActivity);
-    connect(m_corona->activitiesConsumer(), &KActivities::Consumer::runningActivitiesChanged, this, &GenericLayout::updateLastUsedActivity);
+    connect(m_corona->activitiesConsumer(), &KActivities::Consumer::activitiesChanged, this, &GenericLayout::updateLastUsedActivity);
 
     connect(this, &GenericLayout::lastConfigViewForChanged, m_corona->layoutsManager(), &Layouts::Manager::lastConfigViewChangedFrom);
     connect(m_corona->layoutsManager(), &Layouts::Manager::lastConfigViewChangedFrom, this, &GenericLayout::onLastConfigViewChangedFrom);
@@ -1061,7 +1061,7 @@ void GenericLayout::updateLastUsedActivity()
     }
 }
 
-void GenericLayout::assignToLayout(Latte::View *latteView, QList<Plasma::Containment *> containments)
+void GenericLayout::assignToLayout(NSE::View *latteView, QList<Plasma::Containment *> containments)
 {
     if (!m_corona || containments.isEmpty()) {
         return;
@@ -1178,7 +1178,7 @@ bool GenericLayout::hasLatteView(Plasma::Containment *containment)
     return m_latteViews.keys().contains(containment);
 }
 
-QList<Plasma::Types::Location> GenericLayout::availableEdgesForView(QScreen *scr, Latte::View *forView) const
+QList<Plasma::Types::Location> GenericLayout::availableEdgesForView(QScreen *scr, NSE::View *forView) const
 {
     using Plasma::Types;
     QList<Types::Location> edges{Types::BottomEdge, Types::LeftEdge,
@@ -1270,7 +1270,7 @@ QString GenericLayout::mapScreenName(const ViewsMap *map, uint viewId) const
         }
     }
 
-    return QString::number(Latte::ScreenPool::NOSCREENID);
+    return QString::number(NSE::ScreenPool::NOSCREENID);
 }
 
 //! screen name, location, containmentId
@@ -1287,7 +1287,7 @@ Layout::ViewsMap GenericLayout::validViewsMap()
     for (const auto containment : m_containments) {
         if (Layouts::Storage::self()->isLatteContainment(containment)
                 && !Layouts::Storage::self()->isClonedView(containment)) {
-            Data::View view = hasLatteView(containment) ? m_latteViews[containment]->data() : Latte::Layouts::Storage::self()->view(this, containment);
+            Data::View view = hasLatteView(containment) ? m_latteViews[containment]->data() : NSE::Layouts::Storage::self()->view(this, containment);
             view.screen = Layouts::Storage::self()->expectedViewScreenId(m_corona, view);
 
             if (view.onPrimary) {
@@ -1500,7 +1500,7 @@ bool GenericLayout::newView(const QString &templateName)
     return true;
 }
 
-Data::View GenericLayout::newView(const Latte::Data::View &nextViewData)
+Data::View GenericLayout::newView(const NSE::Data::View &nextViewData)
 {
     if (nextViewData.state() == Data::View::IsInvalid) {
         return Data::View();
@@ -1512,7 +1512,7 @@ Data::View GenericLayout::newView(const Latte::Data::View &nextViewData)
     return result;
 }
 
-void GenericLayout::updateView(const Latte::Data::View &viewData)
+void GenericLayout::updateView(const NSE::Data::View &viewData)
 {
     //! storage -> storage [view scenario]
     if (!isActive()) {
@@ -1521,14 +1521,14 @@ void GenericLayout::updateView(const Latte::Data::View &viewData)
     }
 
     //! active -> active [view scenario]
-    Latte::View *view = viewForContainment(viewData.id.toUInt());
+    NSE::View *view = viewForContainment(viewData.id.toUInt());
     bool viewMustBeDeleted = (view && !viewData.onPrimary && !m_corona->screenPool()->isScreenActive(viewData.screen));
 
     QString nextactivelayoutname = (viewData.state() == Data::View::OriginFromLayout && !viewData.originLayout().isEmpty() ? viewData.originLayout() : QString());
 
     if (view) {
         if (!viewMustBeDeleted) {
-            QString scrName = Latte::Data::Screen::ONPRIMARYNAME;
+            QString scrName = NSE::Data::Screen::ONPRIMARYNAME;
 
             if (!viewData.onPrimary) {
                 if (m_corona->screenPool()->hasScreenId(viewData.screen)) {
@@ -1579,7 +1579,7 @@ void GenericLayout::updateView(const Latte::Data::View &viewData)
     syncLatteViewsToScreens();
 }
 
-void GenericLayout::removeView(const Latte::Data::View &viewData)
+void GenericLayout::removeView(const NSE::Data::View &viewData)
 {
     if (!containsView(viewData.id.toInt())) {
         return;
@@ -1642,7 +1642,7 @@ Data::WarningsList GenericLayout::warnings() const
     return Layouts::Storage::self()->warnings(this);
 }
 
-Latte::Data::ViewsTable GenericLayout::viewsTable() const
+NSE::Data::ViewsTable GenericLayout::viewsTable() const
 {
     return Layouts::Storage::self()->views(this);
 }

@@ -13,8 +13,8 @@ import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.activities 0.1 as Activities
 import org.kde.taskmanager 0.1 as TaskManager
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.tasks 0.1 as LatteTasks
+import org.syndromatic.syndock.core 0.2 as LatteCore
+import org.syndromatic.syndock.private.tasks 0.1 as LatteTasks
 
 import "../code/activitiesTools.js" as ActivitiesTools
 

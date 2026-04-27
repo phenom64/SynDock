@@ -11,7 +11,7 @@
 #include <QColor>
 #include <QPaintEvent>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 
 class SchemesComboBox : public QComboBox

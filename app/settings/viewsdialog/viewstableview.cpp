@@ -10,7 +10,7 @@
 #include <QModelIndex>
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace View {
 

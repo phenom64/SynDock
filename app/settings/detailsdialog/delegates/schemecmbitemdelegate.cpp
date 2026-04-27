@@ -17,7 +17,7 @@
 #include <QString>
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Details {
 namespace Delegate {
@@ -32,14 +32,14 @@ void SchemeCmbItemDelegate::paint(QPainter *painter, const QStyleOptionViewItem 
     QStyleOptionViewItem myOptions = option;
 
     //! background
-    Latte::drawBackground(painter, option);
+    NSE::drawBackground(painter, option);
 
     QColor backcolor = index.data(Model::Schemes::BACKGROUNDCOLORROLE).value<QColor>();
     QColor textcolor = index.data(Model::Schemes::TEXTCOLORROLE).value<QColor>();
 
     //! icon
-    QRect remained = Latte::remainedFromColorSchemeIcon(myOptions, Qt::AlignLeft, 4, 2);
-    Latte::drawColorSchemeIcon(painter, myOptions, textcolor, backcolor, Qt::AlignLeft, 5, 2); //+1px in order to take into account popup window border
+    QRect remained = NSE::remainedFromColorSchemeIcon(myOptions, Qt::AlignLeft, 4, 2);
+    NSE::drawColorSchemeIcon(painter, myOptions, textcolor, backcolor, Qt::AlignLeft, 5, 2); //+1px in order to take into account popup window border
     myOptions.rect = remained;
 
     //!

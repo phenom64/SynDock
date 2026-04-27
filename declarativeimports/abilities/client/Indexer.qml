@@ -5,7 +5,7 @@
 
 import QtQuick 2.0
 
-import org.kde.latte.abilities.definition 0.1 as AbilityDefinition
+import org.syndromatic.syndock.abilities.definition 0.1 as AbilityDefinition
 
 AbilityDefinition.Indexer {
     id: _indexer
@@ -129,7 +129,7 @@ AbilityDefinition.Indexer {
                         && !item.isSeparator /*not using "separators" array to avoid binding loops*/
                         && !(item.isHidden || item.isSeparatorHidden) /*not using "hidden" array to avoid binding loops*/
                         && item.itemIndex > ind) {
-                     //console.log("org/kde/latte SETTING UP ::: " + item.itemIndex + " / " + layout.children.length);
+                     //console.log("org/syndromatic/syndock SETTING UP ::: " + item.itemIndex + " / " + layout.children.length);
                     ind = item.itemIndex;
                 }
             }

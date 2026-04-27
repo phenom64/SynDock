@@ -20,7 +20,7 @@
 #include <KWindowSystem>
 #include <PlasmaActivities/Controller>
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 
 #define MAXPLASMAPANELTHICKNESS 96
@@ -36,7 +36,7 @@ AbstractWindowInterface::AbstractWindowInterface(QObject *parent)
     m_activities = new KActivities::Consumer(this);
     m_currentActivity = m_activities->currentActivity();
 
-    m_corona = qobject_cast<Latte::Corona *>(parent);
+    m_corona = qobject_cast<NSE::Corona *>(parent);
     m_windowsTracker = new Tracker::Windows(this);
     m_schemesTracker = new Tracker::Schemes(this);
 
@@ -115,7 +115,7 @@ QString AbstractWindowInterface::currentActivity()
     return m_currentActivity;
 }
 
-Latte::Corona *AbstractWindowInterface::corona()
+NSE::Corona *AbstractWindowInterface::corona()
 {
     return m_corona;
 }
@@ -144,7 +144,7 @@ bool AbstractWindowInterface::isFullScreenWindow(const QRect &wGeometry) const
     for (const auto scr : qGuiApp->screens()) {
         auto screenGeometry = scr->geometry();
 
-        if (KWindowSystem::isPlatformX11() && scr->devicePixelRatio() != 1.0) {
+        if (false && scr->devicePixelRatio() != 1.0) {
             //!Fix for X11 Global Scale, I dont think this could be pixel perfect accurate
             auto factor = scr->devicePixelRatio();
             screenGeometry = QRect(qRound(screenGeometry.x() * factor),
@@ -174,7 +174,7 @@ bool AbstractWindowInterface::isPlasmaPanel(const QRect &wGeometry) const
     for (const auto scr : qGuiApp->screens()) {
         auto screenGeometry = scr->geometry();
 
-        if (KWindowSystem::isPlatformX11() && scr->devicePixelRatio() != 1.0) {
+        if (false && scr->devicePixelRatio() != 1.0) {
             //!Fix for X11 Global Scale, I dont think this could be pixel perfect accurate
             auto factor = scr->devicePixelRatio();
             screenGeometry = QRect(qRound(screenGeometry.x() * factor),
@@ -218,7 +218,7 @@ bool AbstractWindowInterface::isSidepanel(const QRect &wGeometry) const
     for (const auto scr : qGuiApp->screens()) {
         auto curScrGeometry = scr->geometry();
 
-        if (KWindowSystem::isPlatformX11() && scr->devicePixelRatio() != 1.0) {
+        if (false && scr->devicePixelRatio() != 1.0) {
             //!Fix for X11 Global Scale, I dont think this could be pixel perfect accurate
             auto factor = scr->devicePixelRatio();
             curScrGeometry = QRect(qRound(curScrGeometry.x() * factor),
@@ -364,7 +364,7 @@ void AbstractWindowInterface::windowRemovedSlot(WindowId wid)
 //! Activities switching
 void AbstractWindowInterface::switchToNextActivity()
 {
-    QStringList runningActivities = m_activities->activities(KActivities::Info::State::Running);
+    QStringList runningActivities = m_activities->activities();
     if (runningActivities.count() <= 1) {
         return;
     }
@@ -382,7 +382,7 @@ void AbstractWindowInterface::switchToNextActivity()
 
 void AbstractWindowInterface::switchToPreviousActivity()
 {
-    QStringList runningActivities = m_activities->activities(KActivities::Info::State::Running);
+    QStringList runningActivities = m_activities->activities();
     if (runningActivities.count() <= 1) {
         return;
     }
@@ -428,4 +428,3 @@ void AbstractWindowInterface::considerWindowChanged(WindowId wid)
 
 }
 }
-

@@ -5,7 +5,7 @@
 
 #include "layoutcolordata.h"
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 LayoutColor::LayoutColor()

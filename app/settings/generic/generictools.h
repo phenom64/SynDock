@@ -14,7 +14,7 @@
 #include <QStyleOption>
 #include <QStyleOptionViewItem>
 
-namespace Latte {
+namespace NSE {
 
 bool isActive(const QStyleOption &option);
 bool isEnabled(const QStyleOption &option);

@@ -13,7 +13,7 @@
 #include <QStringList>
 #include <QtMath>
 
-namespace Latte {
+namespace NSE {
 
 float colorBrightness(QColor color)
 {
@@ -118,6 +118,17 @@ QString configPath()
     }
 
     return configPaths[0];
+}
+
+QString dataPath()
+{
+    QStringList dataPaths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
+
+    if (dataPaths.count() == 0) {
+        return QDir::homePath() + "/.local/share";
+    }
+
+    return dataPaths[0];
 }
 
 // Predicates.

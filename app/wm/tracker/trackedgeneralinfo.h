@@ -13,7 +13,7 @@
 // Qt
 #include <QObject>
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 class SchemeColors;
 namespace Tracker {
@@ -23,14 +23,14 @@ class Windows;
 }
 
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 namespace Tracker {
 
 class TrackedGeneralInfo : public QObject {
     Q_OBJECT
 
-    Q_PROPERTY(Latte::WindowSystem::Tracker::LastActiveWindow *activeWindow READ lastActiveWindow NOTIFY lastActiveWindowChanged)
+    Q_PROPERTY(NSE::WindowSystem::Tracker::LastActiveWindow *activeWindow READ lastActiveWindow NOTIFY lastActiveWindowChanged)
 
 public:
     TrackedGeneralInfo(Tracker::Windows *tracker);

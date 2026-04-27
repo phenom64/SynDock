@@ -18,7 +18,7 @@
 
 #define BASELINESHADOWTHRESHOLD 5
 
-namespace Latte {
+namespace NSE {
 namespace PlasmaExtended {
 
 PanelBackground::PanelBackground(Plasma::Types::Location edge, Theme *parent)

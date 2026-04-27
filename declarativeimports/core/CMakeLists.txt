@@ -1,9 +1,9 @@
-configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-latte-lib.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-latte-lib.h)
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config-syndock-lib.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/config-syndock-lib.h)
 
 include_directories(../../legacy)
 
-set(lattecoreplugin_SRCS
-    lattecoreplugin.cpp
+set(syndockcoreplugin_SRCS
+    syndockcoreplugin.cpp
     dialog.cpp
     environment.cpp
     ../../legacy/ManagedTextureNode.cpp
@@ -14,9 +14,9 @@ set(lattecoreplugin_SRCS
 )
 
 #include_directories(${Plasma_INCLUDE_DIRS})
-add_library(lattecoreplugin SHARED ${lattecoreplugin_SRCS})
+add_library(syndockcoreplugin SHARED ${syndockcoreplugin_SRCS})
 
-target_link_libraries(lattecoreplugin
+target_link_libraries(syndockcoreplugin
     Qt::Quick
     Qt::Qml
     KF6::CoreAddons
@@ -26,10 +26,8 @@ target_link_libraries(lattecoreplugin
     Plasma::PlasmaQuick
 )
 
-if(HAVE_X11)
-    target_link_libraries(lattecoreplugin KF6::WindowSystem)
-endif()
+target_link_libraries(syndockcoreplugin KF6::WindowSystem)
 
-install(TARGETS lattecoreplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/core)
+install(TARGETS syndockcoreplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/syndromatic/syndock/core)
 
-install(FILES qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/core)
+install(FILES qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/syndromatic/syndock/core)

@@ -16,12 +16,12 @@
 #include "../../plasma/extended/theme.h"
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 
 
-TabPreferences::TabPreferences(Latte::Settings::Dialog::SettingsDialog *parent)
+TabPreferences::TabPreferences(NSE::Settings::Dialog::SettingsDialog *parent)
     : Generic(parent),
       m_parentDialog(parent),
       m_corona(m_parentDialog->corona()),

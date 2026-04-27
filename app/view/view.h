@@ -54,20 +54,20 @@ class PlasmaShellSurface;
 }
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class Interfaces;
 class GenericLayout;
 }
 
-namespace Latte {
+namespace NSE {
 
 class View : public PlasmaQuick::ContainmentView
 {
     Q_OBJECT
 
     Q_PROPERTY(int groupId READ groupId NOTIFY groupIdChanged)
-    Q_PROPERTY(Latte::Types::ViewType type READ type WRITE setType NOTIFY typeChanged)
+    Q_PROPERTY(NSE::Types::ViewType type READ type WRITE setType NOTIFY typeChanged)
 
     Q_PROPERTY(bool alternativesIsShown READ alternativesIsShown NOTIFY alternativesIsShownChanged)
     Q_PROPERTY(bool behaveAsPlasmaPanel READ behaveAsPlasmaPanel WRITE setBehaveAsPlasmaPanel NOTIFY behaveAsPlasmaPanelChanged)
@@ -107,17 +107,17 @@ class View : public PlasmaQuick::ContainmentView
 
     Q_PROPERTY(QVariantList containmentActions READ containmentActions NOTIFY containmentActionsChanged)
 
-    Q_PROPERTY(Latte::Layout::GenericLayout *layout READ layout WRITE setLayout NOTIFY layoutChanged)
-    Q_PROPERTY(Latte::ViewPart::Effects *effects READ effects NOTIFY effectsChanged)
-    Q_PROPERTY(Latte::ViewPart::ContainmentInterface *extendedInterface READ extendedInterface NOTIFY extendedInterfaceChanged)
-    Q_PROPERTY(Latte::ViewPart::Indicator *indicator READ indicator NOTIFY indicatorChanged)
-    Q_PROPERTY(Latte::ViewPart::Parabolic *parabolic READ parabolic NOTIFY parabolicChanged)
-    Q_PROPERTY(Latte::ViewPart::Positioner *positioner READ positioner NOTIFY positionerChanged)
-    Q_PROPERTY(Latte::ViewPart::EventsSink *sink READ sink NOTIFY sinkChanged)
-    Q_PROPERTY(Latte::ViewPart::VisibilityManager *visibility READ visibility NOTIFY visibilityChanged)
-    Q_PROPERTY(Latte::ViewPart::WindowsTracker *windowsTracker READ windowsTracker NOTIFY windowsTrackerChanged)
+    Q_PROPERTY(NSE::Layout::GenericLayout *layout READ layout WRITE setLayout NOTIFY layoutChanged)
+    Q_PROPERTY(NSE::ViewPart::Effects *effects READ effects NOTIFY effectsChanged)
+    Q_PROPERTY(NSE::ViewPart::ContainmentInterface *extendedInterface READ extendedInterface NOTIFY extendedInterfaceChanged)
+    Q_PROPERTY(NSE::ViewPart::Indicator *indicator READ indicator NOTIFY indicatorChanged)
+    Q_PROPERTY(NSE::ViewPart::Parabolic *parabolic READ parabolic NOTIFY parabolicChanged)
+    Q_PROPERTY(NSE::ViewPart::Positioner *positioner READ positioner NOTIFY positionerChanged)
+    Q_PROPERTY(NSE::ViewPart::EventsSink *sink READ sink NOTIFY sinkChanged)
+    Q_PROPERTY(NSE::ViewPart::VisibilityManager *visibility READ visibility NOTIFY visibilityChanged)
+    Q_PROPERTY(NSE::ViewPart::WindowsTracker *windowsTracker READ windowsTracker NOTIFY windowsTrackerChanged)
 
-    Q_PROPERTY(Latte::Interfaces *interfacesGraphicObj READ interfacesGraphicObj WRITE setInterfacesGraphicObj NOTIFY interfacesGraphicObjChanged)
+    Q_PROPERTY(NSE::Interfaces *interfacesGraphicObj READ interfacesGraphicObj WRITE setInterfacesGraphicObj NOTIFY interfacesGraphicObjChanged)
 
     Q_PROPERTY(QRect absoluteGeometry READ absoluteGeometry NOTIFY absoluteGeometryChanged)
     Q_PROPERTY(QRect localGeometry READ localGeometry WRITE setLocalGeometry NOTIFY localGeometryChanged)
@@ -228,13 +228,13 @@ public:
     virtual bool isCloned() const = 0; //means that this view is a clone of an original view
     virtual bool isOriginal() const = 0; //means that this view is an original view that can be autocloned to other screens
     virtual bool isSingle() const = 0; //means that this view is not related to clones and screen groups in any way
-    virtual Latte::Types::ScreensGroup screensGroup() const = 0;
+    virtual NSE::Types::ScreensGroup screensGroup() const = 0;
 
     QVariantList containmentActions() const;
 
     QQuickView *configView();
 
-    virtual Latte::Data::View data() const;
+    virtual NSE::Data::View data() const;
 
     ViewPart::Effects *effects() const;   
     ViewPart::ContainmentInterface *extendedInterface() const;
@@ -245,8 +245,8 @@ public:
     ViewPart::VisibilityManager *visibility() const;
     ViewPart::WindowsTracker *windowsTracker() const;
 
-    Latte::Interfaces *interfacesGraphicObj() const;
-    void setInterfacesGraphicObj(Latte::Interfaces *ifaces);
+    NSE::Interfaces *interfacesGraphicObj() const;
+    void setInterfacesGraphicObj(NSE::Interfaces *ifaces);
 
     Layout::GenericLayout *layout() const;
     void setLayout(Layout::GenericLayout *layout);
@@ -349,17 +349,17 @@ signals:
 
     //! are used to trigger the Corona relevant signals and in that
     //! way we can disable any such signaling all together, e.g. through disconnectSensitiveSignals()
-    void availableScreenRectChangedFrom(Latte::View *origin);
-    void availableScreenRegionChangedFrom(Latte::View *origin);
+    void availableScreenRectChangedFrom(NSE::View *origin);
+    void availableScreenRegionChangedFrom(NSE::View *origin);
 
 protected:
-    QPointer<Latte::Corona> m_corona;
+    QPointer<NSE::Corona> m_corona;
 
 private slots:
     void applyActivitiesToWindows();
     void availableScreenRectChangedFromSlot(View *origin);
     void hideWindowsForSlidingOut();
-    void preferredViewForShortcutsChangedSlot(Latte::View *view);
+    void preferredViewForShortcutsChangedSlot(NSE::View *view);
     void releaseGrab();
     void reloadSource();
     void updateTransientWindowsTracking();
@@ -451,7 +451,7 @@ private:
     QPointer<ViewPart::VisibilityManager> m_visibility;
     QPointer<ViewPart::WindowsTracker> m_windowsTracker;
 
-    QPointer<Latte::Interfaces> m_interfacesGraphicObj;
+    QPointer<NSE::Interfaces> m_interfacesGraphicObj;
 
     //! Connections to release and bound for the assigned layout
     QList<QMetaObject::Connection> connectionsLayout;

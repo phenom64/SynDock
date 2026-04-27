@@ -12,7 +12,7 @@
 #include <QJSEngine>
 
 
-namespace Latte{
+namespace NSE{
 
 class Environment final: public QObject
 {

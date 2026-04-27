@@ -11,7 +11,7 @@
 // KDE
 #include <KPackage/PackageLoader>
 
-namespace Latte {
+namespace NSE {
 
 IndicatorPackage::IndicatorPackage(QObject *parent, const QVariantList &args)
     : KPackage::PackageStructure(parent, args)
@@ -20,7 +20,7 @@ IndicatorPackage::IndicatorPackage(QObject *parent, const QVariantList &args)
 
 void IndicatorPackage::initPackage(KPackage::Package *package)
 {
-    package->setDefaultPackageRoot(QStringLiteral("latte/indicators"));
+    package->setDefaultPackageRoot(QStringLiteral("syndock/indicators"));
 
     package->addDirectoryDefinition("config", QStringLiteral("config"));
     package->addDirectoryDefinition("ui", QStringLiteral("ui"));
@@ -31,6 +31,6 @@ void IndicatorPackage::initPackage(KPackage::Package *package)
 
 }
 
-K_PLUGIN_CLASS_WITH_JSON(Latte::IndicatorPackage, "latte-packagestructure-indicator.json")
+K_PLUGIN_CLASS_WITH_JSON(NSE::IndicatorPackage, "syndock-packagestructure-indicator.json")
 
 #include "indicatorpackage.moc"

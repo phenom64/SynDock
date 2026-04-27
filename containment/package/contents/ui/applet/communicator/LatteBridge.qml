@@ -5,8 +5,8 @@
 
 import QtQuick 2.7
 
-import org.kde.latte.abilities.host 0.1 as AbilityHost
-import org.kde.latte.abilities.bridge 0.1 as AbilityBridge
+import org.syndromatic.syndock.abilities.host 0.1 as AbilityHost
+import org.syndromatic.syndock.abilities.bridge 0.1 as AbilityBridge
 
 Item{
     id: settings

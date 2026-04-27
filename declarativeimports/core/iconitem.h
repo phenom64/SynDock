@@ -26,7 +26,7 @@
 #include <Plasma/Theme>
 
 // this file is based on PlasmaCore::IconItem class, thanks to KDE
-namespace Latte {
+namespace NSE {
 class IconItem : public QQuickItem
 {
     Q_OBJECT

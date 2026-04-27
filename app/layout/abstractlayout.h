@@ -19,7 +19,7 @@ namespace Plasma {
 class Types;
 }
 
-namespace Latte {
+namespace NSE {
 namespace Layout {
 Q_NAMESPACE
 
@@ -41,7 +41,7 @@ Q_ENUM_NS(BackgroundStyle);
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace Layout {
 
 const char MULTIPLELAYOUTSHIDDENNAME[] = ".multiple-layouts_hidden";

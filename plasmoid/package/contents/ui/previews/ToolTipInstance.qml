@@ -9,7 +9,7 @@
 
 import QtQuick 2.6
 import QtQuick.Layouts 1.1
-import Qt5Compat.GraphicalEffects
+import org.syndromatic.syndock.effects 1.0
 import QtQml.Models 2.2
 
 import org.kde.kirigami 2.5 as Kirigami
@@ -18,7 +18,7 @@ import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.extras 2.0 as PlasmaExtras
 import org.kde.kquickcontrolsaddons 2.0 as KQuickControlsAddons
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.syndromatic.syndock.core 0.2 as LatteCore
 
 import org.kde.draganddrop 2.0
 
@@ -191,7 +191,7 @@ Column {
                 id:previewThumbLoader
                 anchors.fill: parent
                 anchors.margins: Math.max(2, previewShadow.radius)
-                active: LatteCore.WindowSystem.isPlatformX11 || (root.plasma520 && LatteCore.WindowSystem.isPlatformWayland)
+                active: false || (LatteCore.WindowSystem.isPlatformWayland)
                 visible: !albumArtImage.visible && !thumbnailSourceItem.isMinimized
                 source:  {
                     if (LatteCore.WindowSystem.isPlatformWayland) {

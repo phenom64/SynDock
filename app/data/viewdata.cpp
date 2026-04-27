@@ -5,7 +5,7 @@
 
 #include "viewdata.h"
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 const int View::ISCLONEDNULL = -1;
@@ -187,11 +187,11 @@ View::operator QString() const
     }
 
     result += " : ";
-    if (screensGroup == Latte::Types::SingleScreenGroup) {
+    if (screensGroup == NSE::Types::SingleScreenGroup) {
         result += onPrimary ? "Primary" : "Explicit";
-    } else if (screensGroup == Latte::Types::AllScreensGroup) {
+    } else if (screensGroup == NSE::Types::AllScreensGroup) {
         result += "All Screens";
-    } else if (screensGroup == Latte::Types::AllSecondaryScreensGroup) {
+    } else if (screensGroup == NSE::Types::AllSecondaryScreensGroup) {
         result += "All Secondary Screens";
     }
 
@@ -211,17 +211,17 @@ View::operator QString() const
 
     result += " : ";
 
-    if (alignment == Latte::Types::Center) {
+    if (alignment == NSE::Types::Center) {
         result += "CenterAlignment";
-    } else if (alignment == Latte::Types::Left) {
+    } else if (alignment == NSE::Types::Left) {
         result += "LeftAlignment";
-    } else if (alignment == Latte::Types::Right) {
+    } else if (alignment == NSE::Types::Right) {
         result += "RightAlignment";
-    } else if (alignment == Latte::Types::Top) {
+    } else if (alignment == NSE::Types::Top) {
         result += "TopAlignment";
-    } else if (alignment == Latte::Types::Bottom) {
+    } else if (alignment == NSE::Types::Bottom) {
         result += "BottomAlignment";
-    } else if (alignment == Latte::Types::Justify) {
+    } else if (alignment == NSE::Types::Justify) {
         result += "JustifyAlignment";
     }
 

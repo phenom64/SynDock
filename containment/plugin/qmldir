@@ -1,2 +1,2 @@
-module org.kde.latte.private.containment
-plugin lattecontainmentplugin 
+module org.syndromatic.syndock.private.containment
+plugin syndockcontainmentplugin 

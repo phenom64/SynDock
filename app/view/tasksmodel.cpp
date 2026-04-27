@@ -12,7 +12,7 @@
 #include <Plasma/Applet>
 #include <PlasmaQuick/AppletQuickItem>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 TasksModel::TasksModel(QObject *parent)

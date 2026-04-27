@@ -34,7 +34,7 @@
         ],
         "Category": "",
         "Dependencies": [],
-        "Description": "Containment provided for the Latte Dock",
+        "Description": "Containment provided for SynDock",
         "Description[az]": "Latte Dok paneli üçün nəzərdə tutulmuş saxlama",
         "Description[ca@valencia]": "Contenidor proporcionat per Latte Dock",
         "Description[ca]": "Contenidor proporcionat pel Latte Dock",
@@ -61,9 +61,9 @@
         "Description[zh_CN]": "用于 Latte 停靠栏的容器",
         "Description[zh_TW]": "提供給 Latte Dock 使用的容器",
         "EnabledByDefault": true,
-        "Id": "org.kde.latte.containment",
+        "Id": "org.syndromatic.syndock.containment",
         "License": "GPL",
-        "Name": "Latte Containment",
+        "Name": "SynDock Containment",
         "Name[ar]": "حاوية لاتيه",
         "Name[az]": "Latte əhatəsi",
         "Name[ca@valencia]": "Contenidor de Latte",
@@ -92,13 +92,10 @@
         "Name[x-test]": "xxLatte Containmentxx",
         "Name[zh_CN]": "Latte 容器",
         "Name[zh_TW]": "Latte 容器",
-        "ServiceTypes": [
-            "Plasma/Applet",
-            "Plasma/Containment"
-        ],
-        "Website": "https://userbase.kde.org/LatteDock"
+        "Website": "https://syndromatic.com/syndock"
     },
     "NoDisplay": true,
     "X-Plasma-API-Minimum-Version": "6.0",
-    "X-Plasma-ContainmentType": "Panel"
+    "X-Plasma-ContainmentType": "Panel",
+    "KPackageStructure": "Plasma/Applet"
 }

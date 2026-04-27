@@ -1,4 +1,4 @@
-module org.kde.latte.abilities.definition
+module org.syndromatic.syndock.abilities.definition
 
 Animations 0.1 Animations.qml
 AppletRequirements 0.1 AppletRequirements.qml

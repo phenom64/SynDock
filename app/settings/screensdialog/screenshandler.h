@@ -18,7 +18,7 @@ namespace Ui {
 class ScreensDialog;
 }
 
-namespace Latte{
+namespace NSE{
 namespace Settings{
 namespace Model {
 class Screens;
@@ -29,7 +29,7 @@ class ScreensDialog;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 
@@ -43,7 +43,7 @@ public:
     bool hasChangedData() const override;
     bool inDefaultValues() const override;
 
-    Latte::Data::ScreensTable currentData() const;
+    NSE::Data::ScreensTable currentData() const;
 
 public slots:
     void deselectAll();

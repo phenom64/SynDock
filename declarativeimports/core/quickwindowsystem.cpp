@@ -14,7 +14,7 @@
 #include <KWindowSystem>
 #include <KX11Extras>
 
-namespace Latte {
+namespace NSE {
 
 QuickWindowSystem::QuickWindowSystem(QObject *parent)
     : QObject(parent)
@@ -49,11 +49,6 @@ bool QuickWindowSystem::compositingActive() const
 bool QuickWindowSystem::isPlatformWayland() const
 {
     return KWindowSystem::isPlatformWayland();
-}
-
-bool QuickWindowSystem::isPlatformX11() const
-{
-    return KWindowSystem::isPlatformX11();
 }
 
 } //end of namespace

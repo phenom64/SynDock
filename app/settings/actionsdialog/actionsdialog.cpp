@@ -13,7 +13,7 @@
 // Qt
 #include <QDebug>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Dialog {
 

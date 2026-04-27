@@ -24,7 +24,7 @@ namespace Ui {
 class ViewsDialog;
 }
 
-namespace Latte{
+namespace NSE{
 class CentralLayout;
 class Corona;
 namespace Settings{
@@ -39,7 +39,7 @@ class ViewsDialog;
 }
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 
@@ -59,11 +59,11 @@ public:
 
     bool isSelectedLayoutOriginal() const;
 
-    Latte::Data::Layout currentData() const;
-    Latte::Data::Layout originalData() const;
+    NSE::Data::Layout currentData() const;
+    NSE::Data::Layout originalData() const;
 
     Ui::ViewsDialog *ui() const;
-    Latte::Corona *corona() const;
+    NSE::Corona *corona() const;
     Settings::Controller::Layouts *layoutsController() const;
 
 public slots:
@@ -94,7 +94,7 @@ private:
 
     void reload();
 
-    void loadLayout(const Latte::Data::Layout &data);
+    void loadLayout(const NSE::Data::Layout &data);
 
     QString storedView(const QString &viewId);
 
@@ -108,7 +108,7 @@ private:
 
     QSortFilterProxyModel *m_layoutsProxyModel{nullptr};
 
-    Latte::Data::Layout o_data;
+    NSE::Data::Layout o_data;
 
     int m_lastConfirmedLayoutIndex{-1};
 

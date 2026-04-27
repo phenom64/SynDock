@@ -5,7 +5,7 @@
 
 #include "activitydata.h"
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 Activity::Activity()
@@ -53,12 +53,12 @@ Activity &Activity::operator=(Activity &&rhs)
 
 bool Activity::isValid() const
 {
-    return (state != KActivities::Info::Invalid);
+    return (state != Invalid);
 }
 
 bool Activity::isRunning() const
 {
-    return ((state == KActivities::Info::Running) || (state == KActivities::Info::Starting));
+    return ((state == Running) || (state == Starting));
 }
 
 }

@@ -7,7 +7,7 @@
 import QtQuick 2.0
 import QtQuick.Controls 1.0
 import QtQuick.Layouts 1.0
-import Qt5Compat.GraphicalEffects
+import org.syndromatic.syndock.effects 1.0
 
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
@@ -29,9 +29,9 @@ PlasmoidItem {
     property alias cfg_dotsOnActive: dotsOnActive.checked
     property alias cfg_durationTime : durationTime.value
 
-    property alias cfg_isInLatteDock: mainItem.isInLatteDock
+    property alias cfg_isInSynDock: mainItem.isInSynDock
 
-    property bool isInLatteDock
+    property bool isInSynDock
 
     ColumnLayout {
         id:mainColumn
@@ -58,7 +58,7 @@ PlasmoidItem {
                     ComboBox {
                         // 16, 22, 32, 48, 64,128, 256
                         id: iconSizeCmb
-                        enabled: !mainItem.isInLatteDock
+                        enabled: !mainItem.isInSynDock
 
                         property int realValue
                         property bool startup: true
@@ -198,7 +198,7 @@ PlasmoidItem {
             Label{Layout.columnSpan: 3}
 
             Item{
-                enabled: !mainItem.isInLatteDock
+                enabled: !mainItem.isInSynDock
                 Layout.columnSpan: 3
                 Layout.fillWidth: true
                 Label {
@@ -212,7 +212,7 @@ PlasmoidItem {
             //////
 
             Label {
-                enabled: !mainItem.isInLatteDock
+                enabled: !mainItem.isInSynDock
                 Layout.alignment: Qt.AlignHCenter
                 horizontalAlignment: Text.AlignHCenter
 
@@ -221,7 +221,7 @@ PlasmoidItem {
 
             Slider {
                 id: zoomLevel
-                enabled: !mainItem.isInLatteDock
+                enabled: !mainItem.isInSynDock
                 Layout.fillWidth: true
                 minimumValue: 0
                 maximumValue: 20
@@ -231,7 +231,7 @@ PlasmoidItem {
 
             Label {
                 id:zoomLevelText
-                enabled: !mainItem.isInLatteDock
+                enabled: !mainItem.isInSynDock
                 Layout.minimumWidth: metricsLabel2.width
                 Layout.maximumWidth: metricsLabel2.width
                 Layout.alignment: Qt.AlignHCenter
@@ -259,7 +259,7 @@ PlasmoidItem {
 
             CheckBox {
                 id: zoomHelper
-                enabled: !mainItem.isInLatteDock
+                enabled: !mainItem.isInSynDock
                 text: i18n("Show a red line on the limit needed for animations")
 
                 Layout.columnSpan: 3
@@ -269,22 +269,22 @@ PlasmoidItem {
 
     DropShadow {
         id:shadowText
-        anchors.fill: inLatteDockLabel
+        anchors.fill: inSynDockLabel
         fast: true
-        enabled: isInLatteDock
+        enabled: isInSynDock
         radius: 3
         samples: 5
         color: "#cc080808"
-        source: inLatteDockLabel
+        source: inSynDockLabel
 
         verticalOffset: 2
         horizontalOffset: -1
-        visible: isInLatteDock
+        visible: isInSynDock
     }
 
 
     Label {
-        id:inLatteDockLabel
+        id:inSynDockLabel
         anchors.horizontalCenter: mainItem.horizontalCenter
         anchors.bottom: mainColumn.bottom
         anchors.bottomMargin: mainColumn.height / 12
@@ -292,7 +292,7 @@ PlasmoidItem {
 
         width: 0.85 * mainItem.width
         text: i18n("For the disabled settings you should use the Latte Dock Configuration Window")
-        visible: mainItem.isInLatteDock
+        visible: mainItem.isInSynDock
 
         horizontalAlignment: Text.AlignHCenter
         //  font.bold: true

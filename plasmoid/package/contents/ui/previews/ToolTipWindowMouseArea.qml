@@ -8,7 +8,7 @@ import QtQuick 2.0
 
 import org.kde.plasma.components 3.0 as PlasmaComponents
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.syndromatic.syndock.core 0.2 as LatteCore
 
 MouseArea {
     property var modelIndex

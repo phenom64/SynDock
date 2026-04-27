@@ -1,121 +1,51 @@
-About
-=====
-Latte is a dock based on plasma frameworks that provides an elegant and intuitive experience for your tasks and plasmoids. It animates its contents by using parabolic zoom effect and tries to be there only when it is needed.
+# SynDock
 
-**"Art in Coffee"**
+SynDock is the SynOS dock for KDE Plasma 6. It is currently being reset from
+KDE Latte Dock's `work/plasma6` branch and ported for SynOS Canora 1.0.
 
-Screenshots
-===========
+The target runtime is:
 
-![](https://cdn.kde.org/screenshots/latte-dock/latte-dock_regular.png)
+- KDE Plasma 6.6
+- Qt 6.10.2
+- KDE Frameworks 6.24.0
+- Wayland only
 
-![](https://cdn.kde.org/screenshots/latte-dock/latte-dock_settings.png)
+The first goal is functional parity with Latte Dock on Plasma 6: layouts,
+indicators, templates, task grouping, parabolic zoom, auto-hide and dodge modes,
+multi-screen handling, shortcuts, and settings dialogs. Visual redesign work is
+intentionally secondary until the port builds and runs reliably.
 
-Development
-============
+## Public IDs
 
-- Official KDE repo in which you can also send your MRs is located at: https://invent.kde.org/plasma/latte-dock
-- Bug reports can be sent at: https://bugs.kde.org/enter_bug.cgi?product=lattedock
+- Executable: `syndock`
+- D-Bus service and interface: `org.syndromatic.SynDock`
+- Desktop/AppStream ID: `org.syndromatic.syndock`
+- Main config file: `syndockrc`
+- User data root: `~/.local/share/syndock`
+- Plasma packages:
+  - `org.syndromatic.syndock.containment`
+  - `org.syndromatic.syndock.plasmoid`
+  - `org.syndromatic.syndock.shell`
 
+## Build
 
-Installation
-============
-
-## Requirements
-
-We need to use at least:
-
-- **Plasma >= 6.0**
-- **PlasmaWaylandProtocols >= 1.6.0**
-- **Qt >= 6.5**
-
-Minimum requirements:
-
-**tools:**
-```
- bash
+```sh
+cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Debug -DCMAKE_INSTALL_PREFIX=/usr
+ninja -C build
 ```
 
-**development packages for:**
-```
- QtCore >= 6.5.0
- QtGui >= 6.5.0
- QtDbus >= 6.5.0
+## Migration
 
- KF6Plasma >= 6.0
- KF6PlasmaQuick >= 6.0
- KF6Activities >= 6.0
- KF6CoreAddons >= 6.0
- KF6GuiAddons >= 6.0
- KF6DBusAddons >= 6.0
- KF6Declarative >= 6.0
- KF6Kirigami2 >= 6.0
- KF6Wayland >= 6.0
- KF6Package >= 6.0
- KF6XmlGui >= 6.0
- KF6IconThemes >= 6.0
- KF6KIO >= 6.0
- KF6I18n >= 6.0
- KF6Notifications >= 6.0
- KF6NewStuff >= 6.0
- KF6Archive >= 6.0
- KF6GlobalAccel >= 6.0
- KF6Crash >= 6.0
+Latte Dock configs can be copied into SynDock locations with:
 
-  For X11 support:
-    KF6WindowSystem >= 6.0
-    libxcb
-    libxcb-randr
-    libxcb-shape
-    libSM
+```sh
+tools/migrate-latte-config.py --dry-run
+tools/migrate-latte-config.py
 ```
 
-## From repositories
+The migration writes backups before replacing SynDock files. To reverse the
+copy for testing:
 
-### Ubuntu/Debian
-
-- [Ubuntu](https://packages.ubuntu.com/bionic/latte-dock)
-
-### openSUSE
-
-- [openSUSE](https://software.opensuse.org/package/latte-dock?search_term=latte+dock)
-- [psifidotos - OBS](https://software.opensuse.org//download.html?project=home%3Apsifidotos&package=latte-dock)
-
-### Fedora
-
-- [Fedora](https://koji.fedoraproject.org/koji/packageinfo?packageID=24229)
-
-### Arch Linux
-
-- [Arch Linux](https://www.archlinux.org/packages/?sort=&q=latte-dock)
-
-### Gentoo
-
-- [Gentoo](https://packages.gentoo.org/packages/kde-misc/latte-dock)
-
-### Solus Project
-
-- [Solus](https://packages.solus-project.com/shannon/l/latte-dock/)
-
-### Void Linux
-
-- [Void Linux](https://github.com/void-linux/void-packages/tree/master/srcpkgs/latte-dock)
-
-### FreeBSD
-- [FreeBSD Port](https://www.freshports.org/deskutils/latte-dock/)
-
-See the [installation instructions](./INSTALLATION.md) for other Linux distributions or development builds
-
-## Run Latte-Dock
-
-Latte is now ready to be used by executing
+```sh
+tools/migrate-latte-config.py --reverse
 ```
-latte-dock
-```
-
-or activating **Latte Dock** from the applications menu.
-
-
-Contributors
-============
-[Varlesh](https://github.com/varlesh): Logos and Icons.

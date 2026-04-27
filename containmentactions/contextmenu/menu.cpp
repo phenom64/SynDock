@@ -41,7 +41,7 @@ enum LayoutsMemoryUsage
     MultipleLayouts
 };
 
-enum LatteConfigPage
+enum SynDockConfigPage
 {
     LayoutPage = 0,
     PreferencesPage
@@ -60,8 +60,8 @@ Menu::~Menu()
     m_moveToLayoutMenu->deleteLater();
 
     //! clear menu actions that have been created from submenus
-    m_actions.remove(Latte::Data::ContextMenu::ADDVIEWACTION);
-    m_actions.remove(Latte::Data::ContextMenu::LAYOUTSACTION);
+    m_actions.remove(NSE::Data::ContextMenu::ADDVIEWACTION);
+    m_actions.remove(NSE::Data::ContextMenu::LAYOUTSACTION);
 
     //! actions
     qDeleteAll(m_actions.values());
@@ -76,24 +76,24 @@ void Menu::restore(const KConfigGroup &config)
 
     auto& containmentActions = this->containment()->containmentActions();
 
-    m_actions[Latte::Data::ContextMenu::SECTIONACTION] = new QAction(this);
-    m_actions[Latte::Data::ContextMenu::SECTIONACTION]->setSeparator(true);
-    m_actions[Latte::Data::ContextMenu::SECTIONACTION]->setText("Latte");
+    m_actions[NSE::Data::ContextMenu::SECTIONACTION] = new QAction(this);
+    m_actions[NSE::Data::ContextMenu::SECTIONACTION]->setSeparator(true);
+    m_actions[NSE::Data::ContextMenu::SECTIONACTION]->setText("SynDock");
 
-    m_actions[Latte::Data::ContextMenu::SEPARATOR1ACTION] = new QAction(this);
-    m_actions[Latte::Data::ContextMenu::SEPARATOR1ACTION]->setSeparator(true);
+    m_actions[NSE::Data::ContextMenu::SEPARATOR1ACTION] = new QAction(this);
+    m_actions[NSE::Data::ContextMenu::SEPARATOR1ACTION]->setSeparator(true);
 
     //! Print Message...
-    m_actions[Latte::Data::ContextMenu::PRINTACTION] = new QAction(QIcon::fromTheme("edit"), "Print Message...", this);
-    connect(m_actions[Latte::Data::ContextMenu::PRINTACTION], &QAction::triggered, [ = ]() {
+    m_actions[NSE::Data::ContextMenu::PRINTACTION] = new QAction(QIcon::fromTheme("edit"), "Print Message...", this);
+    connect(m_actions[NSE::Data::ContextMenu::PRINTACTION], &QAction::triggered, [ = ]() {
         qDebug() << "Action Trigerred !!!";
     });
 
     //! Add Widgets...
-    m_actions[Latte::Data::ContextMenu::ADDWIDGETSACTION] = new QAction(QIcon::fromTheme("list-add"), i18n("&Add Widgets..."), this);
-    m_actions[Latte::Data::ContextMenu::ADDWIDGETSACTION]->setStatusTip(i18n("Show Widget Explorer"));
-    connect(m_actions[Latte::Data::ContextMenu::ADDWIDGETSACTION], &QAction::triggered, this, &Menu::requestWidgetExplorer);
-    this->containment()->setInternalAction(Latte::Data::ContextMenu::ADDWIDGETSACTION, m_actions[Latte::Data::ContextMenu::ADDWIDGETSACTION]);
+    m_actions[NSE::Data::ContextMenu::ADDWIDGETSACTION] = new QAction(QIcon::fromTheme("list-add"), i18n("&Add Widgets..."), this);
+    m_actions[NSE::Data::ContextMenu::ADDWIDGETSACTION]->setStatusTip(i18n("Show Widget Explorer"));
+    connect(m_actions[NSE::Data::ContextMenu::ADDWIDGETSACTION], &QAction::triggered, this, &Menu::requestWidgetExplorer);
+    this->containment()->setInternalAction(NSE::Data::ContextMenu::ADDWIDGETSACTION, m_actions[NSE::Data::ContextMenu::ADDWIDGETSACTION]);
 
     /*connect(m_addWidgetsAction, &QAction::triggered, [ = ]() {
         QDBusInterface iface("org.kde.plasmashell", "/PlasmaShell", "", QDBusConnection::sessionBus());
@@ -104,54 +104,54 @@ void Menu::restore(const KConfigGroup &config)
     });*/
 
     //! Edit Dock/Panel...
-    m_actions[Latte::Data::ContextMenu::EDITVIEWACTION] = new QAction(QIcon::fromTheme("document-edit"), "Edit Dock...", this);
-    connect(m_actions[Latte::Data::ContextMenu::EDITVIEWACTION], &QAction::triggered, this, &Menu::requestConfiguration);
-    this->containment()->setInternalAction(Latte::Data::ContextMenu::EDITVIEWACTION, m_actions[Latte::Data::ContextMenu::EDITVIEWACTION]);
+    m_actions[NSE::Data::ContextMenu::EDITVIEWACTION] = new QAction(QIcon::fromTheme("document-edit"), "Edit Dock...", this);
+    connect(m_actions[NSE::Data::ContextMenu::EDITVIEWACTION], &QAction::triggered, this, &Menu::requestConfiguration);
+    this->containment()->setInternalAction(NSE::Data::ContextMenu::EDITVIEWACTION, m_actions[NSE::Data::ContextMenu::EDITVIEWACTION]);
 
 
     //! Quit Application
-    m_actions[Latte::Data::ContextMenu::QUITLATTEACTION] = new QAction(QIcon::fromTheme("application-exit"), i18nc("quit application", "Quit &Latte"));
-    connect(m_actions[Latte::Data::ContextMenu::QUITLATTEACTION], &QAction::triggered, this, &Menu::quitApplication);
-    this->containment()->setInternalAction(Latte::Data::ContextMenu::QUITLATTEACTION, m_actions[Latte::Data::ContextMenu::QUITLATTEACTION]);
+    m_actions[NSE::Data::ContextMenu::QUITLATTEACTION] = new QAction(QIcon::fromTheme("application-exit"), i18nc("quit application", "Quit &SynDock"));
+    connect(m_actions[NSE::Data::ContextMenu::QUITLATTEACTION], &QAction::triggered, this, &Menu::quitApplication);
+    this->containment()->setInternalAction(NSE::Data::ContextMenu::QUITLATTEACTION, m_actions[NSE::Data::ContextMenu::QUITLATTEACTION]);
 
     //! Layouts submenu
     m_switchLayoutsMenu = new QMenu;
-    m_actions[Latte::Data::ContextMenu::LAYOUTSACTION] = m_switchLayoutsMenu->menuAction();
-    m_actions[Latte::Data::ContextMenu::LAYOUTSACTION]->setText(i18n("&Layouts"));
-    m_actions[Latte::Data::ContextMenu::LAYOUTSACTION]->setIcon(QIcon::fromTheme("user-identity"));
-    m_actions[Latte::Data::ContextMenu::LAYOUTSACTION]->setStatusTip(i18n("Switch to another layout"));
-    this->containment()->setInternalAction(Latte::Data::ContextMenu::LAYOUTSACTION, m_actions[Latte::Data::ContextMenu::LAYOUTSACTION]);
+    m_actions[NSE::Data::ContextMenu::LAYOUTSACTION] = m_switchLayoutsMenu->menuAction();
+    m_actions[NSE::Data::ContextMenu::LAYOUTSACTION]->setText(i18n("&Layouts"));
+    m_actions[NSE::Data::ContextMenu::LAYOUTSACTION]->setIcon(QIcon::fromTheme("user-identity"));
+    m_actions[NSE::Data::ContextMenu::LAYOUTSACTION]->setStatusTip(i18n("Switch to another layout"));
+    this->containment()->setInternalAction(NSE::Data::ContextMenu::LAYOUTSACTION, m_actions[NSE::Data::ContextMenu::LAYOUTSACTION]);
 
     connect(m_switchLayoutsMenu, &QMenu::aboutToShow, this, &Menu::populateLayouts);
     connect(m_switchLayoutsMenu, &QMenu::triggered, this, &Menu::switchToLayout);
 
     //! Add View submenu
     m_addViewMenu = new QMenu;
-    m_actions[Latte::Data::ContextMenu::ADDVIEWACTION] = m_addViewMenu->menuAction();
-    m_actions[Latte::Data::ContextMenu::ADDVIEWACTION]->setText(i18n("&Add Dock/Panel"));
-    m_actions[Latte::Data::ContextMenu::ADDVIEWACTION]->setIcon(QIcon::fromTheme("list-add"));
-    m_actions[Latte::Data::ContextMenu::ADDVIEWACTION]->setStatusTip(i18n("Add dock or panel based on specific template"));
-    this->containment()->setInternalAction(Latte::Data::ContextMenu::ADDVIEWACTION, m_actions[Latte::Data::ContextMenu::ADDVIEWACTION]);
+    m_actions[NSE::Data::ContextMenu::ADDVIEWACTION] = m_addViewMenu->menuAction();
+    m_actions[NSE::Data::ContextMenu::ADDVIEWACTION]->setText(i18n("&Add Dock/Panel"));
+    m_actions[NSE::Data::ContextMenu::ADDVIEWACTION]->setIcon(QIcon::fromTheme("list-add"));
+    m_actions[NSE::Data::ContextMenu::ADDVIEWACTION]->setStatusTip(i18n("Add dock or panel based on specific template"));
+    this->containment()->setInternalAction(NSE::Data::ContextMenu::ADDVIEWACTION, m_actions[NSE::Data::ContextMenu::ADDVIEWACTION]);
 
     connect(m_addViewMenu, &QMenu::aboutToShow, this, &Menu::populateViewTemplates);
     connect(m_addViewMenu, &QMenu::triggered, this, &Menu::addView);
 
     //! Move submenu
     m_moveToLayoutMenu = new QMenu;
-    m_actions[Latte::Data::ContextMenu::MOVEVIEWACTION] = m_moveToLayoutMenu->menuAction();
-    m_actions[Latte::Data::ContextMenu::MOVEVIEWACTION]->setText("Move To Layout");
-    m_actions[Latte::Data::ContextMenu::MOVEVIEWACTION]->setIcon(QIcon::fromTheme("transform-move-horizontal"));
-    m_actions[Latte::Data::ContextMenu::MOVEVIEWACTION]->setStatusTip(i18n("Move dock or panel to different layout"));
-    this->containment()->setInternalAction(Latte::Data::ContextMenu::MOVEVIEWACTION, m_actions[Latte::Data::ContextMenu::MOVEVIEWACTION]);
+    m_actions[NSE::Data::ContextMenu::MOVEVIEWACTION] = m_moveToLayoutMenu->menuAction();
+    m_actions[NSE::Data::ContextMenu::MOVEVIEWACTION]->setText("Move To Layout");
+    m_actions[NSE::Data::ContextMenu::MOVEVIEWACTION]->setIcon(QIcon::fromTheme("transform-move-horizontal"));
+    m_actions[NSE::Data::ContextMenu::MOVEVIEWACTION]->setStatusTip(i18n("Move dock or panel to different layout"));
+    this->containment()->setInternalAction(NSE::Data::ContextMenu::MOVEVIEWACTION, m_actions[NSE::Data::ContextMenu::MOVEVIEWACTION]);
 
     connect(m_moveToLayoutMenu, &QMenu::aboutToShow, this, &Menu::populateMoveToLayouts);
     connect(m_moveToLayoutMenu, &QMenu::triggered, this, &Menu::moveToLayout);
 
-    //! Configure Latte
-    m_actions[Latte::Data::ContextMenu::PREFERENCESACTION] = new QAction(QIcon::fromTheme("configure"), i18nc("global settings window", "&Configure Latte..."), this);
-    this->containment()->setInternalAction(Latte::Data::ContextMenu::PREFERENCESACTION, m_actions[Latte::Data::ContextMenu::PREFERENCESACTION]);
-    connect(m_actions[Latte::Data::ContextMenu::PREFERENCESACTION], &QAction::triggered, [=](){
-        QDBusInterface iface("org.kde.lattedock", "/Latte", "", QDBusConnection::sessionBus());
+    //! Configure SynDock
+    m_actions[NSE::Data::ContextMenu::PREFERENCESACTION] = new QAction(QIcon::fromTheme("configure"), i18nc("global settings window", "&Configure SynDock..."), this);
+    this->containment()->setInternalAction(NSE::Data::ContextMenu::PREFERENCESACTION, m_actions[NSE::Data::ContextMenu::PREFERENCESACTION]);
+    connect(m_actions[NSE::Data::ContextMenu::PREFERENCESACTION], &QAction::triggered, [=](){
+        QDBusInterface iface("org.syndromatic.SynDock", "/SynDock", "", QDBusConnection::sessionBus());
 
         if (iface.isValid()) {
             iface.call("showSettingsWindow", (int)PreferencesPage);
@@ -159,37 +159,37 @@ void Menu::restore(const KConfigGroup &config)
     });
 
     //! Duplicate Action
-    m_actions[Latte::Data::ContextMenu::DUPLICATEVIEWACTION] = new QAction(QIcon::fromTheme("edit-copy"), "Duplicate Dock as Template", this);
-    connect(m_actions[Latte::Data::ContextMenu::DUPLICATEVIEWACTION], &QAction::triggered, [=](){
-        QDBusInterface iface("org.kde.lattedock", "/Latte", "", QDBusConnection::sessionBus());
+    m_actions[NSE::Data::ContextMenu::DUPLICATEVIEWACTION] = new QAction(QIcon::fromTheme("edit-copy"), "Duplicate Dock as Template", this);
+    connect(m_actions[NSE::Data::ContextMenu::DUPLICATEVIEWACTION], &QAction::triggered, [=](){
+        QDBusInterface iface("org.syndromatic.SynDock", "/SynDock", "", QDBusConnection::sessionBus());
 
         if (iface.isValid()) {
             iface.call("duplicateView", containment()->id());
         }
     });
-    this->containment()->setInternalAction(Latte::Data::ContextMenu::DUPLICATEVIEWACTION, m_actions[Latte::Data::ContextMenu::DUPLICATEVIEWACTION]);
+    this->containment()->setInternalAction(NSE::Data::ContextMenu::DUPLICATEVIEWACTION, m_actions[NSE::Data::ContextMenu::DUPLICATEVIEWACTION]);
 
     //! Export View Template Action
-    m_actions[Latte::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION] = new QAction(QIcon::fromTheme("document-export"), "Export as Template...", this);
-    connect(m_actions[Latte::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION], &QAction::triggered, [=](){
-        QDBusInterface iface("org.kde.lattedock", "/Latte", "", QDBusConnection::sessionBus());
+    m_actions[NSE::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION] = new QAction(QIcon::fromTheme("document-export"), "Export as Template...", this);
+    connect(m_actions[NSE::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION], &QAction::triggered, [=](){
+        QDBusInterface iface("org.syndromatic.SynDock", "/SynDock", "", QDBusConnection::sessionBus());
 
         if (iface.isValid()) {
             iface.call("exportViewTemplate", containment()->id());
         }
     });
-    this->containment()->setInternalAction(Latte::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION, m_actions[Latte::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION]);
+    this->containment()->setInternalAction(NSE::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION, m_actions[NSE::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION]);
 
     //! Remove Action
-    m_actions[Latte::Data::ContextMenu::REMOVEVIEWACTION] = new QAction(QIcon::fromTheme("delete"), "Remove Dock", this);
-    connect(m_actions[Latte::Data::ContextMenu::REMOVEVIEWACTION], &QAction::triggered, [=](){
-        QDBusInterface iface("org.kde.lattedock", "/Latte", "", QDBusConnection::sessionBus());
+    m_actions[NSE::Data::ContextMenu::REMOVEVIEWACTION] = new QAction(QIcon::fromTheme("delete"), "Remove Dock", this);
+    connect(m_actions[NSE::Data::ContextMenu::REMOVEVIEWACTION], &QAction::triggered, [=](){
+        QDBusInterface iface("org.syndromatic.SynDock", "/SynDock", "", QDBusConnection::sessionBus());
 
         if (iface.isValid()) {
             iface.call("removeView", containment()->id());
         }
     });
-    this->containment()->setInternalAction(Latte::Data::ContextMenu::REMOVEVIEWACTION, m_actions[Latte::Data::ContextMenu::REMOVEVIEWACTION]);
+    this->containment()->setInternalAction(NSE::Data::ContextMenu::REMOVEVIEWACTION, m_actions[NSE::Data::ContextMenu::REMOVEVIEWACTION]);
 
     //! Signals
     connect(this->containment(), &Plasma::Containment::userConfiguringChanged, [=](){
@@ -215,16 +215,16 @@ QList<QAction *> Menu::contextualActions()
 {
     QList<QAction *> actions;
 
-    actions << m_actions[Latte::Data::ContextMenu::SECTIONACTION];
-    actions << m_actions[Latte::Data::ContextMenu::PRINTACTION];
-    for(int i=0; i<Latte::Data::ContextMenu::ACTIONSEDITORDER.count(); ++i) {
-        actions << m_actions[Latte::Data::ContextMenu::ACTIONSEDITORDER[i]];
+    actions << m_actions[NSE::Data::ContextMenu::SECTIONACTION];
+    actions << m_actions[NSE::Data::ContextMenu::PRINTACTION];
+    for(int i=0; i<NSE::Data::ContextMenu::ACTIONSEDITORDER.count(); ++i) {
+        actions << m_actions[NSE::Data::ContextMenu::ACTIONSEDITORDER[i]];
     }
-    actions << m_actions[Latte::Data::ContextMenu::EDITVIEWACTION];
+    actions << m_actions[NSE::Data::ContextMenu::EDITVIEWACTION];
 
     m_data.clear();
     m_viewTemplates.clear();
-    QDBusInterface iface("org.kde.lattedock", "/Latte", "", QDBusConnection::sessionBus());
+    QDBusInterface iface("org.syndromatic.SynDock", "/SynDock", "", QDBusConnection::sessionBus());
 
     if (iface.isValid()) {
         QDBusReply<QStringList> contextData = iface.call("contextMenuData", containment()->id());
@@ -242,20 +242,20 @@ QList<QAction *> Menu::contextualActions()
     if (m_view.isCloned) {
         configureActionText = (m_view.type == DockView) ? i18n("&Edit Original Dock...") : i18n("&Edit Original Panel...");
     }
-    m_actions[Latte::Data::ContextMenu::EDITVIEWACTION]->setText(configureActionText);
+    m_actions[NSE::Data::ContextMenu::EDITVIEWACTION]->setText(configureActionText);
 
     const QString duplicateActionText = (m_view.type == DockView) ? i18n("&Duplicate Dock") : i18n("&Duplicate Panel");
-    m_actions[Latte::Data::ContextMenu::DUPLICATEVIEWACTION]->setText(duplicateActionText);
+    m_actions[NSE::Data::ContextMenu::DUPLICATEVIEWACTION]->setText(duplicateActionText);
 
     const QString exportTemplateText = (m_view.type == DockView) ? i18n("E&xport Dock as Template") : i18n("E&xport Panel as Template");
-    m_actions[Latte::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION]->setText(exportTemplateText);
+    m_actions[NSE::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION]->setText(exportTemplateText);
 
     m_activeLayoutNames = m_data[ACTIVELAYOUTSINDEX].split(";;");
     const QString moveText = (m_view.type == DockView) ? i18n("&Move Dock To Layout") : i18n("&Move Panel To Layout");
-    m_actions[Latte::Data::ContextMenu::MOVEVIEWACTION]->setText(moveText);
+    m_actions[NSE::Data::ContextMenu::MOVEVIEWACTION]->setText(moveText);
 
     const QString removeActionText = (m_view.type == DockView) ? i18n("&Remove Dock") : i18n("&Remove Panel");
-    m_actions[Latte::Data::ContextMenu::REMOVEVIEWACTION]->setText(removeActionText);
+    m_actions[NSE::Data::ContextMenu::REMOVEVIEWACTION]->setText(removeActionText);
 
     updateVisibleActions();
 
@@ -273,8 +273,8 @@ QAction *Menu::action(const QString &name)
 
 void Menu::updateVisibleActions()
 {
-    if (!m_actions.contains(Latte::Data::ContextMenu::EDITVIEWACTION)
-            || !m_actions.contains(Latte::Data::ContextMenu::REMOVEVIEWACTION)) {
+    if (!m_actions.contains(NSE::Data::ContextMenu::EDITVIEWACTION)
+            || !m_actions.contains(NSE::Data::ContextMenu::REMOVEVIEWACTION)) {
         return;
     }
 
@@ -282,9 +282,9 @@ void Menu::updateVisibleActions()
 
     // normal actions that the user can specify their visibility
     for(auto actionName: m_actions.keys()) {
-        if (Latte::Data::ContextMenu::ACTIONSSPECIAL.contains(actionName)) {
+        if (NSE::Data::ContextMenu::ACTIONSSPECIAL.contains(actionName)) {
             continue;
-        } else if (Latte::Data::ContextMenu::ACTIONSALWAYSHIDDEN.contains(actionName)) {
+        } else if (NSE::Data::ContextMenu::ACTIONSALWAYSHIDDEN.contains(actionName)) {
             m_actions[actionName]->setVisible(false);
             continue;
         }
@@ -294,18 +294,18 @@ void Menu::updateVisibleActions()
     }
 
     // normal actions with more criteria
-    bool isshown = (m_actions[Latte::Data::ContextMenu::MOVEVIEWACTION]->isVisible() && m_activeLayoutNames.count()>1);
-    m_actions[Latte::Data::ContextMenu::MOVEVIEWACTION]->setVisible(isshown);
+    bool isshown = (m_actions[NSE::Data::ContextMenu::MOVEVIEWACTION]->isVisible() && m_activeLayoutNames.count()>1);
+    m_actions[NSE::Data::ContextMenu::MOVEVIEWACTION]->setVisible(isshown);
 
     // special actions
-    m_actions[Latte::Data::ContextMenu::EDITVIEWACTION]->setVisible(!configuring);
-    m_actions[Latte::Data::ContextMenu::SECTIONACTION]->setVisible(true);
+    m_actions[NSE::Data::ContextMenu::EDITVIEWACTION]->setVisible(!configuring);
+    m_actions[NSE::Data::ContextMenu::SECTIONACTION]->setVisible(true);
 
     if (m_view.isCloned) {
-        m_actions[Latte::Data::ContextMenu::DUPLICATEVIEWACTION]->setVisible(false);
-        m_actions[Latte::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION]->setVisible(false);
-        m_actions[Latte::Data::ContextMenu::MOVEVIEWACTION]->setVisible(false);
-        m_actions[Latte::Data::ContextMenu::REMOVEVIEWACTION]->setVisible(false);
+        m_actions[NSE::Data::ContextMenu::DUPLICATEVIEWACTION]->setVisible(false);
+        m_actions[NSE::Data::ContextMenu::EXPORTVIEWTEMPLATEACTION]->setVisible(false);
+        m_actions[NSE::Data::ContextMenu::MOVEVIEWACTION]->setVisible(false);
+        m_actions[NSE::Data::ContextMenu::REMOVEVIEWACTION]->setVisible(false);
     }
 
     // because sometimes they are disabled unexpectedly, we should reenable them
@@ -441,10 +441,10 @@ void Menu::populateViewTemplates()
     }
 
     QAction *templatesSeparatorAction = m_addViewMenu->addSeparator();
-    QAction *duplicateAction = m_addViewMenu->addAction(m_actions[Latte::Data::ContextMenu::DUPLICATEVIEWACTION]->text());
-    duplicateAction->setToolTip(m_actions[Latte::Data::ContextMenu::DUPLICATEVIEWACTION]->toolTip());
-    duplicateAction->setIcon(m_actions[Latte::Data::ContextMenu::DUPLICATEVIEWACTION]->icon());
-    connect(duplicateAction, &QAction::triggered, m_actions[Latte::Data::ContextMenu::DUPLICATEVIEWACTION], &QAction::triggered);
+    QAction *duplicateAction = m_addViewMenu->addAction(m_actions[NSE::Data::ContextMenu::DUPLICATEVIEWACTION]->text());
+    duplicateAction->setToolTip(m_actions[NSE::Data::ContextMenu::DUPLICATEVIEWACTION]->toolTip());
+    duplicateAction->setIcon(m_actions[NSE::Data::ContextMenu::DUPLICATEVIEWACTION]->icon());
+    connect(duplicateAction, &QAction::triggered, m_actions[NSE::Data::ContextMenu::DUPLICATEVIEWACTION], &QAction::triggered);
 }
 
 void Menu::addView(QAction *action)
@@ -452,7 +452,7 @@ void Menu::addView(QAction *action)
     const QString templateId = action->data().toString();
 
     QTimer::singleShot(400, [this, templateId]() {
-        QDBusInterface iface("org.kde.lattedock", "/Latte", "", QDBusConnection::sessionBus());
+        QDBusInterface iface("org.syndromatic.SynDock", "/SynDock", "", QDBusConnection::sessionBus());
 
         if (iface.isValid()) {
             iface.call("addView", containment()->id(), templateId);
@@ -465,7 +465,7 @@ void Menu::moveToLayout(QAction *action)
     const QString layoutName = action->data().toString();
 
     QTimer::singleShot(400, [this, layoutName]() {
-        QDBusInterface iface("org.kde.lattedock", "/Latte", "", QDBusConnection::sessionBus());
+        QDBusInterface iface("org.syndromatic.SynDock", "/SynDock", "", QDBusConnection::sessionBus());
 
         if (iface.isValid()) {
             iface.call("moveViewToLayout", containment()->id(), layoutName);
@@ -479,7 +479,7 @@ void Menu::switchToLayout(QAction *action)
 
     if (layout == QLatin1String(" _show_latte_settings_dialog_")) {
         QTimer::singleShot(400, [this]() {
-            QDBusInterface iface("org.kde.lattedock", "/Latte", "", QDBusConnection::sessionBus());
+            QDBusInterface iface("org.syndromatic.SynDock", "/SynDock", "", QDBusConnection::sessionBus());
 
             if (iface.isValid()) {
                 iface.call("showSettingsWindow", (int)LayoutPage);
@@ -487,7 +487,7 @@ void Menu::switchToLayout(QAction *action)
         });
     } else {
         QTimer::singleShot(400, [this, layout]() {
-            QDBusInterface iface("org.kde.lattedock", "/Latte", "", QDBusConnection::sessionBus());
+            QDBusInterface iface("org.syndromatic.SynDock", "/SynDock", "", QDBusConnection::sessionBus());
 
             if (iface.isValid()) {
                 iface.call("switchToLayout", layout);
@@ -498,13 +498,13 @@ void Menu::switchToLayout(QAction *action)
 
 void Menu::quitApplication()
 {
-    QDBusInterface iface("org.kde.lattedock", "/Latte", "", QDBusConnection::sessionBus());
+    QDBusInterface iface("org.syndromatic.SynDock", "/SynDock", "", QDBusConnection::sessionBus());
 
     if (iface.isValid()) {
         iface.call("quitApplication");
     }
 }
 
-K_PLUGIN_CLASS_WITH_JSON(Menu, "plasma-containmentactions-lattecontextmenu.json")
+K_PLUGIN_CLASS_WITH_JSON(Menu, "plasma-containmentactions-syndockcontextmenu.json")
 
 #include "menu.moc"

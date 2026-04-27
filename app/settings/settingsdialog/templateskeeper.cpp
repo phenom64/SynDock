@@ -12,11 +12,11 @@
 #include "../../layouts/manager.h"
 #include "../../layouts/synchronizer.h"
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Part {
 
-TemplatesKeeper::TemplatesKeeper(Settings::Controller::Layouts *parent, Latte::Corona *corona)
+TemplatesKeeper::TemplatesKeeper(Settings::Controller::Layouts *parent, NSE::Corona *corona)
     : QObject(parent),
       m_corona(corona),
       m_layoutsController(parent)
@@ -33,12 +33,12 @@ bool TemplatesKeeper::hasClipboardContents() const
     return (m_clipboardViews.rowCount() > 0);
 }
 
-Latte::Data::ViewsTable TemplatesKeeper::clipboardContents() const
+NSE::Data::ViewsTable TemplatesKeeper::clipboardContents() const
 {
     return m_clipboardViews;
 }
 
-void TemplatesKeeper::setClipboardContents(const Latte::Data::ViewsTable &views)
+void TemplatesKeeper::setClipboardContents(const NSE::Data::ViewsTable &views)
 {
     if (m_clipboardViews == views) {
         return;
@@ -73,10 +73,10 @@ QString TemplatesKeeper::storedView(const QString &layoutCurrentId, const QStrin
         return m_storedViews[keeperid].originFile();
     }
 
-    Latte::Data::Layout originallayout = m_layoutsController->originalData(layoutCurrentId);
-    Latte::Data::Layout currentlayout = m_layoutsController->currentData(layoutCurrentId);
-    Latte::CentralLayout *centralActive =  m_layoutsController->isLayoutOriginal(layoutCurrentId) ? m_corona->layoutsManager()->synchronizer()->centralLayout(originallayout.name) : nullptr;
-    Latte::CentralLayout *central = centralActive ? centralActive : new Latte::CentralLayout(this, layoutCurrentId);
+    NSE::Data::Layout originallayout = m_layoutsController->originalData(layoutCurrentId);
+    NSE::Data::Layout currentlayout = m_layoutsController->currentData(layoutCurrentId);
+    NSE::CentralLayout *centralActive =  m_layoutsController->isLayoutOriginal(layoutCurrentId) ? m_corona->layoutsManager()->synchronizer()->centralLayout(originallayout.name) : nullptr;
+    NSE::CentralLayout *central = centralActive ? centralActive : new NSE::CentralLayout(this, layoutCurrentId);
 
     if (!centralActive) {
         m_garbageLayouts << central;
@@ -88,7 +88,7 @@ QString TemplatesKeeper::storedView(const QString &layoutCurrentId, const QStrin
 
     QString storedviewpath = central->storedView(viewId.toInt());
 
-    Latte::Data::View storedview;
+    NSE::Data::View storedview;
     storedview.id = keeperid;
     storedview.isActive = false;
     storedview.setState(Data::View::OriginFromViewTemplate, storedviewpath, layoutCurrentId, viewId);

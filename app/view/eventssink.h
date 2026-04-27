@@ -13,11 +13,11 @@
 #include <QPointer>
 #include <QQuickItem>
 
-namespace Latte {
+namespace NSE {
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 //! This class is used in order to sunk events from children rects of originParentItem
@@ -33,7 +33,7 @@ class EventsSink: public QObject
     Q_PROPERTY(QQuickItem *destinationItem READ destinationItem NOTIFY itemsChanged)
 
 public:
-    EventsSink(Latte::View *parent);
+    EventsSink(NSE::View *parent);
     virtual ~EventsSink();
 
     bool isActive();
@@ -58,7 +58,7 @@ private:
     bool originSinksContain(const QPointF &point) const;
     bool destinationContains(const QPointF &point) const;
 private:
-    QPointer<Latte::View> m_view;
+    QPointer<NSE::View> m_view;
 
     QPointer<QQuickItem> m_originParentItem;
     QPointer<QQuickItem> m_destinationItem;

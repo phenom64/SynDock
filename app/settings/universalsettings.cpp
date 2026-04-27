@@ -26,7 +26,7 @@
 #include <KPackage/Package>
 #include <KWindowSystem>
 
-#define KWINMETAFORWARDTOLATTESTRING "org.kde.lattedock,/Latte,org.kde.LatteDock,activateLauncherMenu"
+#define KWINMETAFORWARDTOLATTESTRING "org.syndromatic.SynDock,/SynDock,org.syndromatic.SynDock,activateLauncherMenu"
 #define KWINMETAFORWARDTOPLASMASTRING "org.kde.plasmashell,/PlasmaShell,org.kde.PlasmaShell,activateLauncherMenu"
 
 #define KWINCOLORSSCRIPT "kwin/scripts/lattewindowcolors"
@@ -34,14 +34,14 @@
 
 #define KWINRCTRACKERINTERVAL 2500
 
-namespace Latte {
+namespace NSE {
 
 UniversalSettings::UniversalSettings(KSharedConfig::Ptr config, QObject *parent)
     : QObject(parent),
       m_config(config),
       m_universalGroup(KConfigGroup(config, QStringLiteral("UniversalSettings")))
 {
-    m_corona = qobject_cast<Latte::Corona *>(parent);
+    m_corona = qobject_cast<NSE::Corona *>(parent);
 
     connect(this, &UniversalSettings::actionsChanged, this, &UniversalSettings::saveConfig);
     connect(this, &UniversalSettings::badges3DStyleChanged, this, &UniversalSettings::saveConfig);
@@ -65,7 +65,7 @@ UniversalSettings::UniversalSettings(KSharedConfig::Ptr config, QObject *parent)
     connect(qGuiApp, &QGuiApplication::screenAdded, this, &UniversalSettings::screensCountChanged);
     connect(qGuiApp, &QGuiApplication::screenRemoved, this, &UniversalSettings::screensCountChanged);
 
-    m_kwinrcPtr = KSharedConfig::openConfig(Latte::configPath() + "/" + KWINRC);
+    m_kwinrcPtr = KSharedConfig::openConfig(NSE::configPath() + "/" + KWINRC);
     m_kwinrcModifierOnlyShortcutsGroup = KConfigGroup(m_kwinrcPtr, QStringLiteral("ModifierOnlyShortcuts"));
     m_kwinrcWindowsGroup = KConfigGroup(m_kwinrcPtr, QStringLiteral("Windows"));
 }
@@ -104,7 +104,7 @@ void UniversalSettings::load()
     }
 
     //! Track KWin rc options
-    const QString kwinrcFilePath = Latte::configPath() + "/" + KWINRC;
+    const QString kwinrcFilePath = NSE::configPath() + "/" + KWINRC;
     KDirWatch::self()->addFile(kwinrcFilePath);
     recoverKWinOptions();
 
@@ -484,7 +484,7 @@ void UniversalSettings::setLayoutsMemoryUsage(MemoryUsage::LayoutsMemory layouts
 Settings::MouseSensitivity UniversalSettings::sensitivity()
 {
     //! return always default option as the users have not shown any interest in that option
-    return Latte::Settings::HighMouseSensitivity;
+    return NSE::Settings::HighMouseSensitivity;
  //   return m_sensitivity;
 }
 
@@ -570,7 +570,7 @@ void UniversalSettings::loadConfig()
     m_version = m_universalGroup.readEntry("version", 1);
     m_badges3DStyle = m_universalGroup.readEntry("badges3DStyle", false);
     m_canDisableBorders = m_universalGroup.readEntry("canDisableBorders", false);
-    m_contextMenuActionsAlwaysShown = m_universalGroup.readEntry("contextMenuActionsAlwaysShown", Latte::Data::ContextMenu::ACTIONSALWAYSVISIBLE);
+    m_contextMenuActionsAlwaysShown = m_universalGroup.readEntry("contextMenuActionsAlwaysShown", NSE::Data::ContextMenu::ACTIONSALWAYSVISIBLE);
     m_inAdvancedModeForEditSettings = m_universalGroup.readEntry("inAdvancedModeForEditSettings", false);
     m_inConfigureAppletsMode = m_universalGroup.readEntry("inConfigureAppletsMode", false);
     m_isAvailableGeometryBroadcastedToPlasma = m_universalGroup.readEntry("isAvailableGeometryBroadcastedToPlasma", true);

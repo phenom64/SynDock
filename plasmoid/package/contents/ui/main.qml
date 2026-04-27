@@ -7,7 +7,7 @@
 import QtQuick 2.8
 import QtQuick.Layouts
 
-import Qt5Compat.GraphicalEffects
+import org.syndromatic.syndock.effects 1.0
 
 import org.kde.ksvg 1.0 as KSvg
 import org.kde.plasma.core 2.0 as PlasmaCore
@@ -19,10 +19,10 @@ import org.kde.plasma.private.taskmanager 0.1 as TaskManagerApplet
 
 import org.kde.activities 0.1 as Activities
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.syndromatic.syndock.core 0.2 as LatteCore
+import org.syndromatic.syndock.components 1.0 as LatteComponents
 
-import org.kde.latte.private.tasks 0.1 as LatteTasks
+import org.syndromatic.syndock.private.tasks 0.1 as LatteTasks
 
 import "abilities" as Ability
 import "previews" as Previews
@@ -243,7 +243,7 @@ PlasmoidItem {
         onIsReadyChanged: {
             if (appletAbilities.myView.isReady) {
                 plasmoid.action("configure").visible = false;
-                plasmoid.configuration.isInLatteDock = true;
+                plasmoid.configuration.isInSynDock = true;
             }
         }
     }
@@ -305,7 +305,7 @@ PlasmoidItem {
 
 
     function forcePreviewsHiding(debug) {
-        // console.log(" org.kde.latte   Tasks: Force hide previews event called: "+debug);
+        // console.log(" org.syndromatic.syndock   Tasks: Force hide previews event called: "+debug);
         windowsPreviewDlg.activeItem = null;
         windowsPreviewDlg.visible = false;
     }
@@ -707,7 +707,7 @@ PlasmoidItem {
 
         indexer.updateIsBlocked: root.inDraggingPhase || root.inActivityChange || tasksExtendedManager.launchersInPausedStateCount>0
 
-        indicators.local.isEnabled: !plasmoid.configuration.isInLatteDock
+        indicators.local.isEnabled: !plasmoid.configuration.isInSynDock
 
         launchers.group: plasmoid.configuration.launchersGroup
         launchers.isStealingDroppedLaunchers: plasmoid.configuration.isPreferredForDroppedLaunchers

@@ -13,7 +13,7 @@
 #include <QRect>
 #include <QVariant>
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 class WindowId : public QVariant
 {
@@ -34,9 +34,9 @@ public:
 }
 }
 
-uint qHash(const Latte::WindowSystem::WindowId&, uint);
+uint qHash(const NSE::WindowSystem::WindowId&, uint);
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 
 class WindowInfoWrap

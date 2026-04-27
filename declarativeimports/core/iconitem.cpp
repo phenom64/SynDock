@@ -31,7 +31,7 @@
 
 #include "ManagedTextureNode.h"
 
-namespace Latte {
+namespace NSE {
 
 IconItem::IconItem(QQuickItem *parent)
     : QQuickItem(parent),
@@ -358,13 +358,13 @@ QSGNode *IconItem::updatePaintNode(QSGNode *oldNode, UpdatePaintNodeData *update
         return nullptr;
     }
 
-    Latte::Legacy::ManagedTextureNode *textureNode = dynamic_cast<Latte::Legacy::ManagedTextureNode *>(oldNode);
+    NSE::Legacy::ManagedTextureNode *textureNode = dynamic_cast<NSE::Legacy::ManagedTextureNode *>(oldNode);
 
     if (!textureNode || m_textureChanged) {
         if (oldNode)
             delete oldNode;
 
-        textureNode = new Latte::Legacy::ManagedTextureNode;
+        textureNode = new NSE::Legacy::ManagedTextureNode;
         textureNode->setTexture(QSharedPointer<QSGTexture>(window()->createTextureFromImage(m_iconPixmap.toImage(), QQuickWindow::TextureCanUseAtlas)));
         textureNode->setFiltering(smooth() ? QSGTexture::Linear : QSGTexture::Nearest);
 

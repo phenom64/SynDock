@@ -22,14 +22,14 @@
 #include <KLocalizedString>
 #include <KPackage/Package>
 
-namespace Latte {
+namespace NSE {
 namespace Templates {
 
-Manager::Manager(Latte::Corona *corona)
+Manager::Manager(NSE::Corona *corona)
     : QObject(corona),
       m_corona(corona)
 {
-    KDirWatch::self()->addDir(Latte::configPath() + "/latte/templates", KDirWatch::WatchFiles);
+    KDirWatch::self()->addDir(NSE::dataPath() + "/syndock/templates", KDirWatch::WatchFiles);
     connect(KDirWatch::self(), &KDirWatch::created, this, &Manager::onCustomTemplatesCountChanged);
     connect(KDirWatch::self(), &KDirWatch::deleted, this, &Manager::onCustomTemplatesCountChanged);
     connect(KDirWatch::self(), &KDirWatch::dirty, this, &Manager::onCustomTemplatesCountChanged);
@@ -41,7 +41,7 @@ Manager::~Manager()
 
 void Manager::init()
 {
-    connect(this, &Manager::viewTemplatesChanged, m_corona->layoutsManager(), &Latte::Layouts::Manager::viewTemplatesChanged);
+    connect(this, &Manager::viewTemplatesChanged, m_corona->layoutsManager(), &NSE::Layouts::Manager::viewTemplatesChanged);
 
     initLayoutTemplates();
     initViewTemplates();
@@ -51,7 +51,7 @@ void Manager::initLayoutTemplates()
 {
     m_layoutTemplates.clear();
     initLayoutTemplates(m_corona->kPackage().filePath("templates"));
-    initLayoutTemplates(Latte::configPath() + "/latte/templates");
+    initLayoutTemplates(NSE::dataPath() + "/syndock/templates");
     emit layoutTemplatesChanged();
 }
 
@@ -59,7 +59,7 @@ void Manager::initViewTemplates()
 {
     m_viewTemplates.clear();
     initViewTemplates(m_corona->kPackage().filePath("templates"));
-    initViewTemplates(Latte::configPath() + "/latte/templates");
+    initViewTemplates(NSE::dataPath() + "/syndock/templates");
     emit viewTemplatesChanged();
 }
 
@@ -177,17 +177,17 @@ QString Manager::newLayout(QString layoutName, QString layoutTemplate)
 
 bool Manager::exportTemplate(const QString &originFile, const QString &destinationFile, const Data::AppletsTable &approvedApplets)
 {
-    return Latte::Layouts::Storage::self()->exportTemplate(originFile, destinationFile, approvedApplets);
+    return NSE::Layouts::Storage::self()->exportTemplate(originFile, destinationFile, approvedApplets);
 }
 
-bool Manager::exportTemplate(const Latte::View *view, const QString &destinationFile, const Data::AppletsTable &approvedApplets)
+bool Manager::exportTemplate(const NSE::View *view, const QString &destinationFile, const Data::AppletsTable &approvedApplets)
 {
-    return Latte::Layouts::Storage::self()->exportTemplate(view->layout(), view->containment(), destinationFile, approvedApplets);
+    return NSE::Layouts::Storage::self()->exportTemplate(view->layout(), view->containment(), destinationFile, approvedApplets);
 }
 
 void Manager::onCustomTemplatesCountChanged(const QString &file)
 {
-    if (file.startsWith(Latte::configPath() + "/latte/templates")) {
+    if (file.startsWith(NSE::dataPath() + "/syndock/templates")) {
         if (file.endsWith(".layout.latte")) {
             initLayoutTemplates();
         } else if (file.endsWith(".view.latte")) {
@@ -222,7 +222,7 @@ QString Manager::proposedTemplateAbsolutePath(QString templateFilename)
         tempfilename = uniqueViewTemplateName(clearedname) + ".view.latte";
     }
 
-    return QString(Latte::configPath() + "/latte/templates/" + tempfilename);
+    return QString(NSE::dataPath() + "/syndock/templates/" + tempfilename);
 }
 
 bool Manager::hasCustomLayoutTemplate(const QString &templateName) const
@@ -263,7 +263,7 @@ void Manager::installCustomLayoutTemplate(const QString &templateFilePath)
 
     QString layoutName = QFileInfo(templateFilePath).baseName();
 
-    QString destinationFilePath = Latte::configPath() + "/latte/templates/" + layoutName + ".layout.latte";
+    QString destinationFilePath = NSE::dataPath() + "/syndock/templates/" + layoutName + ".layout.latte";
 
     if (hasCustomLayoutTemplate(layoutName)) {
         QFile(destinationFilePath).remove();

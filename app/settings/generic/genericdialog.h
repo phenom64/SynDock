@@ -18,7 +18,7 @@
 #include <KMessageBox>
 #include <KMessageWidget>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Dialog {
 

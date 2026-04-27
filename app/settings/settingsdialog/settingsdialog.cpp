@@ -37,11 +37,11 @@
 #include <KX11Extras>
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Dialog {
 
-SettingsDialog::SettingsDialog(QWidget *parent, Latte::Corona *corona)
+SettingsDialog::SettingsDialog(QWidget *parent, NSE::Corona *corona)
     : GenericDialog(parent),
       m_ui(new Ui::SettingsDialog),
       m_corona(corona),
@@ -177,7 +177,7 @@ void SettingsDialog::initHelpMenu()
     m_helpMenu->action(KHelpMenu::menuWhatsThis)->setVisible(false);
 }
 
-Latte::Corona *SettingsDialog::corona() const
+NSE::Corona *SettingsDialog::corona() const
 {
     return m_corona;
 }
@@ -273,11 +273,11 @@ void SettingsDialog::importFullConfiguration()
     connect(importFileDialog, &QFileDialog::finished, importFileDialog, &QFileDialog::deleteLater);
 
     connect(importFileDialog, &QFileDialog::fileSelected, this, [&](const QString & file) {
-        Latte::Layouts::Importer::LatteFileVersion version = Latte::Layouts::Importer::fileVersion(file);
+        NSE::Layouts::Importer::LatteFileVersion version = NSE::Layouts::Importer::fileVersion(file);
         qDebug() << "VERSION :::: " << version;
 
-        if (version == Latte::Layouts::Importer::ConfigVersion2
-                || version == Latte::Layouts::Importer::ConfigVersion1) {
+        if (version == NSE::Layouts::Importer::ConfigVersion2
+                || version == NSE::Layouts::Importer::ConfigVersion1) {
             auto msg = new QMessageBox(this);
             msg->setIcon(QMessageBox::Warning);
             msg->setWindowTitle(i18n("Import: Full Configuration File"));
@@ -607,7 +607,7 @@ void SettingsDialog::dropEvent(QDropEvent *event)
 
 void SettingsDialog::updateWindowActivities()
 {
-    if (KWindowSystem::isPlatformX11()) {
+    if (false) {
         KX11Extras::setOnActivities(winId(), QStringList());
     }
 }

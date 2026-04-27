@@ -15,7 +15,7 @@
 #define LONGDURATION 240
 #define SHORTDURATION 40
 
-namespace Latte{
+namespace NSE{
 
 const int Environment::SeparatorLength;
 

@@ -12,7 +12,7 @@
 #include <QTableView>
 #include <QDragEnterEvent>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace View {
 

@@ -114,7 +114,7 @@
          <item>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
-            <widget class="Latte::Settings::View::LayoutsTableView" name="layoutsView">
+            <widget class="NSE::Settings::View::LayoutsTableView" name="layoutsView">
              <property name="sizeAdjustPolicy">
               <enum>QAbstractScrollArea::AdjustToContents</enum>
              </property>
@@ -1207,7 +1207,7 @@ This tracker is used in order to not lose any screen related update.</string>
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Latte::Settings::View::LayoutsTableView</class>
+   <class>NSE::Settings::View::LayoutsTableView</class>
    <extends>QTableView</extends>
    <header>settings/settingsdialog/layoutstableview.h</header>
   </customwidget>

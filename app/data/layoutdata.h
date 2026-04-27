@@ -16,7 +16,7 @@
 #include <QString>
 #include <QStringList>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class Layout : public Generic
@@ -49,7 +49,7 @@ public:
     int errors{0};
     int warnings{0};
 
-    Latte::Layout::BackgroundStyle backgroundStyle{Latte::Layout::ColorBackgroundStyle};
+    NSE::Layout::BackgroundStyle backgroundStyle{NSE::Layout::ColorBackgroundStyle};
 
     ViewsTable views;
 
@@ -74,6 +74,6 @@ public:
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::Layout)
+Q_DECLARE_METATYPE(NSE::Data::Layout)
 
 #endif

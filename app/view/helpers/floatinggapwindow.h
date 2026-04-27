@@ -22,12 +22,12 @@ class PlasmaShellSurface;
 }
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 //! What is the importance of this class?
@@ -49,7 +49,7 @@ class FloatingGapWindow : public SubWindow
     Q_OBJECT
 
 public:
-    FloatingGapWindow(Latte::View *view);
+    FloatingGapWindow(NSE::View *view);
     ~FloatingGapWindow() override;
 
     void callAsyncContainsMouse();

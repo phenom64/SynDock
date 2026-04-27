@@ -14,7 +14,7 @@
 #include <QObject>
 #include <QRect>
 
-namespace Latte {
+namespace NSE {
 class View;
 namespace WindowSystem {
 class SchemeColors;
@@ -25,7 +25,7 @@ class Windows;
 }
 
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 namespace Tracker {
 
@@ -33,7 +33,7 @@ class TrackedViewInfo : public TrackedGeneralInfo {
     Q_OBJECT
 
 public:
-    TrackedViewInfo(Tracker::Windows *tracker, Latte::View *view);
+    TrackedViewInfo(Tracker::Windows *tracker, NSE::View *view);
     ~TrackedViewInfo() override;
 
     bool activeWindowTouching() const;
@@ -57,7 +57,7 @@ public:
     SchemeColors *touchingWindowScheme() const;
     void setTouchingWindowScheme(SchemeColors *scheme);
 
-    Latte::View *view() const;
+    NSE::View *view() const;
 
     bool isTracking(const WindowInfoWrap &winfo) const override;
 
@@ -72,7 +72,7 @@ private:
 
     SchemeColors *m_touchingWindowScheme{nullptr};
 
-    Latte::View *m_view{nullptr};
+    NSE::View *m_view{nullptr};
 };
 
 }

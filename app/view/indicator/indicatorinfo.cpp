@@ -11,7 +11,7 @@
 // KDE
 #include <KSvg/Svg>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 namespace IndicatorPart {
 

@@ -18,7 +18,7 @@
 #include <QPainter>
 #include <QStandardItemModel>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Layout {
 namespace Delegate {

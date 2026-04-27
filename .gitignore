@@ -43,3 +43,6 @@ build*/
 CMakeLists.txt.user*
 /compile_commands.json
 
+
+# Local build/install output
+install-root/

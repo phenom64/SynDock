@@ -19,7 +19,7 @@
 #include <Plasma/Containment>
 
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 
 SyncedLaunchers::SyncedLaunchers(QObject *parent)
@@ -93,7 +93,7 @@ QList<QQuickItem *> SyncedLaunchers::clients(QString layoutName, QString groupId
     return items;
 }
 
-QList<QQuickItem *> SyncedLaunchers::clients(QString layoutName, uint senderId, Latte::Types::LaunchersGroup launcherGroup, QString launcherGroupId)
+QList<QQuickItem *> SyncedLaunchers::clients(QString layoutName, uint senderId, NSE::Types::LaunchersGroup launcherGroup, QString launcherGroupId)
 {
     QList<QQuickItem *> temclients;
 

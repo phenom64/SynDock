@@ -29,7 +29,7 @@ Item {
 
             //var pageShown = stackView.currentItem ? 1 : 0;
             //var total = page1.children.length + page2.children.length + hiddenPages.children.length + pageShown;
-            //console.log(" org.kde.latte >>>>>>>>>>>>>>>>> ALL PAGES :: " + total);
+            //console.log(" org.syndromatic.syndock >>>>>>>>>>>>>>>>> ALL PAGES :: " + total);
 
             if (children.length > 0) {
                 nextIndicator = children[0];

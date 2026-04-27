@@ -13,7 +13,7 @@
 // Qt
 #include <QMetaType>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class GenericBasicTable : public GenericTable<Generic>
@@ -27,6 +27,6 @@ public:
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::GenericBasicTable)
+Q_DECLARE_METATYPE(NSE::Data::GenericBasicTable)
 
 #endif

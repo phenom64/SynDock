@@ -33,7 +33,7 @@
             }
         ],
         "Category": "Windows and Tasks",
-        "Description": "Tasks plasmoid from Latte Dock",
+        "Description": "Tasks plasmoid for SynDock",
         "Description[az]": "Latte Dokdan Tapşırıqlar plasmoidi",
         "Description[ca@valencia]": "Plasmoide de tasques de Latte Dock",
         "Description[ca]": "Plasmoide de tasques del Latte Dock",
@@ -60,10 +60,10 @@
         "Description[zh_CN]": "Latte 停靠栏的任务管理 Plasma 小程序",
         "Description[zh_TW]": "來自 Latte Dock 的工作 Plasmoid",
         "EnabledByDefault": true,
-        "Icon": "latte-dock",
-        "Id": "org.kde.latte.plasmoid",
+        "Icon": "syndock",
+        "Id": "org.syndromatic.syndock.plasmoid",
         "License": "GPL v2+",
-        "Name": "Latte Tasks",
+        "Name": "SynDock Tasks",
         "Name[ar]": "مهام لاتيه",
         "Name[az]": "Latte Tapşırıqları",
         "Name[ca@valencia]": "Tasques de Latte",
@@ -97,14 +97,12 @@
         "Name[x-test]": "xxLatte Tasksxx",
         "Name[zh_CN]": "Latte 任务管理器",
         "Name[zh_TW]": "Latte 工作",
-        "ServiceTypes": [
-            "Plasma/Applet"
-        ],
         "Version": "0.1",
-        "Website": "https://userbase.kde.org/LatteDock"
+        "Website": "https://syndromatic.com/syndock"
     },
     "X-Plasma-API-Minimum-Version": "6.0",
     "X-Plasma-Provides": [
         "org.kde.plasma.multitasking"
-    ]
+    ],
+    "KPackageStructure": "Plasma/Applet"
 }

@@ -6,7 +6,7 @@
 #include "effects.h"
 
 // local
-#include <config-latte.h>
+#include <config-syndock.h>
 #include <coretypes.h>
 #include "panelshadows_p.h"
 #include "view.h"
@@ -22,14 +22,14 @@
 #include <KX11Extras>
 
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-Effects::Effects(Latte::View *parent)
+Effects::Effects(NSE::View *parent)
     : QObject(parent),
       m_view(parent)
 {
-    m_corona = qobject_cast<Latte::Corona *>(m_view->corona());
+    m_corona = qobject_cast<NSE::Corona *>(m_view->corona());
 
     init();
 }
@@ -55,7 +55,7 @@ void Effects::init()
     connect(this, &Effects::unitedMaskRegionsChanged, this, &Effects::updateMask);
     connect(m_view, &QQuickWindow::widthChanged, this, &Effects::updateMask);
     connect(m_view, &QQuickWindow::heightChanged, this, &Effects::updateMask);
-    connect(m_view, &Latte::View::behaveAsPlasmaPanelChanged, this, &Effects::updateMask);
+    connect(m_view, &NSE::View::behaveAsPlasmaPanelChanged, this, &Effects::updateMask);
     connect(KX11Extras::self(), &KX11Extras::compositingChanged, this, [&]() {
         if (!KX11Extras::compositingActive() && !m_view->behaveAsPlasmaPanel()) {
             setMask(m_rect);
@@ -82,15 +82,15 @@ void Effects::init()
 
     connect(this, &Effects::popUpMarginChanged, this, &Effects::onPopUpMarginChanged);
 
-    connect(m_view, &Latte::View::alignmentChanged, this, &Effects::updateEnabledBorders);
-    connect(m_view, &Latte::View::maxLengthChanged, this, &Effects::updateEnabledBorders);
-    connect(m_view, &Latte::View::offsetChanged, this, &Effects::updateEnabledBorders);
-    connect(m_view, &Latte::View::screenEdgeMarginEnabledChanged, this, &Effects::updateEnabledBorders);
-    connect(m_view, &Latte::View::behaveAsPlasmaPanelChanged, this, &Effects::updateEffects);
+    connect(m_view, &NSE::View::alignmentChanged, this, &Effects::updateEnabledBorders);
+    connect(m_view, &NSE::View::maxLengthChanged, this, &Effects::updateEnabledBorders);
+    connect(m_view, &NSE::View::offsetChanged, this, &Effects::updateEnabledBorders);
+    connect(m_view, &NSE::View::screenEdgeMarginEnabledChanged, this, &Effects::updateEnabledBorders);
+    connect(m_view, &NSE::View::behaveAsPlasmaPanelChanged, this, &Effects::updateEffects);
     connect(this, &Effects::drawShadowsChanged, this, &Effects::updateShadows);
-    connect(m_view, &Latte::View::behaveAsPlasmaPanelChanged, this, &Effects::updateShadows);
-    connect(m_view, &Latte::View::configWindowGeometryChanged, this, &Effects::updateMask);
-    connect(m_view, &Latte::View::layoutChanged, this, &Effects::onPopUpMarginChanged);
+    connect(m_view, &NSE::View::behaveAsPlasmaPanelChanged, this, &Effects::updateShadows);
+    connect(m_view, &NSE::View::configWindowGeometryChanged, this, &Effects::updateMask);
+    connect(m_view, &NSE::View::layoutChanged, this, &Effects::onPopUpMarginChanged);
 
     connect(&m_theme, &Plasma::Theme::themeChanged, this, [&]() {
         updateBackgroundContrastValues();
@@ -308,7 +308,7 @@ void Effects::setInputMask(QRect area)
 
     m_inputMask = area;
 
-    if (KWindowSystem::isPlatformX11()) {
+    if (false) {
         if (m_view->devicePixelRatio() != 1.0) {
             //!Fix for X11 Global Scale
             auto ratio = m_view->devicePixelRatio();
@@ -472,7 +472,7 @@ void Effects::updateBackgroundCorners()
 void Effects::updateMask()
 {
     if (KX11Extras::compositingActive()) {
-        if (KWindowSystem::isPlatformX11()) {
+        if (false) {
             if (m_view->behaveAsPlasmaPanel()) {
                 // set as NULL in order for plasma framrworks to identify NULL Mask properly
                 m_view->setMask(QRect(-1, -1, 0, 0));
@@ -509,7 +509,7 @@ void Effects::updateMask()
 
         fixedMask.translate(maskRect.x(), maskRect.y());
 
-        //! fix for KF5.32 that return empty QRegion's for the mask
+        //! Defensive fallback for platforms that return an empty QRegion for the mask.
         if (fixedMask.isEmpty()) {
             fixedMask = QRegion(maskRect);
         }
@@ -575,7 +575,7 @@ void Effects::updateEffects()
                 //! Latte is now using GtkFrameExtents so Effects geometries must be adjusted
                 //! windows that use GtkFrameExtents and apply Effects on them they take GtkFrameExtents
                 //! as granted
-                if (KWindowSystem::isPlatformX11() && !m_view->byPassWM()) {
+                if (false && !m_view->byPassWM()) {
                     if (m_view->location() == Plasma::Types::BottomEdge) {
                         fY = qMax(0, fY - m_view->headThicknessGap());
                     } else if (m_view->location() == Plasma::Types::RightEdge) {
@@ -704,7 +704,7 @@ void Effects::updateEnabledBorders()
 
     if (!m_backgroundAllCorners) {
         if ((m_view->location() == Plasma::Types::LeftEdge || m_view->location() == Plasma::Types::RightEdge)) {
-            if (m_view->maxLength() == 1 && m_view->alignment() == Latte::Types::Justify) {
+            if (m_view->maxLength() == 1 && m_view->alignment() == NSE::Types::Justify) {
                 if (!m_forceTopBorder) {
                     borders &= ~KSvg::FrameSvg::TopBorder;
                 }
@@ -714,26 +714,26 @@ void Effects::updateEnabledBorders()
                 }
             }
 
-            if (m_view->alignment() == Latte::Types::Top && !m_forceTopBorder && m_view->offset() == 0) {
+            if (m_view->alignment() == NSE::Types::Top && !m_forceTopBorder && m_view->offset() == 0) {
                 borders &= ~KSvg::FrameSvg::TopBorder;
             }
 
-            if (m_view->alignment() == Latte::Types::Bottom && !m_forceBottomBorder && m_view->offset() == 0) {
+            if (m_view->alignment() == NSE::Types::Bottom && !m_forceBottomBorder && m_view->offset() == 0) {
                 borders &= ~KSvg::FrameSvg::BottomBorder;
             }
         }
 
         if (m_view->location() == Plasma::Types::TopEdge || m_view->location() == Plasma::Types::BottomEdge) {
-            if (m_view->maxLength() == 1 && m_view->alignment() == Latte::Types::Justify) {
+            if (m_view->maxLength() == 1 && m_view->alignment() == NSE::Types::Justify) {
                 borders &= ~KSvg::FrameSvg::LeftBorder;
                 borders &= ~KSvg::FrameSvg::RightBorder;
             }
 
-            if (m_view->alignment() == Latte::Types::Left && m_view->offset() == 0) {
+            if (m_view->alignment() == NSE::Types::Left && m_view->offset() == 0) {
                 borders &= ~KSvg::FrameSvg::LeftBorder;
             }
 
-            if (m_view->alignment() == Latte::Types::Right  && m_view->offset() == 0) {
+            if (m_view->alignment() == NSE::Types::Right  && m_view->offset() == 0) {
                 borders &= ~KSvg::FrameSvg::RightBorder;
             }
         }

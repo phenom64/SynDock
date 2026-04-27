@@ -14,7 +14,7 @@
 #include <QMetaType>
 #include <QString>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class ErrorInformation : public Generic
@@ -42,6 +42,6 @@ typedef ErrorInformation WarningInformation;
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::ErrorInformation)
+Q_DECLARE_METATYPE(NSE::Data::ErrorInformation)
 
 #endif

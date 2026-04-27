@@ -16,7 +16,7 @@
 
 class KPluginMetaData;
 
-namespace Latte {
+namespace NSE {
 namespace Indicator {
 
 class Factory : public QObject
@@ -50,7 +50,7 @@ public:
     static bool metadataAreValid(QString &file);
 
     //! imports an indicator compressed file
-    static Latte::ImportExport::State importIndicatorFile(QString compressedFile);
+    static NSE::ImportExport::State importIndicatorFile(QString compressedFile);
 signals:
     void indicatorChanged(const QString &indicatorId);
     void indicatorRemoved(const QString &indicatorId);

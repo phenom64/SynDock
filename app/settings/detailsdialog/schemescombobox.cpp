@@ -15,7 +15,7 @@
 #include <QStyleOptionComboBox>
 #include <QStylePainter>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 
 const int MARGIN = 2;
@@ -70,8 +70,8 @@ void SchemesComboBox::paintEvent(QPaintEvent *event)
     painter.drawComplexControl(QStyle::CC_ComboBox, opt);
 
     // icon
-    QRect remained = Latte::remainedFromColorSchemeIcon(opt, Qt::AlignLeft, 3, 5);
-    Latte::drawColorSchemeIcon(&painter, opt, m_textColor, m_backgroundColor, Qt::AlignLeft, 7, 6);
+    QRect remained = NSE::remainedFromColorSchemeIcon(opt, Qt::AlignLeft, 3, 5);
+    NSE::drawColorSchemeIcon(&painter, opt, m_textColor, m_backgroundColor, Qt::AlignLeft, 7, 6);
     opt.rect = remained;
 
     // adjust text place, move it a bit to the left

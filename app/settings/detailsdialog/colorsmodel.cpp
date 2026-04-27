@@ -12,16 +12,16 @@
 #include <KLocalizedString>
 #include <KPackage/Package>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Model {
 
-Colors::Colors(QObject *parent, Latte::Corona *corona)
+Colors::Colors(QObject *parent, NSE::Corona *corona)
     : QAbstractTableModel(parent),
       m_corona(corona)
 {
     //!find the available colors
-    m_colorsPath = m_corona->kPackage().path() + "../../shells/org.kde.latte.shell/contents/images/canvas/";
+    m_colorsPath = m_corona->kPackage().path() + "../../shells/org.syndromatic.syndock.shell/contents/images/canvas/";
 
     init();
 }
@@ -53,7 +53,7 @@ QString Colors::colorPath(const QString &color)
 
 void Colors::add(const QString &newid, const QString &newname, const QString &newpath, const QString &newtextcolor)
 {
-    Latte::Data::LayoutColor color;
+    NSE::Data::LayoutColor color;
     color.setData(newid, newname, newpath, newtextcolor);
     m_colorsTable << color;
 }

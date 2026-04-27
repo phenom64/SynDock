@@ -15,13 +15,13 @@
 #include <QObject>
 #include <QTemporaryDir>
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 class Manager;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 
 //! This class is responsible to import/export configurations
@@ -110,8 +110,8 @@ public:
     //! close correctly, e.g. there was a crash.
     static QStringList checkRepairMultipleLayoutsLinkedFile();
 
-    static Latte::MultipleLayouts::Status multipleLayoutsStatus();
-    static void setMultipleLayoutsStatus(const Latte::MultipleLayouts::Status &status);
+    static NSE::MultipleLayouts::Status multipleLayoutsStatus();
+    static void setMultipleLayoutsStatus(const NSE::MultipleLayouts::Status &status);
 
 signals:
     void newLayoutAdded(const QString &path);

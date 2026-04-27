@@ -29,12 +29,12 @@ namespace PlasmaQuick {
 class AppletQuickItem;
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 struct AppletInterfaceData
@@ -63,7 +63,7 @@ class ContainmentInterface: public QObject
     Q_PROPERTY(QObject* layoutManager READ layoutManager WRITE setLayoutManager NOTIFY layoutManagerChanged)
 
 public:
-    ContainmentInterface(Latte::View *parent);
+    ContainmentInterface(NSE::View *parent);
     virtual ~ContainmentInterface();
 
     bool hasExpandedApplet() const;
@@ -186,8 +186,8 @@ private:
     QMetaMethod m_newInstanceMethod;
     QMetaMethod m_showShortcutsMethod;
 
-    QPointer<Latte::Corona> m_corona;
-    QPointer<Latte::View> m_view;
+    QPointer<NSE::Corona> m_corona;
+    QPointer<NSE::View> m_view;
     QPointer<QQuickItem> m_shortcutsHost;
 
     //! startup timer to initialize

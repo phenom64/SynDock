@@ -6,7 +6,7 @@
 #include "layoutmanager.h"
 
 // local
-#include <plugin/lattetypes.h>
+#include <plugin/nsetypes.h>
 
 // Qt
 #include <QtMath>
@@ -19,7 +19,7 @@
 #define ISAPPLETLOCKEDOPTION "lockZoom"
 #define ISCOLORINGBLOCKEDOPTION "userBlocksColorizing"
 
-namespace Latte{
+namespace NSE{
 namespace Containment{
 
 const int LayoutManager::JUSTIFYSPLITTERID;
@@ -264,11 +264,11 @@ void LayoutManager::setMetrics(QQuickItem *metrics)
 
 void LayoutManager::updateOrder()
 {
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    NSE::Types::Alignment alignment = static_cast<NSE::Types::Alignment>((*m_configuration)["alignment"].toInt());
 
     auto nextorder = m_appletOrder;
 
-    if (alignment==Latte::Types::Justify) {
+    if (alignment==NSE::Types::Justify) {
         nextorder.insert(m_splitterPosition-1, JUSTIFYSPLITTERID);
         nextorder.insert(m_splitterPosition2-1, JUSTIFYSPLITTERID);
     }
@@ -318,11 +318,11 @@ void LayoutManager::restore()
     QList<int> appletIdsOrder = toIntList((*m_configuration)["appletOrder"].toString());
     QList<QObject *> applets = m_plasmoid->property("applets").value<QList<QObject *>>();
 
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    NSE::Types::Alignment alignment = static_cast<NSE::Types::Alignment>((*m_configuration)["alignment"].toInt());
     int splitterPosition = (*m_configuration)["splitterPosition"].toInt();
     int splitterPosition2 = (*m_configuration)["splitterPosition2"].toInt();
 
-    if (alignment==Latte::Types::Justify) {
+    if (alignment==NSE::Types::Justify) {
         if (splitterPosition!=-1 && splitterPosition2!=-1) {
             appletIdsOrder.insert(splitterPosition-1, -1);
             appletIdsOrder.insert(splitterPosition2-1, -1);
@@ -392,12 +392,12 @@ void LayoutManager::restore()
         }
     }
 
-    qDebug() << "org.kde.latte ::: applets found :: " << applets.count() << " : " << appletIdsOrder << " :: " << splitterPosition << " : " << splitterPosition2 << " | " << alignment;
-    qDebug() << "org.kde.latte ::: applets orphaned added in the end:: " << orphanedIds;
-    qDebug() << "org.kde.latte ::: applets recorded order :: " << appletIdsOrder;
-    qDebug() << "org.kde.latte ::: applets produced order ?? " << validateAppletsOrder;
+    qDebug() << "org.syndromatic.syndock ::: applets found :: " << applets.count() << " : " << appletIdsOrder << " :: " << splitterPosition << " : " << splitterPosition2 << " | " << alignment;
+    qDebug() << "org.syndromatic.syndock ::: applets orphaned added in the end:: " << orphanedIds;
+    qDebug() << "org.syndromatic.syndock ::: applets recorded order :: " << appletIdsOrder;
+    qDebug() << "org.syndromatic.syndock ::: applets produced order ?? " << validateAppletsOrder;
 
-    if (alignment != Latte::Types::Justify) {
+    if (alignment != NSE::Types::Justify) {
         for (int i=0; i<orderedApplets.count(); ++i) {
             if (orderedApplets[i] == nullptr) {
                 continue;
@@ -544,9 +544,9 @@ void LayoutManager::save()
     int mainChilds  = collectLayoutAppletIds(m_mainLayout,  appletIds);
     int endChilds   = collectLayoutAppletIds(m_endLayout,   appletIds);
 
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    NSE::Types::Alignment alignment = static_cast<NSE::Types::Alignment>((*m_configuration)["alignment"].toInt());
 
-    if (alignment == Latte::Types::Justify) {
+    if (alignment == NSE::Types::Justify) {
         setSplitterPosition(startChilds + 1);
         setSplitterPosition2(startChilds + 1 + mainChilds + 1);
     } else {
@@ -886,10 +886,10 @@ int LayoutManager::dndSpacerIndex()
         return -1;
     }
 
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    NSE::Types::Alignment alignment = static_cast<NSE::Types::Alignment>((*m_configuration)["alignment"].toInt());
     int index = -1;
 
-    if (alignment == Latte::Types::Justify) {
+    if (alignment == NSE::Types::Justify) {
         for(int i=0; i<m_startLayout->childItems().count(); ++i) {
             QQuickItem *item = m_startLayout->childItems()[i];
             bool isparabolicspacer = item->property("isParabolicEdgeSpacer").toBool();
@@ -919,7 +919,7 @@ int LayoutManager::dndSpacerIndex()
         }
     }
 
-    if (alignment == Latte::Types::Justify) {
+    if (alignment == NSE::Types::Justify) {
         for(int i=0; i<m_endLayout->childItems().count(); ++i) {
             QQuickItem *item = m_endLayout->childItems()[i];
             bool isparabolicspacer = item->property("isParabolicEdgeSpacer").toBool();
@@ -941,8 +941,8 @@ int LayoutManager::dndSpacerIndex()
 
 void LayoutManager::requestAppletsOrder(const QList<int> &order)
 {
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
-    QQuickItem *nextlayout = alignment != Latte::Types::Justify ? m_mainLayout : m_startLayout;
+    NSE::Types::Alignment alignment = static_cast<NSE::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    QQuickItem *nextlayout = alignment != NSE::Types::Justify ? m_mainLayout : m_startLayout;
     QQuickItem *previousitem = nullptr;
 
     int addedsplitters{0};
@@ -950,9 +950,9 @@ void LayoutManager::requestAppletsOrder(const QList<int> &order)
     for (int i=0; i<order.count(); ++i) {
         QQuickItem *currentitem;
 
-        if (alignment != Latte::Types::Justify || order[i] != JUSTIFYSPLITTERID) {
+        if (alignment != NSE::Types::Justify || order[i] != JUSTIFYSPLITTERID) {
             currentitem = appletItem(order[i]);
-        } else if (alignment == Latte::Types::Justify && order[i] == JUSTIFYSPLITTERID) {
+        } else if (alignment == NSE::Types::Justify && order[i] == JUSTIFYSPLITTERID) {
             currentitem = addedsplitters == 0 ? firstSplitter() : lastSplitter();
             addedsplitters++;
         }
@@ -966,12 +966,12 @@ void LayoutManager::requestAppletsOrder(const QList<int> &order)
 
         previousitem = currentitem;
 
-        if (alignment == Latte::Types::Justify && order[i] == JUSTIFYSPLITTERID) {
+        if (alignment == NSE::Types::Justify && order[i] == JUSTIFYSPLITTERID) {
             nextlayout = addedsplitters == 1 ? m_mainLayout : m_endLayout;
         }
     }
 
-    if (alignment == Latte::Types::Justify) {
+    if (alignment == NSE::Types::Justify) {
         moveAppletsBasedOnJustifyAlignment();
         save();
     }
@@ -1005,11 +1005,11 @@ void LayoutManager::insertAtCoordinates(QQuickItem *item, const int &x, const in
         return;
     }
 
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    NSE::Types::Alignment alignment = static_cast<NSE::Types::Alignment>((*m_configuration)["alignment"].toInt());
 
     bool result{false};
 
-    if (alignment == Latte::Types::Justify) {
+    if (alignment == NSE::Types::Justify) {
         QPointF startPos = m_startLayout->mapFromItem(m_rootItem, QPointF(x, y));
         result = insertAtLayoutCoordinates(m_startLayout, item, startPos.x(), startPos.y());
 
@@ -1047,7 +1047,7 @@ void LayoutManager::insertAtCoordinates(QQuickItem *item, const int &x, const in
     int maindistance = qMin(maintaildistance, mainheaddistance);
     int enddistance = qMin(endtaildistance, endheaddistance);
 
-    if (alignment != Latte::Types::Justify || (maindistance < startdistance && maindistance < enddistance)) {
+    if (alignment != NSE::Types::Justify || (maindistance < startdistance && maindistance < enddistance)) {
         if (maintaildistance <= mainheaddistance) {
             insertAtLayoutTail(m_mainLayout, item);
         } else {
@@ -1095,7 +1095,7 @@ void LayoutManager::addAppletItem(QObject *applet, int index)
         return;
     }
 
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    NSE::Types::Alignment alignment = static_cast<NSE::Types::Alignment>((*m_configuration)["alignment"].toInt());
     QVariant appletItemVariant;
     QVariant appletVariant; appletVariant.setValue(applet);
     m_createAppletItemMethod.invoke(m_rootItem, Q_RETURN_ARG(QVariant, appletItemVariant), Q_ARG(QVariant, appletVariant));
@@ -1110,7 +1110,7 @@ void LayoutManager::addAppletItem(QObject *applet, int index)
     if (index >= m_order.count()) {
         // do nothing it should be added at the end
     } else {
-        if (alignment == Latte::Types::Justify && m_order[index] == JUSTIFYSPLITTERID) {
+        if (alignment == NSE::Types::Justify && m_order[index] == JUSTIFYSPLITTERID) {
             if (index<m_splitterPosition2-1) {
                 previousItem = firstSplitter();
             } else {
@@ -1124,14 +1124,14 @@ void LayoutManager::addAppletItem(QObject *applet, int index)
     if (previousItem) {
         insertBefore(previousItem, aitem);
     } else {
-        if (alignment == Latte::Types::Justify) {
+        if (alignment == NSE::Types::Justify) {
             insertAtLayoutHead(m_endLayout, aitem);
         } else {
             insertAtLayoutHead(m_mainLayout, aitem);
         }
     }
 
-    if (alignment == Latte::Types::Justify) {
+    if (alignment == NSE::Types::Justify) {
         moveAppletsBasedOnJustifyAlignment();
     }
 
@@ -1273,9 +1273,9 @@ void LayoutManager::destroyAppletContainer(QObject *applet)
 
 void LayoutManager::reorderSplitterInStartLayout()
 {
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    NSE::Types::Alignment alignment = static_cast<NSE::Types::Alignment>((*m_configuration)["alignment"].toInt());
 
-    if (alignment != Latte::Types::Justify) {
+    if (alignment != NSE::Types::Justify) {
         return;
     }
 
@@ -1302,9 +1302,9 @@ void LayoutManager::reorderSplitterInStartLayout()
 
 void LayoutManager::reorderSplitterInEndLayout()
 {
-    Latte::Types::Alignment alignment = static_cast<Latte::Types::Alignment>((*m_configuration)["alignment"].toInt());
+    NSE::Types::Alignment alignment = static_cast<NSE::Types::Alignment>((*m_configuration)["alignment"].toInt());
 
-    if (alignment != Latte::Types::Justify) {
+    if (alignment != NSE::Types::Justify) {
         return;
     }
 

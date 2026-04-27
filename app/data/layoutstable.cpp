@@ -7,7 +7,7 @@
 
 #include <QDebug>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 LayoutsTable::LayoutsTable()

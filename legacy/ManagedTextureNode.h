@@ -17,7 +17,7 @@
 // I promise I will get rid of it.
 // - L.B.
 
-namespace Latte {
+namespace NSE {
 namespace Legacy {
 
 /**

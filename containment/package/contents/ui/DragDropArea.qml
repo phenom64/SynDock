@@ -8,7 +8,7 @@ import QtQuick 2.7
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.draganddrop 2.0 as DragDrop
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.syndromatic.syndock.core 0.2 as LatteCore
 
 DragDrop.DropArea {
     id: dragArea
@@ -96,11 +96,11 @@ DragDrop.DropArea {
         var isSeparator = event !== undefined
                 && event.mimeData !== undefined
                 && ( latteView.mimeContainsPlasmoid(event.mimeData, "audoban.applet.separator")
-                    || latteView.mimeContainsPlasmoid(event.mimeData, "org.kde.latte.separator") );
+                    || latteView.mimeContainsPlasmoid(event.mimeData, "org.syndromatic.syndock.separator") );
 
         var isLatteTasks = event !== undefined
                 && event.mimeData !== undefined
-                && latteView.mimeContainsPlasmoid(event.mimeData, "org.kde.latte.plasmoid");
+                && latteView.mimeContainsPlasmoid(event.mimeData, "org.syndromatic.syndock.plasmoid");
 
         var isPlasmoid = event !== undefined
                 && event.mimeData !== undefined

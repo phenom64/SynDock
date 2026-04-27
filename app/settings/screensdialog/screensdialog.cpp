@@ -12,7 +12,7 @@
 #include "../../layouts/manager.h"
 #include "../../layouts/synchronizer.h"
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Dialog {
 
@@ -35,7 +35,7 @@ ScreensDialog::~ScreensDialog()
 {
 }
 
-Latte::Corona *ScreensDialog::corona() const
+NSE::Corona *ScreensDialog::corona() const
 {
     return m_corona;
 }

@@ -37,12 +37,12 @@ class PlasmaShellSurface;
 }
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 class CanvasConfigView;
 class SecondaryConfigView;
@@ -53,7 +53,7 @@ class IndicatorUiManager;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 class PrimaryConfigView : public SubConfigView
@@ -68,7 +68,7 @@ class PrimaryConfigView : public SubConfigView
 
     Q_PROPERTY(QRect availableScreenGeometry READ availableScreenGeometry NOTIFY availableScreenGeometryChanged)
 
-    Q_PROPERTY(Latte::ViewPart::Config::IndicatorUiManager *indicatorUiManager READ indicatorUiManager NOTIFY indicatorUiManagerChanged)
+    Q_PROPERTY(NSE::ViewPart::Config::IndicatorUiManager *indicatorUiManager READ indicatorUiManager NOTIFY indicatorUiManagerChanged)
 
 public:
     enum ConfigViewType
@@ -77,7 +77,7 @@ public:
         SecondaryConfig
     };
 
-    PrimaryConfigView(Latte::View *view);
+    PrimaryConfigView(NSE::View *view);
     ~PrimaryConfigView() override;
 
     bool hasFocus() const;
@@ -92,7 +92,7 @@ public:
 
     Config::IndicatorUiManager *indicatorUiManager();
 
-    void setParentView(Latte::View *view, const bool &immediate = false) override;
+    void setParentView(NSE::View *view, const bool &immediate = false) override;
     void setOnActivities(QStringList activities);
 
     void showConfigWindow();
@@ -121,7 +121,7 @@ protected:
     void focusOutEvent(QFocusEvent *ev) override;
 
     void init() override;
-    void initParentView(Latte::View *view) override;
+    void initParentView(NSE::View *view) override;
     void updateEnabledBorders() override;
 
 private slots:
@@ -152,7 +152,7 @@ private:
     bool m_isReady{false};
     bool m_showInlineProperties{false};
 
-    Latte::Types::Visibility m_originalMode{Latte::Types::DodgeActive};
+    NSE::Types::Visibility m_originalMode{NSE::Types::DodgeActive};
 
     QTimer m_availableScreemGeometryTimer;
 

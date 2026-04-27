@@ -28,14 +28,14 @@
 #include <KLocalizedString>
 #include <KPluginMetaData>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-ContainmentInterface::ContainmentInterface(Latte::View *parent)
+ContainmentInterface::ContainmentInterface(NSE::View *parent)
     : QObject(parent),
       m_view(parent)
 {
-    m_corona = qobject_cast<Latte::Corona *>(m_view->corona());
+    m_corona = qobject_cast<NSE::Corona *>(m_view->corona());
 
     m_latteTasksModel = new TasksModel(this);
     m_plasmaTasksModel = new TasksModel(this);
@@ -204,7 +204,7 @@ bool ContainmentInterface::updateBadgeForLatteTask(const QString identifier, con
     for (auto *applet : applets) {
         KPluginMetaData meta = applet->pluginMetaData();
 
-        if (meta.pluginId() == QLatin1String("org.kde.latte.plasmoid")) {
+        if (meta.pluginId() == QLatin1String("org.syndromatic.syndock.plasmoid")) {
 
             if (QQuickItem *appletInterface = applet->property("_plasma_graphicObject").value<QQuickItem *>()) {
                 const auto &childItems = appletInterface->childItems();
@@ -453,7 +453,7 @@ bool ContainmentInterface::appletIsExpandable(PlasmaQuick::AppletQuickItem *appl
 
     return ((appletQuickItem->fullRepresentation() != nullptr
             && appletQuickItem->preferredRepresentation() != appletQuickItem->fullRepresentation())
-            || Latte::Layouts::Storage::self()->isSubContainment(m_view->corona(), appletQuickItem->applet()));
+            || NSE::Layouts::Storage::self()->isSubContainment(m_view->corona(), appletQuickItem->applet()));
 }
 
 bool ContainmentInterface::appletIsActivationTogglesExpanded(const int id) const
@@ -609,7 +609,7 @@ void ContainmentInterface::addApplet(const QString &pluginId)
         return;
     }
 
-    QStringList paths = Latte::Layouts::Importer::standardPaths();
+    QStringList paths = NSE::Layouts::Importer::standardPaths();
     QString pluginpath;
 
     for(int i=0; i<paths.count(); ++i) {
@@ -997,7 +997,7 @@ void ContainmentInterface::onAppletAdded(Plasma::Applet *applet)
         KPluginMetaData meta = applet->pluginMetaData();
         const QStringList& provides = meta.value(QStringLiteral("X-Plasma-Provides"), QStringList{});
 
-        if (meta.pluginId() == QLatin1String("org.kde.latte.plasmoid")) {
+        if (meta.pluginId() == QLatin1String("org.syndromatic.syndock.plasmoid")) {
             //! populate latte tasks applet
             m_latteTasksModel->addTask(ai);
         } else if (provides.contains(QLatin1String("org.kde.plasma.multitasking"))) {

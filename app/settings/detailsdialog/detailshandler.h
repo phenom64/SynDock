@@ -22,7 +22,7 @@ namespace Ui {
 class DetailsDialog;
 }
 
-namespace Latte{
+namespace NSE{
 namespace Settings{
 namespace Dialog{
 class DetailsDialog;
@@ -30,7 +30,7 @@ class DetailsDialog;
 }
 }
 
-namespace Latte{
+namespace NSE{
 namespace Settings{
 namespace Model {
 class Colors;
@@ -40,7 +40,7 @@ class Schemes;
 }
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 
@@ -58,7 +58,7 @@ public:
     bool hasChangedData() const override;
     bool inDefaultValues() const override;
 
-    Latte::Data::Layout currentData() const;
+    NSE::Data::Layout currentData() const;
 
 public slots:
     void reset() override;
@@ -96,9 +96,9 @@ private:
 
     void setPopUpMargin(const int &margin);
 
-    void setBackgroundStyle(const Latte::Layout::BackgroundStyle &style);
+    void setBackgroundStyle(const NSE::Layout::BackgroundStyle &style);
 
-    void loadLayout(const Latte::Data::Layout &data);
+    void loadLayout(const NSE::Data::Layout &data);
 
     KMessageBox::ButtonCode saveChangesConfirmation();
 
@@ -116,8 +116,8 @@ private:
 
     QButtonGroup *m_backButtonsGroup;
 
-    Latte::Data::Layout o_data;
-    Latte::Data::Layout c_data;
+    NSE::Data::Layout o_data;
+    NSE::Data::Layout c_data;
 };
 
 }

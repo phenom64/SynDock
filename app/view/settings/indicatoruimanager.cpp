@@ -22,7 +22,7 @@
 #include <KPluginMetaData>
 #include <PlasmaQuick/SharedQmlEngine>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 namespace Config {
 
@@ -30,7 +30,7 @@ IndicatorUiManager::IndicatorUiManager(ViewPart::PrimaryConfigView *parent)
     : QObject(parent),
       m_primary(parent)
 {
-    qmlRegisterAnonymousType<Latte::ViewPart::Config::IndicatorUiManager>("latte-dock", 1);
+    qmlRegisterAnonymousType<NSE::ViewPart::Config::IndicatorUiManager>("syndock", 1);
 }
 
 IndicatorUiManager::~IndicatorUiManager()
@@ -91,7 +91,7 @@ void IndicatorUiManager::showNextIndicator()
     }
 }
 
-void IndicatorUiManager::ui(const QString &type, Latte::View *view)
+void IndicatorUiManager::ui(const QString &type, NSE::View *view)
 {
     if (!m_parentItem) {
         return;
@@ -116,7 +116,7 @@ void IndicatorUiManager::ui(const QString &type, Latte::View *view)
     KPluginMetaData metadata = m_primary->corona()->indicatorFactory()->metadata(type);
 
     if (metadata.isValid()) {
-        QString uiPath = metadata.value("X-Latte-ConfigUi");
+        QString uiPath = metadata.value("X-SynDock-ConfigUi");
 
         if (!uiPath.isEmpty()) {
             IndicatorUiData uidata;
@@ -126,7 +126,7 @@ void IndicatorUiManager::ui(const QString &type, Latte::View *view)
             uidata.type = type;
             uidata.view = view;
 
-            uidata.ui->setTranslationDomain(QLatin1String("latte_indicator_") + metadata.pluginId());
+            uidata.ui->setTranslationDomain(QLatin1String("syndock_indicator_") + metadata.pluginId());
             uidata.ui->setInitializationDelayed(true);
             uiPath = uidata.pluginPath + "/package/" + uiPath;
             uidata.ui->setSource(QUrl::fromLocalFile(uiPath));
@@ -173,7 +173,7 @@ void IndicatorUiManager::addIndicator()
     fileDialog->setDefaultSuffix("indicator.latte");
 
     QStringList filters;
-    filters << QString(i18nc("add indicator file", "Latte Indicator") + "(*.indicator.latte)");
+    filters << QString(i18nc("add indicator file", "SynDock Indicator") + "(*.indicator.latte)");
     fileDialog->setNameFilters(filters);
 
     connect(fileDialog, &QFileDialog::finished, fileDialog, &QFileDialog::deleteLater);

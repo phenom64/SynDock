@@ -14,22 +14,22 @@
 #include "../../wm/tracker/windowstracker.h"
 
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-WindowsTracker::WindowsTracker(Latte::View *parent)
+WindowsTracker::WindowsTracker(NSE::View *parent)
     : QObject(parent),
       m_latteView(parent)
 {
     qDebug() << "WindowsTracker creating...";
 
-    auto corona = qobject_cast<Latte::Corona *>(m_latteView->corona());
+    auto corona = qobject_cast<NSE::Corona *>(m_latteView->corona());
     m_wm = corona->wm();
 
     m_allScreensTracker = new TrackerPart::AllScreensTracker(this);
     m_currentScreenTracker = new TrackerPart::CurrentScreenTracker(this);
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::enabledChanged, this, [&](const Latte::View *view) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::enabledChanged, this, [&](const NSE::View *view) {
         if (m_latteView == view) {
             emit enabledChanged();
         }
@@ -53,7 +53,7 @@ WindowsTracker::~WindowsTracker()
     }
 }
 
-Latte::View *WindowsTracker::view() const
+NSE::View *WindowsTracker::view() const
 {
     return m_latteView;
 }

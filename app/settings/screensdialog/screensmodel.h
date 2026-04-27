@@ -15,7 +15,7 @@
 #include <QModelIndex>
 #include <QObject>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Model {
 
@@ -65,10 +65,10 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    void setData(const Latte::Data::ScreensTable &screens);
-    void setSelected(const Latte::Data::ScreensTable &screens);
+    void setData(const NSE::Data::ScreensTable &screens);
+    void setSelected(const NSE::Data::ScreensTable &screens);
 
-    Latte::Data::ScreensTable checkedScreens();
+    NSE::Data::ScreensTable checkedScreens();
 
     void deselectAll();
     void reset();    
@@ -85,8 +85,8 @@ private:
     QString sortableText(const int &priority, const QString &text) const;
 
 private:
-    Latte::Data::ScreensTable o_screens;
-    Latte::Data::ScreensTable c_screens;
+    NSE::Data::ScreensTable o_screens;
+    NSE::Data::ScreensTable c_screens;
 
 };
 

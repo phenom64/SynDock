@@ -18,7 +18,7 @@
 #include <KDirWatch>
 
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 namespace Tracker {
 
@@ -53,7 +53,7 @@ void Schemes::init()
     });
 
     //! track for changing default scheme
-    QString kdeSettingsFile = Latte::configPath() + "/kdeglobals";
+    QString kdeSettingsFile = NSE::configPath() + "/kdeglobals";
 
     KDirWatch::self()->addFile(kdeSettingsFile);
 

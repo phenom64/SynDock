@@ -7,7 +7,7 @@
 #include "screenpool.h"
 
 // local
-#include <config-latte.h>
+#include <config-syndock.h>
 #include "primaryoutputwatcher.h"
 
 // Qt
@@ -21,14 +21,8 @@
 #include <KWindowSystem>
 
 // X11
-#if HAVE_X11
-#include <private/qtx11extras_p.h>
-#include <xcb/randr.h>
-#include <xcb/xcb.h>
-#include <xcb/xcb_event.h>
-#endif
 
-namespace Latte {
+namespace NSE {
 
 const int ScreenPool::FIRSTSCREENID;
 
@@ -64,11 +58,11 @@ void ScreenPool::load()
         QString serialized = m_configGroup.readEntry(key, QString());
 
         Data::Screen screenRecord(key, serialized);
-        //qDebug() << "org.kde.latte ::: " << screenRecord.id << ":" << screenRecord.serialize();
+        //qDebug() << "org.syndromatic.syndock ::: " << screenRecord.id << ":" << screenRecord.serialize();
 
         if (!key.isEmpty() && !serialized.isEmpty() && !m_screensTable.containsId(key)) {
             m_screensTable << screenRecord;
-            qDebug() << "org.kde.latte :: Known Screen - " << screenRecord.id << " : " << screenRecord.name << " : " << screenRecord.geometry;
+            qDebug() << "org.syndromatic.syndock :: Known Screen - " << screenRecord.id << " : " << screenRecord.name << " : " << screenRecord.geometry;
         }
     }
 
@@ -89,7 +83,7 @@ void ScreenPool::load()
         onScreenAdded(screen);
     }
 
-    if (KWindowSystem::isPlatformX11()) {
+    if (false) {
         connect(qGuiApp, &QGuiApplication::primaryScreenChanged, this, &ScreenPool::primaryScreenChanged, Qt::UniqueConnection);
     }
 
@@ -141,11 +135,11 @@ void ScreenPool::updateScreenGeometry(const int &screenId, const QRect &screenGe
     emit screenGeometryChanged();
 }
 
-Latte::Data::ScreensTable ScreenPool::screensTable() { return m_screensTable; }
+NSE::Data::ScreensTable ScreenPool::screensTable() { return m_screensTable; }
 
 void ScreenPool::reload(QString path)
 {
-    QFile rcfile(QString(path + "/lattedockrc"));
+    QFile rcfile(QString(path + "/syndockrc"));
 
     if (rcfile.exists()) {
         qDebug() << "load screen connectors from ::: " << rcfile.fileName();
@@ -155,7 +149,7 @@ void ScreenPool::reload(QString path)
     }
 }
 
-void ScreenPool::removeScreens(const Latte::Data::ScreensTable &obsoleteScreens)
+void ScreenPool::removeScreens(const NSE::Data::ScreensTable &obsoleteScreens)
 {
     for (int i=0; i<obsoleteScreens.rowCount(); ++i) {
         if (!m_screensTable.containsId(obsoleteScreens[i].id)) {

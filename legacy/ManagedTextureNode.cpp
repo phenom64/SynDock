@@ -6,7 +6,7 @@
 
 #include "ManagedTextureNode.h"
 
-namespace Latte {
+namespace NSE {
 namespace Legacy {
 
 ManagedTextureNode::ManagedTextureNode()

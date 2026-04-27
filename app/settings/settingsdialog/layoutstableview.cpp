@@ -14,7 +14,7 @@
 
 #define MARGIN 15
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace View {
 
@@ -37,7 +37,7 @@ LayoutsTableView::LayoutsTableView(QWidget *parent)
 
     QPalette palette = m_overlayDropMessage->palette();
     // FIXME:
-    // These were QPalette::Background and QPalette::Forground respectively in Qt5.
+    // These were the older background and foreground palette roles.
     // Maybe these need to be changed, I don't know yet.
     QColor backgroundColor = palette.color(QPalette::Window);
     QColor foregroundColor = palette.color(QPalette::WindowText);
@@ -84,4 +84,3 @@ void LayoutsTableView::dragLeft()
 }
 }
 }
-

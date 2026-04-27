@@ -19,7 +19,7 @@
 //! Plasma Activities
 #include <PlasmaActivities/Info>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class Activity : public Generic
@@ -32,7 +32,14 @@ public:
     //! Layout data
     bool isCurrent{false};
     QString icon;
-    KActivities::Info::State state;
+    enum State {
+        Invalid,
+        Stopped,
+        Starting,
+        Running
+    };
+
+    State state{Invalid};
 
     bool isValid() const;
     bool isRunning() const;
@@ -49,7 +56,7 @@ typedef GenericTable<Data::Activity> ActivitiesTable;
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::Activity)
-Q_DECLARE_METATYPE(Latte::Data::ActivitiesTable)
+Q_DECLARE_METATYPE(NSE::Data::Activity)
+Q_DECLARE_METATYPE(NSE::Data::ActivitiesTable)
 
 #endif

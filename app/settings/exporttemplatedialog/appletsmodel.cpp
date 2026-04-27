@@ -15,7 +15,7 @@
 // KDE
 #include <KLocalizedString>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Model {
 
@@ -23,9 +23,9 @@ Applets::Applets(QObject *parent)
     : QAbstractTableModel(parent)
 {
     m_appletsWithNoPersonalData = {
-        "org.kde.latte.separator",
-        "org.kde.latte.spacer",
-        "org.kde.latte.plasmoid",
+        "org.syndromatic.syndock.separator",
+        "org.syndromatic.syndock.spacer",
+        "org.syndromatic.syndock.plasmoid",
         "org.kde.windowtitle",
         "org.kde.windowbuttons",
         "org.kde.windowappmenu",
@@ -106,7 +106,7 @@ void Applets::reset()
     emit appletsDataChanged();
 }
 
-void Applets::setData(const Latte::Data::AppletsTable &applets)
+void Applets::setData(const NSE::Data::AppletsTable &applets)
 {
     clear();
 
@@ -161,7 +161,7 @@ void Applets::deselectAll()
     }
 }
 
-void Applets::setSelected(const Latte::Data::AppletsTable &applets)
+void Applets::setSelected(const NSE::Data::AppletsTable &applets)
 {
     bool changed{false};
 
@@ -183,7 +183,7 @@ void Applets::setSelected(const Latte::Data::AppletsTable &applets)
     }
 }
 
-Latte::Data::AppletsTable Applets::selectedApplets()
+NSE::Data::AppletsTable Applets::selectedApplets()
 {
     Data::AppletsTable selected;
 

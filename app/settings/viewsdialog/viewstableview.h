@@ -10,7 +10,7 @@
 #include <QTableView>
 #include <QMouseEvent>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace View {
 

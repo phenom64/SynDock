@@ -14,7 +14,7 @@
 // Qt
 #include <QObject>
 
-namespace Latte {
+namespace NSE {
 class CentralLayout;
 class Corona;
 namespace Settings {
@@ -24,7 +24,7 @@ class Layouts;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Part {
 
@@ -33,15 +33,15 @@ class TemplatesKeeper : public QObject
     Q_OBJECT
 
 public:
-    explicit TemplatesKeeper(Settings::Controller::Layouts *parent, Latte::Corona *corona);
+    explicit TemplatesKeeper(Settings::Controller::Layouts *parent, NSE::Corona *corona);
     ~TemplatesKeeper();
 
     QString storedView(const QString &layoutCurrentId, const QString &viewId);
 
     bool hasClipboardContents() const;
 
-    Latte::Data::ViewsTable clipboardContents() const;
-    void setClipboardContents(const Latte::Data::ViewsTable &views);
+    NSE::Data::ViewsTable clipboardContents() const;
+    void setClipboardContents(const NSE::Data::ViewsTable &views);
 
 public slots:
     void clear();
@@ -53,10 +53,10 @@ private:
     QString viewKeeperId(const QString &layoutCurrentId, const QString &viewId);
 
 private:
-    Latte::Data::ViewsTable m_storedViews;
-    Latte::Data::ViewsTable m_clipboardViews;
+    NSE::Data::ViewsTable m_storedViews;
+    NSE::Data::ViewsTable m_clipboardViews;
 
-    Latte::Corona *m_corona{nullptr};
+    NSE::Corona *m_corona{nullptr};
     Settings::Controller::Layouts *m_layoutsController{nullptr};
 
     QList<CentralLayout *> m_garbageLayouts;

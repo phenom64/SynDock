@@ -13,7 +13,7 @@
 #include <QMetaType>
 #include <QString>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class LayoutColor : public Generic
@@ -39,6 +39,6 @@ public:
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::LayoutColor)
+Q_DECLARE_METATYPE(NSE::Data::LayoutColor)
 
 #endif

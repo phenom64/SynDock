@@ -12,7 +12,7 @@
 // Qt
 #include <QList>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 template <class T>

@@ -6,7 +6,7 @@
 import QtQuick 2.7
 import org.kde.plasma.plasmoid 2.0
 
-import org.kde.latte.abilities.items 0.1 as AbilityItem
+import org.syndromatic.syndock.abilities.items 0.1 as AbilityItem
 
 import "./privates" as Ability
 
@@ -19,7 +19,7 @@ Ability.IndicatorsPrivate {
                                                    && view.indicator.configuration)
                                                 : false
 
-    type: view && view.indicator ? view.indicator.type : "org.kde.latte.default"
+    type: view && view.indicator ? view.indicator.type : "org.syndromatic.syndock.default"
 
     indicatorComponent: view && view.indicator ? view.indicator.component : null
 

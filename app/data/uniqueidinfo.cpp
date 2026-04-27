@@ -5,7 +5,7 @@
 
 #include "uniqueidinfo.h"
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 UniqueIdInfo::UniqueIdInfo()

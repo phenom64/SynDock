@@ -30,7 +30,7 @@
 #define DEFAULTCOLORSCHEME "default.colors"
 #define REVERSEDCOLORSCHEME "reversed.colors"
 
-namespace Latte {
+namespace NSE {
 namespace PlasmaExtended {
 
 Theme::Theme(KSharedConfig::Ptr config, QObject *parent) :
@@ -43,7 +43,7 @@ Theme::Theme(KSharedConfig::Ptr config, QObject *parent) :
 {
     qmlRegisterTypes();
 
-    m_corona = qobject_cast<Latte::Corona *>(parent);
+    m_corona = qobject_cast<NSE::Corona *>(parent);
 
     //! compositing tracking
     if (KWindowSystem::isPlatformWayland()) {
@@ -384,7 +384,7 @@ void Theme::loadThemePaths()
     } else {
         //! when plasma theme uses the kde colors
         //! we track when kde color scheme is changing
-        QString kdeSettingsFile = Latte::configPath() + "/kdeglobals";
+        QString kdeSettingsFile = NSE::configPath() + "/kdeglobals";
 
         KDirWatch::self()->addFile(kdeSettingsFile);
 
@@ -406,8 +406,8 @@ void Theme::loadThemePaths()
 
 void Theme::loadThemeLightness()
 {
-    float textColorLum = Latte::colorLumina(m_defaultScheme->textColor());
-    float backColorLum = Latte::colorLumina(m_defaultScheme->backgroundColor());
+    float textColorLum = NSE::colorLumina(m_defaultScheme->textColor());
+    float backColorLum = NSE::colorLumina(m_defaultScheme->backgroundColor());
 
     if (backColorLum > textColorLum) {
         m_isLightTheme = true;
@@ -542,8 +542,8 @@ void Theme::saveConfig()
 
 void Theme::qmlRegisterTypes()
 {
-    qmlRegisterAnonymousType<Latte::PlasmaExtended::Theme>("latte-dock", 1);
-    qmlRegisterAnonymousType<Latte::PlasmaExtended::PanelBackground>("latte-dock", 1);
+    qmlRegisterAnonymousType<NSE::PlasmaExtended::Theme>("syndock", 1);
+    qmlRegisterAnonymousType<NSE::PlasmaExtended::PanelBackground>("syndock", 1);
 }
 
 }

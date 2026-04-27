@@ -7,7 +7,7 @@
 
 #include "../tools/commontools.h"
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 Screen::Screen()
@@ -99,7 +99,7 @@ void Screen::init(const QString &screenId, const QString &serialized)
     isSelected = false;
 
     if (parts.count() > 1) {
-        geometry = Latte::stringToRect(parts[1]);
+        geometry = NSE::stringToRect(parts[1]);
     }
 }
 
@@ -113,7 +113,7 @@ QString Screen::serialize() const
 {
     QStringList result;
     result << name;
-    result << Latte::rectToString(geometry);
+    result << NSE::rectToString(geometry);
 
     return result.join(SERIALIZESPLITTER);
 }

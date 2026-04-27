@@ -1,0 +1,52 @@
+[Desktop Entry]
+Type=ServiceType
+X-KDE-ServiceType=SynDock/Indicator
+
+Comment=SynDock indicator
+Comment[ar]=مؤشرات لاتيه
+Comment[az]=SynDock İndikatoru
+Comment[ca]=Indicador del SynDock
+Comment[ca@valencia]=Indicador de SynDock
+Comment[cs]=Ukazatel SynDock
+Comment[el]=Δείκτης SynDock
+Comment[en_GB]=SynDock indicator
+Comment[eo]=SynDock indikilo
+Comment[es]=Indicador SynDock
+Comment[et]=SynDock indikaator
+Comment[eu]=SynDock adierazlea
+Comment[fi]=SynDock-ilmaisin
+Comment[fr]=Indicateur de SynDock
+Comment[gl]=Indicador de SynDock.
+Comment[hsb]=SynDock pokazowak
+Comment[id]=Indikator syndock
+Comment[it]=Indicatore SynDock
+Comment[ja]=SynDock インジケータ
+Comment[ko]=SynDock 표시기
+Comment[lt]=SynDock indikatorius
+Comment[nl]=Indicator van SynDock
+Comment[nn]=SynDock-markør
+Comment[pl]=Wskaźnik SynDock
+Comment[pt]=Indicador do SynDock
+Comment[pt_BR]=Indicador do SynDock
+Comment[ru]=Индикатор SynDock
+Comment[sk]=SynDock indicator
+Comment[sl]=Kazalnik SynDock
+Comment[sv]=SynDock indikator
+Comment[tr]=SynDock göstergesi
+Comment[uk]=Індикатор Латте
+Comment[x-test]=xxSynDock indicatorxx
+Comment[zh_CN]=SynDock 任务指示器
+Comment[zh_TW]=SynDock 指示器
+
+[PropertyDef::X-SynDock-API]
+Type=QString
+
+[PropertyDef::X-SynDock-MainScript]
+Type=QString
+
+[PropertyDef::X-SynDock-ConfigUi]
+Type=QString
+
+[PropertyDef::X-SynDock-ConfigXml]
+Type=QString
+

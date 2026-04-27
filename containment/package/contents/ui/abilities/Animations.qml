@@ -6,8 +6,8 @@
 import QtQuick 2.7
 import org.kde.plasma.plasmoid 2.0
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.private.app 0.1 as LatteApp
+import org.syndromatic.syndock.core 0.2 as LatteCore
+import org.syndromatic.syndock.private.app 0.1 as LatteApp
 
 import "./privates" as Ability
 

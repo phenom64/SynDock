@@ -4,7 +4,7 @@
 */
 
 import QtQuick 2.7
-import org.kde.latte.core 0.2 as LatteCore
+import org.syndromatic.syndock.core 0.2 as LatteCore
 
 Item {
     id: edgeSpacer

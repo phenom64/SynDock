@@ -9,7 +9,7 @@
 // Qt
 #include <QObject>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 namespace IndicatorPart {
 

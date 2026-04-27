@@ -11,7 +11,7 @@
 #include "../../wm/tracker/lastactivewindow.h"
 #include "../../wm/tracker/windowstracker.h"
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 namespace TrackerPart {
 
@@ -34,73 +34,73 @@ void  CurrentScreenTracker::init()
         initSignalsForInformation();
     }
 
-    connect(m_latteView, &Latte::View::layoutChanged, this, [&]() {
+    connect(m_latteView, &NSE::View::layoutChanged, this, [&]() {
         if (m_latteView->layout()) {
             initSignalsForInformation();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::informationAnnounced, this, [&](const Latte::View *view) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::informationAnnounced, this, [&](const NSE::View *view) {
         if (m_latteView == view) {
             initSignalsForInformation();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::activeWindowMaximizedChanged, this, [&](const Latte::View *view) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::activeWindowMaximizedChanged, this, [&](const NSE::View *view) {
         if (m_latteView == view) {
             emit activeWindowMaximizedChanged();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::activeWindowTouchingChanged, this, [&](const Latte::View *view) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::activeWindowTouchingChanged, this, [&](const NSE::View *view) {
         if (m_latteView == view) {
             emit activeWindowTouchingChanged();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::activeWindowTouchingEdgeChanged, this, [&](const Latte::View *view) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::activeWindowTouchingEdgeChanged, this, [&](const NSE::View *view) {
         if (m_latteView == view) {
             emit activeWindowTouchingEdgeChanged();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::existsWindowActiveChanged, this, [&](const Latte::View *view) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::existsWindowActiveChanged, this, [&](const NSE::View *view) {
         if (m_latteView == view) {
             emit existsWindowActiveChanged();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::existsWindowMaximizedChanged, this, [&](const Latte::View *view) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::existsWindowMaximizedChanged, this, [&](const NSE::View *view) {
         if (m_latteView == view) {
             emit existsWindowMaximizedChanged();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::existsWindowTouchingChanged, this, [&](const Latte::View *view) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::existsWindowTouchingChanged, this, [&](const NSE::View *view) {
         if (m_latteView == view) {
             emit existsWindowTouchingChanged();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::existsWindowTouchingEdgeChanged, this, [&](const Latte::View *view) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::existsWindowTouchingEdgeChanged, this, [&](const NSE::View *view) {
         if (m_latteView == view) {
             emit existsWindowTouchingEdgeChanged();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::isTouchingBusyVerticalViewChanged, this, [&](const Latte::View *view) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::isTouchingBusyVerticalViewChanged, this, [&](const NSE::View *view) {
         if (m_latteView == view) {
             emit isTouchingBusyVerticalViewChanged();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::activeWindowSchemeChanged, this, [&](const Latte::View *view) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::activeWindowSchemeChanged, this, [&](const NSE::View *view) {
         if (m_latteView == view) {
             emit activeWindowSchemeChanged();
         }
     });
 
-    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::touchingWindowSchemeChanged, this, [&](const Latte::View *view) {
+    connect(m_wm->windowsTracker(), &WindowSystem::Tracker::Windows::touchingWindowSchemeChanged, this, [&](const NSE::View *view) {
         if (m_latteView == view) {
             emit touchingWindowSchemeChanged();
         }

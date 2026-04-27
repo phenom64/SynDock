@@ -1,19 +1,19 @@
-add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.kde.latte.plasmoid\")
+add_definitions(-DTRANSLATION_DOMAIN=\"plasma_applet_org.syndromatic.syndock.plasmoid\")
 
-plasma_install_package(package org.kde.latte.plasmoid)
+plasma_install_package(package org.syndromatic.syndock.plasmoid)
 
 set(tasks_SRCS
     plugin/types.cpp
-    plugin/lattetasksplugin.cpp
+    plugin/syndocktasksplugin.cpp
 )
 
-qt_add_library(lattetasksplugin SHARED ${tasks_SRCS})
+qt_add_library(syndocktasksplugin SHARED ${tasks_SRCS})
 
-target_link_libraries(lattetasksplugin
+target_link_libraries(syndocktasksplugin
                       Qt::Core
                       Qt::Qml
                       Plasma::Plasma
                       Plasma::PlasmaQuick)
 
-install(TARGETS lattetasksplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/private/tasks)
-install(FILES plugin/qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/kde/latte/private/tasks)
+install(TARGETS syndocktasksplugin DESTINATION ${KDE_INSTALL_QMLDIR}/org/syndromatic/syndock/private/tasks)
+install(FILES plugin/qmldir DESTINATION ${KDE_INSTALL_QMLDIR}/org/syndromatic/syndock/private/tasks)

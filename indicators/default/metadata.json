@@ -32,8 +32,8 @@
                 "Name[zh_TW]": "Michail Vourlakos"
             }
         ],
-        "Category": "Latte Indicator",
-        "Description": "Latte default indicator",
+        "Category": "SynDock Indicator",
+        "Description": "SynDock default indicator",
         "Description[az]": "Latte standart göstəricisi",
         "Description[ca@valencia]": "Indicador predeterminat de Latte",
         "Description[ca]": "Indicador predeterminat del Latte",
@@ -60,10 +60,10 @@
         "Description[zh_CN]": "Latte 默认指示器",
         "Description[zh_TW]": "Latte 預設指示器",
         "EnabledByDefault": true,
-        "Icon": "latte-dock",
-        "Id": "org.kde.latte.default",
+        "Icon": "syndock",
+        "Id": "org.syndromatic.syndock.default",
         "License": "GPL v2+",
-        "Name": "Latte",
+        "Name": "SynDock",
         "Name[ar]": "لاتيه",
         "Name[az]": "Latte",
         "Name[ca@valencia]": "Latte",
@@ -101,13 +101,11 @@
         "Name[x-test]": "xxLattexx",
         "Name[zh_CN]": "Latte",
         "Name[zh_TW]": "Latte",
-        "ServiceTypes": [
-            "Latte/Indicator"
-        ],
-        "Version": "0.1"
+        "Version": "0.1",
+        "Website": "https://syndromatic.com/syndock"
     },
-    "X-Latte-ConfigUi": "config/config.qml",
-    "X-Latte-ConfigXml": "config/main.xml",
-    "X-Latte-MainScript": "ui/main.qml",
-    "X-Plasma-API": "declarativeappletscript"
+    "KPackageStructure": "SynDock/Indicator",
+    "X-SynDock-ConfigUi": "config/config.qml",
+    "X-SynDock-ConfigXml": "config/main.xml",
+    "X-SynDock-MainScript": "ui/main.qml"
 }

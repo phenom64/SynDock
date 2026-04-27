@@ -20,7 +20,7 @@
 #include <qvariant.h>
 
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 namespace Tracker {
 
@@ -599,7 +599,7 @@ void LastActiveWindow::requestClose()
     m_wm->requestClose(m_currentWinId);
 }
 
-void LastActiveWindow::requestMove(Latte::View *fromView, int localX, int localY)
+void LastActiveWindow::requestMove(NSE::View *fromView, int localX, int localY)
 {
     if (!fromView || !canBeDragged()) {
         return;

@@ -5,14 +5,14 @@
 */
 
 import QtQuick 2.0
-import Qt5Compat.GraphicalEffects
+import org.syndromatic.syndock.effects 1.0
 
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 
 import org.kde.kirigami 2.0 as Kirigami
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.syndromatic.syndock.core 0.2 as LatteCore
 
 /////Removing a Window from a group////
 Item{

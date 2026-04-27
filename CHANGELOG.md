@@ -1,7 +1,7 @@
 #**CHANGELOG**#
 
 #### Version 0.10.X (current development build)
-* optionally maximise panel size in presence of maximised windows (https://invent.kde.org/plasma/latte-dock/-/merge_requests/46)
+* optionally maximise panel size in presence of maximised windows (https://invent.kde.org/plasma/syndock/-/merge_requests/46)
 
 #### Version 0.10.8
 * multi-screen: fix docks/panels screen repositioning when the user specifies different screen for dock or panel
@@ -187,7 +187,7 @@
 * fix endless growing/shrinking for items size by introducing an AutomaticItemSizer class that is tracking the algorithm predictions and results in order to identify the issue/case
 * improve paddings and margins for applets that are touching the screen edge and at the same time follow Fitt's Law
 * remove workarounds for margins and paddings for plasma systray
-* dont crash when changing layouts by unloading Latte::View(s) first and their Plasma::Containment(s) afterwards
+* dont crash when changing layouts by unloading NSE::View(s) first and their Plasma::Containment(s) afterwards
 * dont drag/maximize windows from different virtual desktops than the current one
 * fixes for dynamic background: force transparency codepath
 * ignore plasma panels for Latte heuristics. Any plasma window touching the screen edge and having thickness <=96px is considered a plasma panel.
@@ -497,7 +497,7 @@ inform them when they are in a Latte panel/dock and when they dont want any chan
 * fix #323, TaskManagerBackend groupDialog
 * fix #316, [Crash] Exporting settings and trying to open directory of the file
 * fix #308, Always visible option does not work for side-set dock on unusual multi screen setup
-* fix #292, workaround for KF5.32 empty mask
+* fix #292, workaround for empty mask
 * fix #298, default add launchers in taskmanager
 * fix #285, expanded to false for applets
 * fix #262, dont hide preview window for buffer init

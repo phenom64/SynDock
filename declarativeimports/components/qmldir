@@ -1,4 +1,4 @@
-module org.kde.latte.components
+module org.syndromatic.syndock.components
 
 AddItem 1.0 AddItem.qml
 AddingArea 1.0 AddingArea.qml

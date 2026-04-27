@@ -5,8 +5,8 @@
 
 import QtQuick 2.7
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.abilities.definition 0.1 as AbilityDefinition
+import org.syndromatic.syndock.core 0.2 as LatteCore
+import org.syndromatic.syndock.abilities.definition 0.1 as AbilityDefinition
 
 AbilityDefinition.Animations {
     id: _animations

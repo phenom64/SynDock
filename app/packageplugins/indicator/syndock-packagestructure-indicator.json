@@ -1,0 +1,8 @@
+{
+    "KPlugin": {
+        "Id": "SynDock/Indicator",
+        "Name": "SynDock Indicator Package Structure"
+    },
+    "KPackageStructure": "SynDock/Indicator",
+    "X-KDE-ParentApp": "org.syndromatic.syndock"
+}

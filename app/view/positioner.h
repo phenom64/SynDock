@@ -24,12 +24,12 @@ namespace Plasma {
 class Types;
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 class Positioner: public QObject
@@ -53,7 +53,7 @@ class Positioner: public QObject
     Q_PROPERTY(QString currentScreenName READ currentScreenName NOTIFY currentScreenChanged)
 
 public:
-    Positioner(Latte::View *parent);
+    Positioner(NSE::View *parent);
     virtual ~Positioner();
 
     int currentScreenId() const;
@@ -84,11 +84,11 @@ public:
     QRect canvasGeometry();
 
     void setScreenToFollow(QScreen *scr, bool updateScreenId = true);
-    void setWindowOnActivities(const Latte::WindowSystem::WindowId &wid, const QStringList &activities);
+    void setWindowOnActivities(const NSE::WindowSystem::WindowId &wid, const QStringList &activities);
 
     void reconsiderScreen();
 
-    Latte::WindowSystem::WindowId trackedWindowId();
+    NSE::WindowSystem::WindowId trackedWindowId();
 
 public slots:
     Q_INVOKABLE void setNextLocation(const QString layoutName, const int screensGroup, QString screenName, int edge, int alignment);
@@ -181,8 +181,8 @@ private:
     QRect m_lastAvailableScreenRect;
     QRegion m_lastAvailableScreenRegion;
 
-    QPointer<Latte::View> m_view;
-    QPointer<Latte::Corona> m_corona;
+    QPointer<NSE::View> m_view;
+    QPointer<NSE::Corona> m_corona;
 
     QString m_screenNameToFollow;
     QPointer<QScreen> m_screenToFollow;
@@ -195,13 +195,13 @@ private:
     bool m_repositionIsAnimated{false};
 
     QString m_nextLayoutName;
-    Latte::Types::ScreensGroup m_nextScreensGroup{Latte::Types::SingleScreenGroup};
+    NSE::Types::ScreensGroup m_nextScreensGroup{NSE::Types::SingleScreenGroup};
     QString m_nextScreenName;
     QScreen *m_nextScreen{nullptr};
     Plasma::Types::Location m_nextScreenEdge{Plasma::Types::Floating};
-    Latte::Types::Alignment m_nextAlignment{Latte::Types::NoneAlignment};
+    NSE::Types::Alignment m_nextAlignment{NSE::Types::NoneAlignment};
 
-    Latte::WindowSystem::WindowId m_trackedWindowId;
+    NSE::WindowSystem::WindowId m_trackedWindowId;
 };
 
 }

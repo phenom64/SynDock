@@ -15,7 +15,7 @@ class Containment;
 }
 
 
-namespace Latte {
+namespace NSE {
 class View;
 
 namespace ViewPart {
@@ -25,7 +25,7 @@ class WidgetExplorerView;
 
 }
 
-namespace Latte {
+namespace NSE {
 
 class ViewSettingsFactory : public QObject
 {
@@ -41,8 +41,8 @@ public:
     ViewPart::PrimaryConfigView *primaryConfigView();
 
     Plasma::Containment *lastContainment();
-    ViewPart::PrimaryConfigView *primaryConfigView(Latte::View *view);
-    ViewPart::WidgetExplorerView *widgetExplorerView(Latte::View *view);
+    ViewPart::PrimaryConfigView *primaryConfigView(NSE::View *view);
+    ViewPart::WidgetExplorerView *widgetExplorerView(NSE::View *view);
 
 private:
     QPointer<ViewPart::PrimaryConfigView> m_primaryConfigView;

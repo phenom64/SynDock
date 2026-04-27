@@ -1,4 +1,4 @@
-set(lattedock-app_SRCS
+set(syndock-app_SRCS
     alternativeshelper.cpp
     apptypes.cpp
     infoview.cpp
@@ -40,24 +40,27 @@ add_subdirectory(view/windowstracker)
 add_subdirectory(wm)
 add_subdirectory(wm/tracker)
 
-set(latte_dbusXML dbus/org.kde.LatteDock.xml)
-qt_add_dbus_adaptor(lattedock-app_SRCS ${latte_dbusXML} lattecorona.h Latte::Corona lattedockadaptor)
+set(syndock_dbusXML dbus/org.syndromatic.SynDock.xml)
+qt_add_dbus_adaptor(syndock-app_SRCS ${syndock_dbusXML} lattecorona.h NSE::Corona syndockadaptor)
 
-ki18n_wrap_ui(lattedock-app_SRCS settings/actionsdialog/actionsdialog.ui)
-ki18n_wrap_ui(lattedock-app_SRCS settings/detailsdialog/detailsdialog.ui)
-ki18n_wrap_ui(lattedock-app_SRCS settings/exporttemplatedialog/exporttemplatedialog.ui)
-ki18n_wrap_ui(lattedock-app_SRCS settings/screensdialog/screensdialog.ui)
-ki18n_wrap_ui(lattedock-app_SRCS settings/settingsdialog/settingsdialog.ui)
-ki18n_wrap_ui(lattedock-app_SRCS settings/viewsdialog/viewsdialog.ui)
+ki18n_wrap_ui(syndock-app_SRCS settings/actionsdialog/actionsdialog.ui)
+ki18n_wrap_ui(syndock-app_SRCS settings/detailsdialog/detailsdialog.ui)
+ki18n_wrap_ui(syndock-app_SRCS settings/exporttemplatedialog/exporttemplatedialog.ui)
+ki18n_wrap_ui(syndock-app_SRCS settings/screensdialog/screensdialog.ui)
+ki18n_wrap_ui(syndock-app_SRCS settings/settingsdialog/settingsdialog.ui)
+ki18n_wrap_ui(syndock-app_SRCS settings/viewsdialog/viewsdialog.ui)
 
-add_executable(latte-dock ${lattedock-app_SRCS})
+add_executable(syndock ${syndock-app_SRCS})
 
 include(FakeTarget.cmake)
 
-qt6_generate_wayland_protocol_client_sources(latte-dock FILES
+qt6_generate_wayland_protocol_client_sources(syndock FILES
     ${PLASMA_WAYLAND_PROTOCOLS_DIR}/kde-primary-output-v1.xml)
 
-target_link_libraries(latte-dock
+target_sources(syndock PRIVATE
+    ${CMAKE_CURRENT_BINARY_DIR}/wayland-kde-primary-output-v1-protocol.c)
+
+target_link_libraries(syndock
     Qt::DBus
     Qt::Quick
     Qt::Qml
@@ -85,25 +88,21 @@ target_link_libraries(latte-dock
 )
 
 
-if(HAVE_X11)
-    target_link_libraries(latte-dock
-        Qt::GuiPrivate
-        KF6::WindowSystem
-        ${X11_LIBRARIES}
-        ${XCB_LIBRARIES}
-    )
-endif()
+target_link_libraries(syndock
+    Qt6::WaylandClient
+    LayerShellQt::Interface
+)
 
-configure_file(org.kde.latte-dock.desktop.cmake org.kde.latte-dock.desktop)
-configure_file(org.kde.latte-dock.appdata.xml.cmake org.kde.latte-dock.appdata.xml)
+configure_file(org.syndromatic.syndock.desktop.cmake org.syndromatic.syndock.desktop)
+configure_file(org.syndromatic.syndock.appdata.xml.cmake org.syndromatic.syndock.appdata.xml)
 
-install(TARGETS latte-dock ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.latte-dock.desktop DESTINATION ${KDE_INSTALL_APPDIR})
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.kde.latte-dock.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
-install(FILES dbus/org.kde.LatteDock.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
-install(FILES lattedock.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
-install(FILES latte-layouts.knsrc DESTINATION  ${KDE_INSTALL_KNSRCDIR})
-install(FILES latte-indicators.knsrc DESTINATION  ${KDE_INSTALL_KNSRCDIR})
+install(TARGETS syndock ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.syndromatic.syndock.desktop DESTINATION ${KDE_INSTALL_APPDIR})
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/org.syndromatic.syndock.appdata.xml DESTINATION ${KDE_INSTALL_METAINFODIR})
+install(FILES dbus/org.syndromatic.SynDock.xml DESTINATION ${KDE_INSTALL_DBUSINTERFACEDIR})
+install(FILES syndock.notifyrc DESTINATION ${KDE_INSTALL_KNOTIFYRCDIR})
+install(FILES syndock-layouts.knsrc DESTINATION  ${KDE_INSTALL_KNSRCDIR})
+install(FILES syndock-indicators.knsrc DESTINATION  ${KDE_INSTALL_KNSRCDIR})
 
 
 add_subdirectory(packageplugins)

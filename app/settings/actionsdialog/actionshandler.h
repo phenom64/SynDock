@@ -19,7 +19,7 @@ namespace Ui {
 class ActionsDialog;
 }
 
-namespace Latte{
+namespace NSE{
 namespace Settings{
 namespace Dialog{
 class ActionsDialog;
@@ -28,7 +28,7 @@ class ActionsDialog;
 }
 
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 

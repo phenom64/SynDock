@@ -21,12 +21,12 @@ class PlasmaShellSurface;
 }
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 class View;
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
 //! What is the importance of this class?
@@ -38,7 +38,7 @@ class SubWindow : public QQuickView
     Q_OBJECT
 
 public:
-    SubWindow(Latte::View *view, QString debugType);
+    SubWindow(NSE::View *view, QString debugType);
     ~SubWindow() override;
 
     int location();
@@ -49,8 +49,8 @@ public:
     void hideWithMask();
     void showWithMask();
 
-    Latte::View *parentView();
-    Latte::WindowSystem::WindowId trackedWindowId();
+    NSE::View *parentView();
+    NSE::WindowSystem::WindowId trackedWindowId();
 
     KWayland::Client::PlasmaShellSurface *surface();
 
@@ -100,11 +100,11 @@ protected:
     //! Connections for the KWin visibility hack
     QList<QMetaObject::Connection> connectionsHack;
 
-    Latte::View *m_latteView{nullptr};
+    NSE::View *m_latteView{nullptr};
 
-    QPointer<Latte::Corona> m_corona;
+    QPointer<NSE::Corona> m_corona;
 
-    Latte::WindowSystem::WindowId m_trackedWindowId;
+    NSE::WindowSystem::WindowId m_trackedWindowId;
     KWayland::Client::PlasmaShellSurface *m_shellSurface{nullptr};
 };
 

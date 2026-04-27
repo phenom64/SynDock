@@ -49,7 +49,7 @@
             </widget>
            </item>
            <item>
-            <widget class="Latte::Settings::LayoutsComboBox" name="layoutsCmb">
+            <widget class="NSE::Settings::LayoutsComboBox" name="layoutsCmb">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
                <horstretch>0</horstretch>
@@ -87,7 +87,7 @@
           <number>6</number>
          </property>
          <item row="1" column="0">
-          <widget class="Latte::Settings::View::ViewsTableView" name="viewsTable">
+          <widget class="NSE::Settings::View::ViewsTableView" name="viewsTable">
            <property name="contextMenuPolicy">
             <enum>Qt::ActionsContextMenu</enum>
            </property>
@@ -240,12 +240,12 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>Latte::Settings::LayoutsComboBox</class>
+   <class>NSE::Settings::LayoutsComboBox</class>
    <extends>QComboBox</extends>
    <header>settings/generic/layoutscombobox.h</header>
   </customwidget>
   <customwidget>
-   <class>Latte::Settings::View::ViewsTableView</class>
+   <class>NSE::Settings::View::ViewsTableView</class>
    <extends>QTableView</extends>
    <header>settings/viewsdialog/viewstableview.h</header>
   </customwidget>

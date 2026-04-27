@@ -10,7 +10,7 @@
 #include <QWindow>
 
 
-namespace Latte {
+namespace NSE {
 namespace Quick {
 
 Dialog::Dialog(QQuickItem *parent)

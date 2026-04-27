@@ -15,7 +15,7 @@
 #include <QRect>
 #include <QString>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class Screen : public Generic
@@ -59,7 +59,7 @@ typedef GenericTable<Screen> ScreensTable;
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::Screen)
-Q_DECLARE_METATYPE(Latte::Data::ScreensTable)
+Q_DECLARE_METATYPE(NSE::Data::Screen)
+Q_DECLARE_METATYPE(NSE::Data::ScreensTable)
 
 #endif

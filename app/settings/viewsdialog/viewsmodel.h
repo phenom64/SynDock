@@ -23,7 +23,7 @@
 #include <QAbstractTableModel>
 #include <QModelIndex>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Model {
 
@@ -67,7 +67,7 @@ public:
         HIGHESTPRIORITY = 10000
     };
 
-    explicit Views(QObject *parent, Latte::Corona *corona);
+    explicit Views(QObject *parent, NSE::Corona *corona);
     ~Views();
 
     bool hasChangedData() const;
@@ -76,7 +76,7 @@ public:
     //! all original data will become also current
     void resetData();
 
-    void appendTemporaryView(const Latte::Data::View &view);
+    void appendTemporaryView(const NSE::Data::View &view);
     void removeView(const QString &id);
 
     int rowCount() const;
@@ -94,22 +94,22 @@ public:
 
     QString viewForSubContainment(const QString &sid);
 
-    const Latte::Data::View &at(const int &row);
-    const Latte::Data::View currentData(const QString &id);
-    const Latte::Data::View originalData(const QString &id);
+    const NSE::Data::View &at(const int &row);
+    const NSE::Data::View currentData(const QString &id);
+    const NSE::Data::View originalData(const QString &id);
 
-    const Latte::Data::ViewsTable &currentViewsData();
-    const Latte::Data::ViewsTable &originalViewsData();
+    const NSE::Data::ViewsTable &currentViewsData();
+    const NSE::Data::ViewsTable &originalViewsData();
 
-    void setOriginalData(Latte::Data::ViewsTable &data);
-    void setOriginalView(QString currentViewId, Latte::Data::View &view);
-    void updateCurrentView(QString currentViewId, Latte::Data::View &view);
+    void setOriginalData(NSE::Data::ViewsTable &data);
+    void setOriginalView(QString currentViewId, NSE::Data::View &view);
+    void updateCurrentView(QString currentViewId, NSE::Data::View &view);
     void clearErrorsAndWarnings();
 
     void updateActiveStatesBasedOn(const CentralLayout *layout);
 
-    Latte::Data::ViewsTable alteredViews() const;
-    Latte::Data::ViewsTable newViews() const;
+    NSE::Data::ViewsTable alteredViews() const;
+    NSE::Data::ViewsTable newViews() const;
 
 signals:
     void rowsInserted();
@@ -138,18 +138,18 @@ private:
     //! based on priority a sortable text is returned
     QString sortableText(const int &priority, const QString &text) const;
 
-    Latte::Data::Screen screenData(const QString &viewId) const;
+    NSE::Data::Screen screenData(const QString &viewId) const;
 
 private:
-    Latte::Data::ViewsTable m_viewsTable;
-    Latte::Data::ViewsTable o_viewsTable;
+    NSE::Data::ViewsTable m_viewsTable;
+    NSE::Data::ViewsTable o_viewsTable;
 
-    Latte::Corona *m_corona{nullptr};
+    NSE::Corona *m_corona{nullptr};
 
     Data::ViewsTable s_edges;
     Data::ViewsTable s_horizontalAlignments;
     Data::ViewsTable s_verticalAlignments;
-    Latte::Data::ScreensTable s_screens;
+    NSE::Data::ScreensTable s_screens;
 };
 
 }

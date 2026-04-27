@@ -5,7 +5,7 @@
 
 #include "appletdata.h"
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 Applet::Applet()

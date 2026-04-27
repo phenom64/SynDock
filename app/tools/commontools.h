@@ -14,7 +14,7 @@
 #include <QRect>
 #include <QString>
 
-namespace Latte {
+namespace NSE {
 
 float colorBrightness(QColor color);
 float colorBrightness(QRgb rgb);
@@ -32,6 +32,7 @@ QRect stringToRect(const QString &str);
 QString standardPath(QString subPath, bool localFirst = true);
 
 QString configPath();
+QString dataPath();
 
 // Predicates.
 // If this grows out of proportions, consider moving this out of here.

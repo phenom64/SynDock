@@ -7,12 +7,13 @@
 #define SHORTCUTSTRACKER_H
 
 // Qt
+#include <QHash>
 #include <QObject>
 
 // KDE
 #include <KSharedConfig>
 
-namespace Latte {
+namespace NSE {
 namespace ShortcutsPart {
 
 class ShortcutsTracker: public QObject {

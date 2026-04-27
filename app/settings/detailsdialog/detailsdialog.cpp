@@ -10,7 +10,7 @@
 #include "detailshandler.h"
 #include "../settingsdialog/layoutscontroller.h"
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Dialog {
 
@@ -60,7 +60,7 @@ Ui::DetailsDialog *DetailsDialog::ui() const
     return m_ui;
 }
 
-Latte::Corona *DetailsDialog::corona() const
+NSE::Corona *DetailsDialog::corona() const
 {
     return m_parentDlg->corona();
 }

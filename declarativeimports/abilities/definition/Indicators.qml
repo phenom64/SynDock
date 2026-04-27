@@ -12,7 +12,7 @@ Item{
 
     readonly property real padding: Math.max(info.minLengthPadding, info.lengthPadding)
 
-    property string type: "org.kde.latte.default"
+    property string type: "org.syndromatic.syndock.default"
 
     property QtObject configuration: null
     property QtObject resources: null   

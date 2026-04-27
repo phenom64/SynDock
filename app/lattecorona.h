@@ -45,7 +45,7 @@ class PlasmaShell;
 }
 }
 
-namespace Latte {
+namespace NSE {
 class CentralLayout;
 class ScreenPool;
 class GlobalShortcuts;
@@ -74,12 +74,12 @@ class AbstractWindowInterface;
 }
 }
 
-namespace Latte {
+namespace NSE {
 
 class Corona : public Plasma::Corona
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.kde.LatteDock")
+    Q_CLASSINFO("D-Bus Interface", "org.syndromatic.SynDock")
 
 public:
     Corona(bool defaultLayoutOnStartup = false,
@@ -176,8 +176,8 @@ signals:
     void configurationShown(PlasmaQuick::ConfigView *configView);
     void viewLocationChanged();
     void raiseViewsTemporaryChanged();
-    void availableScreenRectChangedFrom(Latte::View *origin);
-    void availableScreenRegionChangedFrom(Latte::View *origin);
+    void availableScreenRectChangedFrom(NSE::View *origin);
+    void availableScreenRegionChangedFrom(NSE::View *origin);
     void verticalUnityViewHasFocus();
 
 private slots:
@@ -190,8 +190,8 @@ private slots:
     void onScreenRemoved(QScreen *screen);
     void onScreenCountChanged();
     void onScreenGeometryChanged(const QRect &geometry);
-    void onAvailableScreenRegionChangedFrom(Latte::View *view);
-    void onAvailableScreenRectChangedFrom(Latte::View *view);
+    void onAvailableScreenRegionChangedFrom(NSE::View *view);
+    void onAvailableScreenRectChangedFrom(NSE::View *view);
     void syncLatteViewsToScreens();
 
 private:

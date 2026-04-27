@@ -69,7 +69,7 @@ Item {
 
         function isDroppingSeparator(event) {
             var appletName = String(event.mimeData.getDataAsByteArray("text/x-plasmoidservicename"));
-            var isSeparator = (appletName === "audoban.applet.separator" || appletName === "org.kde.latte.separator");
+            var isSeparator = (appletName === "audoban.applet.separator" || appletName === "org.syndromatic.syndock.separator");
 
             return ((event.mimeData.formats.indexOf("text/x-plasmoidservicename") === 0) && isSeparator);
         }

@@ -8,13 +8,13 @@
 
 #include <QAbstractListModel>
 
-namespace Latte {
+namespace NSE {
 namespace WindowSystem {
 class SchemeColors;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Model {
 

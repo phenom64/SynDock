@@ -33,7 +33,7 @@
 // KNewStuff
 #include <KNSWidgets/Dialog>
 
-namespace Latte {
+namespace NSE {
 namespace Indicator {
 
 Factory::Factory(QObject *parent)
@@ -41,7 +41,7 @@ Factory::Factory(QObject *parent)
 {
     m_parentWidget = new QWidget();
 
-    m_mainPaths = Latte::Layouts::Importer::standardPaths();
+    m_mainPaths = NSE::Layouts::Importer::standardPaths();
 
     for(int i=0; i<m_mainPaths.count(); ++i) {
         m_mainPaths[i] = m_mainPaths[i] + "/latte/indicators";
@@ -70,7 +70,7 @@ Factory::Factory(QObject *parent)
         }
     });
 
-    qDebug() << m_plugins["org.kde.latte.default"].name();
+    qDebug() << m_plugins["org.syndromatic.syndock.default"].name();
 }
 
 Factory::~Factory()
@@ -124,7 +124,7 @@ void Factory::reload(const QString &indicatorPath)
 
             if (metadataAreValid(metadata)) {
                 pluginChangedId = metadata.pluginId();
-                QString uiFile = indicatorPath + "/package/" + metadata.value("X-Latte-MainScript");
+                QString uiFile = indicatorPath + "/package/" + metadata.value("X-SynDock-MainScript");
 
                 if (!m_plugins.contains(metadata.pluginId())) {
                     m_plugins[metadata.pluginId()] = metadata;
@@ -134,9 +134,9 @@ void Factory::reload(const QString &indicatorPath)
                     m_pluginUiPaths[metadata.pluginId()] = QFileInfo(uiFile).absolutePath();
                 }
 
-                if ((metadata.pluginId() != "org.kde.latte.default")
-                        && (metadata.pluginId() != "org.kde.latte.plasma")
-                        && (metadata.pluginId() != "org.kde.latte.plasmatabstyle")) {
+                if ((metadata.pluginId() != "org.syndromatic.syndock.default")
+                        && (metadata.pluginId() != "org.syndromatic.syndock.plasma")
+                        && (metadata.pluginId() != "org.syndromatic.syndock.plasmatabstyle")) {
 
                     //! find correct alphabetical position
                     int newPos = -1;
@@ -176,9 +176,9 @@ void Factory::reload(const QString &indicatorPath)
 
             /*qDebug() << " Indicator value ::: " << metadata.pluginId();
                             qDebug() << " Indicator value ::: " << metadata.fileName();
-                            qDebug() << " Indicator value ::: " << metadata.value("X-Latte-MainScript");
-                            qDebug() << " Indicator value ::: " << metadata.value("X-Latte-ConfigUi");
-                            qDebug() << " Indicator value ::: " << metadata.value("X-Latte-ConfigXml");*/
+                            qDebug() << " Indicator value ::: " << metadata.value("X-SynDock-MainScript");
+                            qDebug() << " Indicator value ::: " << metadata.value("X-SynDock-ConfigUi");
+                            qDebug() << " Indicator value ::: " << metadata.value("X-SynDock-ConfigXml");*/
         }
     }
 
@@ -233,14 +233,14 @@ void Factory::removeIndicatorRecords(const QString &path)
 
 bool Factory::isCustomType(const QString &id) const
 {
-    return ((id != "org.kde.latte.default") && (id != "org.kde.latte.plasma") && (id != "org.kde.latte.plasmatabstyle"));
+    return ((id != "org.syndromatic.syndock.default") && (id != "org.syndromatic.syndock.plasma") && (id != "org.syndromatic.syndock.plasmatabstyle"));
 }
 
 bool Factory::metadataAreValid(KPluginMetaData &metadata)
 {
     return metadata.isValid()
-            && metadata.category() == QLatin1String("Latte Indicator")
-            && !metadata.value("X-Latte-MainScript").isEmpty();
+            && metadata.category() == QLatin1String("SynDock Indicator")
+            && !metadata.value("X-SynDock-MainScript").isEmpty();
 }
 
 bool Factory::metadataAreValid(QString &file)
@@ -279,7 +279,7 @@ QString Factory::metadataFileAbsolutePath(const QString &directoryPath)
     return QString();
 }
 
-Latte::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
+NSE::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
 {
     auto showNotificationError = []() {
         auto notification = new KNotification("import-fail", KNotification::CloseOnTimeout);
@@ -309,7 +309,7 @@ Latte::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
         if (!tarArchive->isOpen()) {
             delete tarArchive;
             showNotificationError();
-            return Latte::ImportExport::FailedState;
+            return NSE::ImportExport::FailedState;
         } else {
             archive = tarArchive;
         }
@@ -342,7 +342,7 @@ Latte::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
     KPluginMetaData metadata = KPluginMetaData(metadataFile);
 
     if (metadataAreValid(metadata)) {
-        QStringList standardPaths = Latte::Layouts::Importer::standardPaths();
+        QStringList standardPaths = NSE::Layouts::Importer::standardPaths();
         QString installPath = standardPaths[0] + "/latte/indicators/" + metadata.pluginId();
 
         bool updated{QDir(installPath).exists()};
@@ -357,11 +357,11 @@ Latte::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
         QString output(process.readAllStandardOutput());
 
         showNotificationSucceed(metadata.name(), updated);
-        return Latte::ImportExport::InstalledState;
+        return NSE::ImportExport::InstalledState;
     }
 
     showNotificationError();
-    return Latte::ImportExport::FailedState;
+    return NSE::ImportExport::FailedState;
 }
 
 void Factory::removeIndicator(QString id)
@@ -395,7 +395,7 @@ void Factory::removeIndicator(QString id)
 
             qDebug() << "Trying to remove indicator :: " << id;
             QProcess process;
-            process.start(QString("kpackagetool6 -r " +id + " -t Latte/Indicator"));
+            process.start(QString("kpackagetool6 -r " + id + " -t SynDock/Indicator"));
             process.waitForFinished();
             showRemovedSucceed(pluginName);
         });
@@ -406,7 +406,7 @@ void Factory::removeIndicator(QString id)
 
 void Factory::downloadIndicator()
 {
-    KNSWidgets::Dialog dialog(QStringLiteral("latte-indicators.knsrc"), m_parentWidget);
+    KNSWidgets::Dialog dialog(QStringLiteral("syndock-indicators.knsrc"), m_parentWidget);
     dialog.exec();
 }
 

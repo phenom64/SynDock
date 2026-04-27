@@ -7,7 +7,7 @@ import QtQuick 2.0
 
 import org.kde.plasma.plasmoid 2.0
 
-import org.kde.latte.core 0.2 as LatteCore
+import org.syndromatic.syndock.core 0.2 as LatteCore
 
 import "./myview" as MyViewTypes
 

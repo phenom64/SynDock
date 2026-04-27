@@ -9,7 +9,7 @@
 // Qt
 #include <QListWidgetItem>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace ActionsDialog {
 

@@ -4,7 +4,7 @@
 */
 
 #include "tasktools.h"
-#include <config-latte.h>
+#include <config-syndock.h>
 
 #include <PlasmaActivities/ResourceInstance>
 #include <KApplicationTrader>
@@ -26,11 +26,8 @@
 #include <QUrlQuery>
 #include <kservice.h>
 #include <kserviceaction.h>
-#if HAVE_X11
-#include <private/qtx11extras_p.h>
-#endif
 
-namespace Latte
+namespace NSE
 {
 namespace WindowSystem
 {

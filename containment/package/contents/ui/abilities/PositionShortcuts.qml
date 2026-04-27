@@ -27,7 +27,7 @@ Ability.PositionShortcutsPrivate {
         applicationLauncherId = applicationLauncher;
     }
 
-    //! this is called from Latte::View::ContainmentInterface
+    //! this is called from NSE::View::ContainmentInterface
     function activateEntryAtIndex(entryIndex) {
         if (typeof entryIndex !== "number") {
             return;
@@ -36,7 +36,7 @@ Ability.PositionShortcutsPrivate {
         sglActivateEntryAtIndex(entryIndex);
     }
 
-    //! this is called from Latte::View::ContainmentInterface
+    //! this is called from NSE::View::ContainmentInterface
     function newInstanceForEntryAtIndex(entryIndex) {
         if (typeof entryIndex !== "number") {
             return;
@@ -45,7 +45,7 @@ Ability.PositionShortcutsPrivate {
         sglNewInstanceForEntryAtIndex(entryIndex);
     }
 
-    //! this is called from Latte::View::ContainmentInterface
+    //! this is called from NSE::View::ContainmentInterface
     function appletIdForIndex(entryIndex) {
         return indexer.appletIdForVisibleIndex(entryIndex);
     }

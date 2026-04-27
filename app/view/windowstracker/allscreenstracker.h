@@ -13,7 +13,7 @@
 // Qt
 #include <QObject>
 
-namespace Latte{
+namespace NSE{
 class View;
 
 namespace ViewPart {
@@ -26,7 +26,7 @@ class SchemeColors;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 namespace TrackerPart {
 
@@ -35,9 +35,9 @@ class AllScreensTracker : public QObject {
     Q_PROPERTY(bool activeWindowMaximized READ activeWindowMaximized NOTIFY activeWindowMaximizedChanged)
     Q_PROPERTY(bool existsWindowActive READ existsWindowActive NOTIFY existsWindowActiveChanged)
     Q_PROPERTY(bool existsWindowMaximized READ existsWindowMaximized NOTIFY existsWindowMaximizedChanged)
-    Q_PROPERTY(Latte::WindowSystem::SchemeColors *activeWindowScheme READ activeWindowScheme NOTIFY activeWindowSchemeChanged)
+    Q_PROPERTY(NSE::WindowSystem::SchemeColors *activeWindowScheme READ activeWindowScheme NOTIFY activeWindowSchemeChanged)
 
-    Q_PROPERTY(Latte::WindowSystem::Tracker::LastActiveWindow *lastActiveWindow READ lastActiveWindow NOTIFY lastActiveWindowChanged)
+    Q_PROPERTY(NSE::WindowSystem::Tracker::LastActiveWindow *lastActiveWindow READ lastActiveWindow NOTIFY lastActiveWindowChanged)
 
 public:
     explicit AllScreensTracker(WindowsTracker *parent);
@@ -69,9 +69,9 @@ private:
     void init();
 
 private:
-    Latte::WindowSystem::Tracker::LastActiveWindow *m_currentLastActiveWindow{nullptr};
+    NSE::WindowSystem::Tracker::LastActiveWindow *m_currentLastActiveWindow{nullptr};
 
-    Latte::View *m_latteView{nullptr};
+    NSE::View *m_latteView{nullptr};
     WindowSystem::AbstractWindowInterface *m_wm{nullptr};
 };
 

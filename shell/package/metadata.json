@@ -32,7 +32,7 @@
                 "Name[zh_TW]": "Michail Vourlakos, Smith Ar"
             }
         ],
-        "Description": "Shell provided for the Latte Dock",
+        "Description": "Shell provided for SynDock",
         "Description[az]": "Latte Dok paneli üçün nəzərdə tutulan üzlük",
         "Description[ca@valencia]": "Intèrpret d'ordres proporcionat per Latte Dock",
         "Description[ca]": "Intèrpret d'ordres proporcionat pel Latte Dock",
@@ -58,9 +58,9 @@
         "Description[x-test]": "xxShell provided for the Latte Dockxx",
         "Description[zh_CN]": "用于 Latte 停靠栏的 Shell",
         "Description[zh_TW]": "提供給 Latte Dock 用的 Shell",
-        "Id": "org.kde.latte.shell",
+        "Id": "org.syndromatic.syndock.shell",
         "License": "GPLv3+",
-        "Name": "Latte Shell",
+        "Name": "SynDock Shell",
         "Name[ar]": "صدفة لاتيه",
         "Name[az]": "Latte Üzlüyü",
         "Name[ca@valencia]": "Intèrpret d'ordres de Latte",
@@ -96,10 +96,7 @@
         "Name[x-test]": "xxLatte Shellxx",
         "Name[zh_CN]": "Latte Shell",
         "Name[zh_TW]": "Latte Shell",
-        "ServiceTypes": [
-            "Plasma/Shell"
-        ],
-        "Website": "https://userbase.kde.org/LatteDock"
+        "Website": "https://syndromatic.com/syndock"
     },
     "Keywords": "shell",
     "Keywords[ar]": "الصدَفة",
@@ -135,5 +132,6 @@
     "Keywords[x-test]": "xxshellxx",
     "Keywords[zh_CN]": "shell",
     "Keywords[zh_TW]": "shell",
-    "X-KDE-ParentApp": "latte-dock"
+    "X-KDE-ParentApp": "syndock",
+    "KPackageStructure": "Plasma/Shell"
 }

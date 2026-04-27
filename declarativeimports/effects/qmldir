@@ -1,0 +1,6 @@
+module org.syndromatic.syndock.effects
+DropShadow 1.0 DropShadow.qml
+ColorOverlay 1.0 ColorOverlay.qml
+BrightnessContrast 1.0 BrightnessContrast.qml
+FastBlur 1.0 FastBlur.qml
+OpacityMask 1.0 OpacityMask.qml

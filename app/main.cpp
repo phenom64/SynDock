@@ -6,7 +6,7 @@
 */
 
 // local
-#include "config-latte.h"
+#include "config-syndock.h"
 #include "apptypes.h"
 #include "lattecorona.h"
 #include "layouts/importer.h"
@@ -82,8 +82,8 @@ int main(int argc, char **argv)
         qunsetenv("QT_QPA_PLATFORM");
     }
 
-    KLocalizedString::setApplicationDomain("latte-dock");
-    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("latte-dock")));
+    KLocalizedString::setApplicationDomain("syndock");
+    app.setWindowIcon(QIcon::fromTheme(QStringLiteral("syndock")));
     //protect from closing app when changing to "alternative session" and back
     app.setQuitOnLastWindowClosed(false);
 
@@ -93,7 +93,7 @@ int main(int argc, char **argv)
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addOptions({
-                          {{"r", "replace"}, i18nc("command line", "Replace the current Latte instance.")}
+                          {{"r", "replace"}, i18nc("command line", "Replace the current SynDock instance.")}
                           , {{"d", "debug"}, i18nc("command line", "Show the debugging messages on stdout.")}
                           , {{"cc", "clear-cache"}, i18nc("command line", "Clear qml cache. It can be useful after system upgrades.")}
                           , {"enable-autostart", i18nc("command line", "Enable autostart for this application")}
@@ -183,21 +183,21 @@ int main(int argc, char **argv)
     parser.process(app);
 
     if (parser.isSet(QStringLiteral("enable-autostart"))) {
-        Latte::Layouts::Importer::enableAutostart();
+        NSE::Layouts::Importer::enableAutostart();
     }
 
     if (parser.isSet(QStringLiteral("disable-autostart"))) {
-        Latte::Layouts::Importer::disableAutostart();
+        NSE::Layouts::Importer::disableAutostart();
         qGuiApp->exit();
         return 0;
     }
 
     //! print available-layouts
     if (parser.isSet(QStringLiteral("available-layouts"))) {
-        QStringList layouts = Latte::Layouts::Importer::availableLayouts();
+        QStringList layouts = NSE::Layouts::Importer::availableLayouts();
 
         if (layouts.count() > 0) {
-            qInfo() << i18n("Available layouts that can be used to start Latte:");
+            qInfo() << i18n("Available layouts that can be used to start SynDock:");
 
             for (const auto &layout : layouts) {
                 qInfo() << "     " << layout;
@@ -212,7 +212,7 @@ int main(int argc, char **argv)
 
     //! print available-layout-templates
     if (parser.isSet(QStringLiteral("available-layout-templates"))) {
-        QStringList templates = Latte::Layouts::Importer::availableLayoutTemplates();
+        QStringList templates = NSE::Layouts::Importer::availableLayoutTemplates();
 
         if (templates.count() > 0) {
             qInfo() << i18n("Available layout templates found in your system:");
@@ -230,7 +230,7 @@ int main(int argc, char **argv)
 
     //! print available-dock-templates
     if (parser.isSet(QStringLiteral("available-dock-templates"))) {
-        QStringList templates = Latte::Layouts::Importer::availableViewTemplates();
+        QStringList templates = NSE::Layouts::Importer::availableViewTemplates();
 
         if (templates.count() > 0) {
             qInfo() << i18n("Available dock templates found in your system:");
@@ -274,7 +274,7 @@ int main(int argc, char **argv)
     } else if (parser.isSet(QStringLiteral("layout"))) {
         layoutNameOnStartup = parser.value(QStringLiteral("layout"));
 
-        if (!Latte::Layouts::Importer::layoutExists(layoutNameOnStartup)) {
+        if (!NSE::Layouts::Importer::layoutExists(layoutNameOnStartup)) {
             qInfo() << i18nc("layout missing", "This layout doesn't exist in the system.");
             qGuiApp->exit();
             return 0;
@@ -287,7 +287,7 @@ int main(int argc, char **argv)
     if (username.isEmpty())
         username = qgetenv("USERNAME");
 
-    QString lockFileName { QDir::tempPath() + "/latte-dock." + username + ".lock" };
+    QString lockFileName { QDir::tempPath() + "/syndock." + username + ".lock" };
     QLockFile lockFile {lockFileName};
 
     int timeout {100};
@@ -306,7 +306,7 @@ int main(int argc, char **argv)
         if(lockErr != QLockFile::LockFailedError) {
             qInfo() << i18n("Failed to obtain the lock file:") << lockFileName;
         } else {
-          QDBusInterface iface("org.kde.lattedock", "/Latte", "",
+          QDBusInterface iface("org.syndromatic.SynDock", "/SynDock", "",
                                QDBusConnection::sessionBus());
           bool addview{parser.isSet(QStringLiteral("add-dock"))};
           bool importlayout{parser.isSet(QStringLiteral("import-layout"))};
@@ -351,7 +351,7 @@ int main(int argc, char **argv)
 
           if (!validaction) {
             qInfo() << i18n("An instance is already running!, use --replace to "
-                            "restart Latte");
+                            "restart SynDock");
           }
         }
 
@@ -361,7 +361,7 @@ int main(int argc, char **argv)
 
     //! clear-cache option
     if (parser.isSet(QStringLiteral("clear-cache"))) {
-        QDir cacheDir(QDir::homePath() + "/.cache/lattedock/qmlcache");
+        QDir cacheDir(QDir::homePath() + "/.cache/syndock/qmlcache");
 
         if (cacheDir.exists()) {
             cacheDir.removeRecursively();
@@ -371,7 +371,7 @@ int main(int argc, char **argv)
 
     //! import-full option
     if (parser.isSet(QStringLiteral("import-full"))) {
-        bool imported = Latte::Layouts::Importer::importHelper(parser.value(QStringLiteral("import-full")));
+        bool imported = NSE::Layouts::Importer::importHelper(parser.value(QStringLiteral("import-full")));
 
         if (!imported) {
             qInfo() << i18n("The configuration cannot be imported");
@@ -383,7 +383,7 @@ int main(int argc, char **argv)
     //! import-layout option
     if (parser.isSet(QStringLiteral("import-layout"))) {
         QString suggestedname = parser.isSet(QStringLiteral("suggested-layout-name")) ? parser.value(QStringLiteral("suggested-layout-name")) : QString();
-        QString importedLayout = Latte::Layouts::Importer::importLayoutHelper(parser.value(QStringLiteral("import-layout")), suggestedname);
+        QString importedLayout = NSE::Layouts::Importer::importLayoutHelper(parser.value(QStringLiteral("import-layout")), suggestedname);
 
         if (importedLayout.isEmpty()) {
             qInfo() << i18n("The layout cannot be imported");
@@ -396,22 +396,22 @@ int main(int argc, char **argv)
 
     //! memory usage option
     if (parser.isSet(QStringLiteral("multiple"))) {
-        memoryUsage = (int)(Latte::MemoryUsage::MultipleLayouts);
+        memoryUsage = (int)(NSE::MemoryUsage::MultipleLayouts);
     } else if (parser.isSet(QStringLiteral("single"))) {
-        memoryUsage = (int)(Latte::MemoryUsage::SingleLayout);
+        memoryUsage = (int)(NSE::MemoryUsage::SingleLayout);
     }
 
     //! add-dock usage option
     if (parser.isSet(QStringLiteral("add-dock"))) {
         QString viewTemplateName = parser.value(QStringLiteral("add-dock"));
-        QStringList viewTemplates = Latte::Layouts::Importer::availableViewTemplates();
+        QStringList viewTemplates = NSE::Layouts::Importer::availableViewTemplates();
 
         if (viewTemplates.contains(viewTemplateName)) {
             if (layoutNameOnStartup.isEmpty()) {
                 //! Clean layout template is applied and proper name is used
-                QString emptytemplatepath = Latte::Layouts::Importer::layoutTemplateSystemFilePath(Latte::Templates::EMPTYLAYOUTTEMPLATENAME);
+                QString emptytemplatepath = NSE::Layouts::Importer::layoutTemplateSystemFilePath(NSE::Templates::EMPTYLAYOUTTEMPLATENAME);
                 QString suggestedname = parser.isSet(QStringLiteral("suggested-layout-name")) ? parser.value(QStringLiteral("suggested-layout-name")) : viewTemplateName;
-                QString importedLayout = Latte::Layouts::Importer::importLayoutHelper(emptytemplatepath, suggestedname);
+                QString importedLayout = NSE::Layouts::Importer::importLayoutHelper(emptytemplatepath, suggestedname);
 
                 if (importedLayout.isEmpty()) {
                     qInfo() << i18n("The layout cannot be imported");
@@ -454,7 +454,7 @@ int main(int argc, char **argv)
     KCrash::setDrKonqiEnabled(true);
     KCrash::setFlags(KCrash::AutoRestart | KCrash::AlwaysDirectly);
 
-    Latte::Corona corona(defaultLayoutOnStartup, layoutNameOnStartup, addViewTemplateNameOnStartup, memoryUsage);
+    NSE::Corona corona(defaultLayoutOnStartup, layoutNameOnStartup, addViewTemplateNameOnStartup, memoryUsage);
     KDBusService service(KDBusService::Unique);
 
     return app.exec();
@@ -523,20 +523,17 @@ inline void filterDebugMessageOutput(QtMsgType type, const QMessageLogContext &c
 
 inline void configureAboutData()
 {
-    KAboutData about(QStringLiteral("lattedock")
-                     , QStringLiteral("Latte Dock")
+    KAboutData about(QStringLiteral("syndock")
+                     , QStringLiteral("SynDock")
                      , QStringLiteral(VERSION)
-                     , i18n("Latte is a dock based on plasma frameworks that provides an elegant and "
-                            "intuitive experience for your tasks and plasmoids. It animates its contents "
-                            "by using parabolic zoom effect and tries to be there only when it is needed."
-                            "\n\n\"Art in Coffee\"")
+                     , i18n("SynDock is a Plasma 6 dock for SynOS with layouts, indicators, tasks, and parabolic zoom.")
                      , KAboutLicense::GPL_V2
                      , QStringLiteral("\251 2016-2017 Michail Vourlakos, Smith AR"));
 
     about.setHomepage(WEBSITE);
-    about.setProgramLogo(QIcon::fromTheme(QStringLiteral("latte-dock")));
-    about.setDesktopFileName(QStringLiteral("latte-dock"));
-    about.setProductName(QByteArray("lattedock"));
+    about.setProgramLogo(QIcon::fromTheme(QStringLiteral("syndock")));
+    about.setDesktopFileName(QStringLiteral("syndock"));
+    about.setProductName(QByteArray("syndock"));
 
     // Authors
     about.addAuthor(QStringLiteral("Michail Vourlakos"), QString(), QStringLiteral("mvourlakos@gmail.com"));

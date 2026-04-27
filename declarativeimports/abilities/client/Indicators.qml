@@ -5,7 +5,7 @@
 
 import QtQuick 2.0
 
-import org.kde.latte.abilities.definition 0.1 as AbilityDefinition
+import org.syndromatic.syndock.abilities.definition 0.1 as AbilityDefinition
 
 import "./indicators" as LocalIndicator
 
@@ -26,7 +26,7 @@ AbilityDefinition.Indicators {
 
     readonly property AbilityDefinition.Indicators local: AbilityDefinition.Indicators {
         isEnabled: false
-        type: "org.kde.latte.default"
+        type: "org.syndromatic.syndock.default"
 
         info.needsIconColors: false
         info.needsMouseEventCoordinates: false

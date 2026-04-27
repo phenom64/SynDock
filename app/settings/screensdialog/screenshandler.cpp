@@ -18,7 +18,7 @@
 #include <KMessageBox>
 #include <kmessagebox.h>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 

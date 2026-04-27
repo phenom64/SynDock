@@ -6,17 +6,17 @@
 
 import QtQuick 2.7
 import QtQuick.Layouts 1.1
-import Qt5Compat.GraphicalEffects
+import org.syndromatic.syndock.effects 1.0
 
 import org.kde.plasma.plasmoid 2.0
 import org.kde.plasma.core 2.0 as PlasmaCore
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.kquickcontrolsaddons 2.0
 
-import org.kde.latte.core 0.2 as LatteCore
-import org.kde.latte.components 1.0 as LatteComponents
+import org.syndromatic.syndock.core 0.2 as LatteCore
+import org.syndromatic.syndock.components 1.0 as LatteComponents
 
-import org.kde.latte.abilities.items 0.1 as AbilityItem
+import org.syndromatic.syndock.abilities.items 0.1 as AbilityItem
 
 import "colorizer" as Colorizer
 import "communicator" as Communicator
@@ -99,8 +99,8 @@ Item {
     property bool isPlaceHolder: false
     property bool isPressed: viewSignalsConnector.pressed
     property bool isSeparator: applet && (applet.pluginName === "audoban.applet.separator"
-                                          || applet.pluginName === "org.kde.latte.separator")
-    property bool isSpacer: applet && (applet.pluginName === "org.kde.latte.spacer")
+                                          || applet.pluginName === "org.syndromatic.syndock.separator")
+    property bool isSpacer: applet && (applet.pluginName === "org.syndromatic.syndock.spacer")
     property bool isSystray: applet && (applet.pluginName === "org.kde.plasma.systemtray" || applet.pluginName === "org.nomad.systemtray" )
 
     property bool firstChildOfStartLayout: index === appletItem.layouter.startLayout.firstVisibleIndex
@@ -290,7 +290,7 @@ Item {
     property int internalWidthMargins: root.isVertical ? metrics.totals.thicknessEdges : 2 * lengthAppletPadding
     property int internalHeightMargins: root.isHorizontal ? root.metrics.totals.thicknessEdges : 2 * lengthAppletPadding
 
-    readonly property string pluginName: isInternalViewSplitter ? "org.kde.latte.splitter" : (applet ? applet.pluginName : "")
+    readonly property string pluginName: isInternalViewSplitter ? "org.syndromatic.syndock.splitter" : (applet ? applet.pluginName : "")
 
     //! are set by the indicator
     readonly property int iconOffsetX: indicatorBackLayer.level.requested.iconOffsetX
@@ -307,7 +307,7 @@ Item {
                                                    wrapper.height
 
     property Item applet: null
-    property Item latteStyleApplet: applet && ((applet.pluginName === "org.kde.latte.spacer") || (applet.pluginName === "org.kde.latte.separator")) ?
+    property Item latteStyleApplet: applet && ((applet.pluginName === "org.syndromatic.syndock.spacer") || (applet.pluginName === "org.syndromatic.syndock.separator")) ?
                                         (applet.children[0] ? applet.children[0] : null) : null
 
     property Item appletWrapper: wrapper.wrapperContainer

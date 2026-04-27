@@ -17,7 +17,7 @@
 // KDE
 #include <KConfigPropertyMap>
 
-namespace Latte{
+namespace NSE{
 namespace Containment{
 
 class LayoutManager : public QObject

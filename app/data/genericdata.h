@@ -13,7 +13,7 @@
 #include <QMetaType>
 #include <QString>
 
-namespace Latte {
+namespace NSE {
 namespace Data {
 
 class Generic
@@ -38,6 +38,6 @@ public:
 }
 }
 
-Q_DECLARE_METATYPE(Latte::Data::Generic)
+Q_DECLARE_METATYPE(NSE::Data::Generic)
 
 #endif

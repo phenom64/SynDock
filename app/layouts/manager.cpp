@@ -33,7 +33,7 @@
 #include <KNotification>
 #include <KPackage/Package>
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 
 Manager::Manager(QObject *parent)
@@ -41,7 +41,7 @@ Manager::Manager(QObject *parent)
       m_importer(new Importer(this)),
       m_syncedLaunchers(new SyncedLaunchers(this))
 {
-    m_corona = qobject_cast<Latte::Corona *>(parent);
+    m_corona = qobject_cast<NSE::Corona *>(parent);
     //! needs to be created AFTER corona assignment
     m_synchronizer = new Synchronizer(this);
 
@@ -53,8 +53,8 @@ Manager::Manager(QObject *parent)
 
 Manager::~Manager()
 {
-    if (memoryUsage() == Latte::MemoryUsage::MultipleLayouts) {
-        m_importer->setMultipleLayoutsStatus(Latte::MultipleLayouts::Paused);
+    if (memoryUsage() == NSE::MemoryUsage::MultipleLayouts) {
+        m_importer->setMultipleLayoutsStatus(NSE::MultipleLayouts::Paused);
     }
 
     m_importer->deleteLater();
@@ -80,7 +80,7 @@ void Manager::init()
 
         //startup create what is necessary....
         if (!layoutsDir.exists()) {
-            QDir(Latte::configPath()).mkdir("latte");
+            QDir(NSE::dataPath()).mkdir("syndock");
         }
 
         QString defpath = m_corona->templatesManager()->newLayout(i18n("My Layout"), i18n(Templates::DEFAULTLAYOUTTEMPLATENAME));
@@ -100,10 +100,10 @@ void Manager::init()
     }
 
     //! Custom Templates path creation
-    QDir localTemplatesDir(Latte::configPath() + "/latte/templates");
+    QDir localTemplatesDir(NSE::dataPath() + "/syndock/templates");
 
     if (!localTemplatesDir.exists()) {
-        QDir(Latte::configPath() + "/latte").mkdir("templates");
+        QDir(NSE::dataPath() + "/syndock").mkdir("templates");
     }
 
     //! Check if the multiple-layouts hidden file is present, add it if it isnt
@@ -121,7 +121,7 @@ void Manager::unload()
     m_synchronizer->unloadLayouts();
 }
 
-Latte::Corona *Manager::corona()
+NSE::Corona *Manager::corona()
 {
     return m_corona;
 }
@@ -163,7 +163,7 @@ QStringList Manager::currentLayoutsNames() const
 
 QStringList Manager::viewTemplateNames() const
 {
-    Latte::Data::GenericTable<Data::Generic> viewtemplates = m_corona->templatesManager()->viewTemplates();
+    NSE::Data::GenericTable<Data::Generic> viewtemplates = m_corona->templatesManager()->viewTemplates();
 
     QStringList names;
 
@@ -176,7 +176,7 @@ QStringList Manager::viewTemplateNames() const
 
 QStringList Manager::viewTemplateIds() const
 {
-    Latte::Data::GenericTable<Data::Generic> viewtemplates = m_corona->templatesManager()->viewTemplates();
+    NSE::Data::GenericTable<Data::Generic> viewtemplates = m_corona->templatesManager()->viewTemplates();
 
     QStringList ids;
 
@@ -187,15 +187,15 @@ QStringList Manager::viewTemplateIds() const
     return ids;
 }
 
-Latte::Data::LayoutIcon Manager::iconForLayout(const QString &storedLayoutName) const
+NSE::Data::LayoutIcon Manager::iconForLayout(const QString &storedLayoutName) const
 {
     Data::Layout l = m_synchronizer->data(storedLayoutName);
     return iconForLayout(l);
 }
 
-Latte::Data::LayoutIcon Manager::iconForLayout(const Data::Layout &layout) const
+NSE::Data::LayoutIcon Manager::iconForLayout(const Data::Layout &layout) const
 {
-    Latte::Data::LayoutIcon _icon;
+    NSE::Data::LayoutIcon _icon;
 
     if (!layout.icon.isEmpty()) {
         //! if there is specific icon set from the user for this layout we draw only that icon
@@ -206,7 +206,7 @@ Latte::Data::LayoutIcon Manager::iconForLayout(const Data::Layout &layout) const
 
     //! fallback icon: background image
     if (_icon.isEmpty()) {
-        QString colorPath = m_corona->kPackage().path() + "../../shells/org.kde.latte.shell/contents/images/canvas/";
+        QString colorPath = m_corona->kPackage().path() + "../../shells/org.syndromatic.syndock.shell/contents/images/canvas/";
 
         if (layout.backgroundStyle == Layout::PatternBackgroundStyle && layout.background.isEmpty()) {
             colorPath += "defaultcustomprint.jpg";
@@ -221,7 +221,7 @@ Latte::Data::LayoutIcon Manager::iconForLayout(const Data::Layout &layout) const
         }
     }
 
-    return Latte::Data::LayoutIcon();
+    return NSE::Data::LayoutIcon();
 }
 
 QList<CentralLayout *> Manager::currentLayouts() const
@@ -267,7 +267,7 @@ void Manager::loadLayoutOnStartup(QString layoutName)
 
 void Manager::moveView(QString originLayoutName, uint originViewId, QString destinationLayoutName)
 {
-    if (memoryUsage() != Latte::MemoryUsage::MultipleLayouts
+    if (memoryUsage() != NSE::MemoryUsage::MultipleLayouts
             || originLayoutName.isEmpty()
             || destinationLayoutName.isEmpty()
             || originViewId <= 0
@@ -283,7 +283,7 @@ void Manager::moveView(QString originLayoutName, uint originViewId, QString dest
     }
 
     Plasma::Containment *originviewcontainment = originlayout->containmentForId(originViewId);
-    Latte::View *originview = originlayout->viewForContainment(originViewId);
+    NSE::View *originview = originlayout->viewForContainment(originViewId);
 
     if (!originviewcontainment) {
         return;
@@ -403,7 +403,7 @@ void Manager::clearUnloadedContainmentsFromLinkedFile(QStringList containmentsId
 void Manager::showLatteSettingsDialog(int firstPage, bool toggleCurrentPage)
 {
     if (!m_latteSettingsDialog) {
-        m_latteSettingsDialog = new Latte::Settings::Dialog::SettingsDialog(nullptr, m_corona);
+        m_latteSettingsDialog = new NSE::Settings::Dialog::SettingsDialog(nullptr, m_corona);
     }
     m_latteSettingsDialog->show();
 

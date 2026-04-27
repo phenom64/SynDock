@@ -19,7 +19,7 @@ namespace Ui {
 class ViewsDialog;
 }
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Controller {
 class Layouts;
@@ -30,7 +30,7 @@ class ViewsHandler;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Dialog {
 
@@ -42,7 +42,7 @@ public:
     ViewsDialog(SettingsDialog *parent, Controller::Layouts *controller);
     ~ViewsDialog();
 
-    Latte::Corona *corona() const;
+    NSE::Corona *corona() const;
 
     Ui::ViewsDialog *ui() const;
     Controller::Layouts *layoutsController() const;

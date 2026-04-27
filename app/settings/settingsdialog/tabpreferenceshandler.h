@@ -20,7 +20,7 @@ namespace Ui {
 class SettingsDialog;
 }
 
-namespace Latte {
+namespace NSE {
 class Corona;
 namespace Settings {
 namespace Dialog {
@@ -29,7 +29,7 @@ class SettingsDialog;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Handler {
 
@@ -41,7 +41,7 @@ class TabPreferences : public Generic
 {
     Q_OBJECT
 public:
-    TabPreferences(Latte::Settings::Dialog::SettingsDialog *parent);
+    TabPreferences(NSE::Settings::Dialog::SettingsDialog *parent);
 
     bool hasChangedData() const override;
     bool inDefaultValues() const override;
@@ -65,9 +65,9 @@ private slots:
     void onActionsBtnPressed();
 
 private:
-    Latte::Settings::Dialog::SettingsDialog *m_parentDialog{nullptr};
+    NSE::Settings::Dialog::SettingsDialog *m_parentDialog{nullptr};
     Ui::SettingsDialog *m_ui{nullptr};
-    Latte::Corona *m_corona{nullptr};
+    NSE::Corona *m_corona{nullptr};
 
     QButtonGroup *m_parabolicSpreadButtons;
     QButtonGroup *m_thicknessMarginInfluenceButtons;

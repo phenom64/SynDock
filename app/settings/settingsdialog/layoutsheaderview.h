@@ -9,7 +9,7 @@
 // Qt
 #include <QHeaderView>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Layouts {
 

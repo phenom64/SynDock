@@ -17,7 +17,7 @@
 #include <QRadioButton>
 #include <QStyleOptionMenuItem>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace View {
 namespace Widget {
@@ -38,12 +38,12 @@ CustomMenuItemWidget::CustomMenuItemWidget(QAction* action, QWidget *parent)
     setMouseTracking(true);
 }
 
-void CustomMenuItemWidget::setScreen(const Latte::Data::Screen &screen)
+void CustomMenuItemWidget::setScreen(const NSE::Data::Screen &screen)
 {
     m_screen = screen;
 }
 
-void CustomMenuItemWidget::setView(const Latte::Data::View &view)
+void CustomMenuItemWidget::setView(const NSE::Data::View &view)
 {
     m_view = view;
 }
@@ -73,7 +73,7 @@ void CustomMenuItemWidget::paintEvent(QPaintEvent* e)
         opt.state |= QStyle::State_Selected;
     }
 
-    Latte::drawBackground(&painter, style(), opt);
+    NSE::drawBackground(&painter, style(), opt);
 
     //! radio button
     int radiosize = opt.rect.height();
@@ -89,11 +89,11 @@ void CustomMenuItemWidget::paintEvent(QPaintEvent* e)
 
     if (!m_screen.id.isEmpty()) {
         int maxiconsize = 26;
-        remained = Latte::remainedFromScreenDrawing(opt, m_screen.isScreensGroup(), maxiconsize);
-        QRect availableScreenRect = Latte::drawScreen(&painter, opt, m_screen.isScreensGroup(), m_screen.geometry, maxiconsize);
+        remained = NSE::remainedFromScreenDrawing(opt, m_screen.isScreensGroup(), maxiconsize);
+        QRect availableScreenRect = NSE::drawScreen(&painter, opt, m_screen.isScreensGroup(), m_screen.geometry, maxiconsize);
 
         if (!m_view.id.isEmpty()) {
-            Latte::drawView(&painter, opt, m_view, availableScreenRect);
+            NSE::drawView(&painter, opt, m_view, availableScreenRect);
         }
     }
 
@@ -116,7 +116,7 @@ void CustomMenuItemWidget::paintEvent(QPaintEvent* e)
     }
 
     //style()->drawControl(QStyle::CE_MenuItem, &opt, &painter, this);
-    Latte::drawFormattedText(&painter, opt);
+    NSE::drawFormattedText(&painter, opt);
 
     painter.restore();
 }

@@ -21,10 +21,10 @@
 #include <KWayland/Client/plasmashell.h>
 #include <KPackage/Package>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-CanvasConfigView::CanvasConfigView(Latte::View *view, PrimaryConfigView *parent)
+CanvasConfigView::CanvasConfigView(NSE::View *view, PrimaryConfigView *parent)
     : SubConfigView(view, QString("#canvasconfigview#"), false),
       m_parent(parent)
 {
@@ -46,7 +46,7 @@ void CanvasConfigView::init()
     setSource(source);
     syncGeometry();
 
-    if (m_parent && KWindowSystem::isPlatformX11()) {
+    if (m_parent && false) {
         m_parent->requestActivate();
     }
 }
@@ -56,7 +56,7 @@ QRect CanvasConfigView::geometryWhenVisible() const
     return m_geometryWhenVisible;
 }
 
-void CanvasConfigView::initParentView(Latte::View *view)
+void CanvasConfigView::initParentView(NSE::View *view)
 {
     SubConfigView::initParentView(view);
 
@@ -94,7 +94,7 @@ void CanvasConfigView::syncGeometry()
 
     //! after placement request to activate the main config window in order to avoid
     //! rare cases of closing settings window from secondaryConfigView->focusOutEvent
-    if (m_parent && KWindowSystem::isPlatformX11()) {
+    if (m_parent && false) {
         m_parent->requestActivate();
     }
 }

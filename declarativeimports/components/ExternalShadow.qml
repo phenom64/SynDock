@@ -6,7 +6,7 @@
 import QtQuick 2.1
 
 import org.kde.plasma.core 2.0 as PlasmaCore
-import Qt5Compat.GraphicalEffects
+import org.syndromatic.syndock.effects 1.0
 
 Item{
     id: shadowRoot

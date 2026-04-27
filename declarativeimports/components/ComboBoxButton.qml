@@ -10,7 +10,7 @@ import QtQuick.Layouts 1.3
 import org.kde.plasma.components 3.0 as PlasmaComponents
 import org.kde.plasma.components 3.0 as PlasmaComponents3
 
-import org.kde.latte.components 1.0 as LatteComponents
+import org.syndromatic.syndock.components 1.0 as LatteComponents
 
 Rectangle {
     id: root

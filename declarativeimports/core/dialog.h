@@ -18,7 +18,7 @@
 #include <Plasma/Plasma>
 #include <PlasmaQuick/Dialog>
 
-namespace Latte {
+namespace NSE {
 namespace Quick {
 
 class Dialog : public PlasmaQuick::Dialog {

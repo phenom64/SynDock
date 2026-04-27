@@ -11,7 +11,7 @@
 #include <QMetaEnum>
 #include <QMetaType>
 
-namespace Latte {
+namespace NSE {
 namespace Containment {
 
 class Types

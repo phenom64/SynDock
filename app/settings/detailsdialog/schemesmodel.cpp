@@ -17,7 +17,7 @@
 // KDE
 #include <KLocalizedString>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 namespace Model {
 
@@ -49,7 +49,7 @@ void Schemes::initSchemes()
     QString currentSchemePath = WindowSystem::SchemeColors::possibleSchemeFile(Data::Layout::DEFAULTSCHEMEFILE);
     insertSchemeInList(currentSchemePath);
 
-    QStringList standardPaths = Latte::Layouts::Importer::standardPathsFor("color-schemes");
+    QStringList standardPaths = NSE::Layouts::Importer::standardPathsFor("color-schemes");
 
     QStringList registeredSchemes;
 

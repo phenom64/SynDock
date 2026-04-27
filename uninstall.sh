@@ -1,7 +1,6 @@
 #!/bin/bash
 #Author: Michail Vourlakos
-#Summary: Uninstallation script for Latte Dock Panel
-#This script was written and tested on openSuSe Leap 42.1
+#Summary: Uninstallation script for SynDock
 
 if [ -f build/install_manifest.txt ]; then
    echo "Uninstallation file exists..."

@@ -37,7 +37,7 @@ enum SessionType
     AlternativeSession
 };
 
-namespace Latte {
+namespace NSE {
 namespace Layouts {
 
 Importer::Importer(QObject *parent)
@@ -54,17 +54,17 @@ Importer::~Importer()
 
 bool Importer::updateOldConfiguration()
 {
-    QFile oldAppletsFile(Latte::configPath() + "/lattedock-appletsrc");
+    QFile oldAppletsFile(NSE::configPath() + "/syndock-appletsrc");
 
     if (!oldAppletsFile.exists()) {
         return false;
     }
 
     //! import standard old configuration and create the relevant layouts
-    importOldLayout(Latte::configPath() + "/lattedock-appletsrc", i18n("My Layout"));
-    importOldLayout(Latte::configPath() + "/lattedock-appletsrc", i18n("Alternative"), true);
+    importOldLayout(NSE::configPath() + "/syndock-appletsrc", i18n("My Layout"));
+    importOldLayout(NSE::configPath() + "/syndock-appletsrc", i18n("Alternative"), true);
 
-    QFile extFile(Latte::configPath() + "/lattedockextrc");
+    QFile extFile(NSE::configPath() + "/syndockextrc");
 
     //! import also the old user layouts into the new architecture
     if (extFile.exists()) {
@@ -109,10 +109,10 @@ bool Importer::importOldLayout(QString oldAppletsPath, QString newName, bool alt
 
         bool shouldImport = false;
 
-        if (plugin == QLatin1String("org.kde.latte.containment") && session == DefaultSession && !alternative) {
+        if (plugin == QLatin1String("org.syndromatic.syndock.containment") && session == DefaultSession && !alternative) {
             qDebug() << containmentId << " - " << plugin << " - " << session;
             shouldImport = true;
-        } else if (plugin == QLatin1String("org.kde.latte.containment") && session == AlternativeSession && alternative) {
+        } else if (plugin == QLatin1String("org.syndromatic.syndock.containment") && session == AlternativeSession && alternative) {
             qDebug() << containmentId << " - " << plugin << " - " << session;
             shouldImport = true;
         }
@@ -259,7 +259,7 @@ QString Importer::layoutCanBeImported(QString oldAppletsPath, QString newName, Q
     QDir layoutDir(exportDirectory.isNull() ? layoutUserDir() : exportDirectory);
 
     if (!layoutDir.exists() && exportDirectory.isNull()) {
-        QDir(Latte::configPath()).mkdir("latte");
+        QDir(NSE::dataPath()).mkdir("syndock");
     }
 
     //! set up the new layout name
@@ -319,8 +319,8 @@ bool Importer::importOldConfiguration(QString oldConfigPath, QString newName)
         for(const auto &name : rootDir->entries()) {
             auto fileEntry = rootDir->file(name);
 
-            if (fileEntry && (fileEntry->name() == QLatin1String("lattedockrc")
-                              || fileEntry->name() == QLatin1String("lattedock-appletsrc"))) {
+            if (fileEntry && (fileEntry->name() == QLatin1String("syndockrc")
+                              || fileEntry->name() == QLatin1String("syndock-appletsrc"))) {
                 if (!fileEntry->copyTo(tempDir.absolutePath())) {
                     qInfo() << i18nc("import/export config", "The extracted file could not be copied!!!");
                     archive.close();
@@ -339,8 +339,8 @@ bool Importer::importOldConfiguration(QString oldConfigPath, QString newName)
     }
 
     //! only if the above has passed we must process the files
-    QString appletsPath(tempDir.absolutePath() + "/lattedock-appletsrc");
-    QString screensPath(tempDir.absolutePath() + "/lattedockrc");
+    QString appletsPath(tempDir.absolutePath() + "/syndock-appletsrc");
+    QString screensPath(tempDir.absolutePath() + "/syndockrc");
 
     if (!QFile(appletsPath).exists() || !QFile(screensPath).exists()) {
         return false;
@@ -390,14 +390,14 @@ bool Importer::exportFullConfiguration(QString file)
         return false;
     }
 
-    archive.addLocalFile(QString(Latte::configPath() + "/lattedockrc"), QStringLiteral("lattedockrc"));
+    archive.addLocalFile(QString(NSE::configPath() + "/syndockrc"), QStringLiteral("syndockrc"));
 
     for(const auto &layoutName : availableLayouts()) {
         archive.addLocalFile(layoutUserFilePath(layoutName), QString("latte/" + layoutName + ".layout.latte"));
     }
 
     //! custom templates
-    QDir templatesDir(Latte::configPath() + "/latte/templates");
+    QDir templatesDir(NSE::dataPath() + "/syndock/templates");
     QStringList filters;
     filters.append(QString("*.layout.latte"));
     QStringList templates = templatesDir.entryList(filters, QDir::Files | QDir::Hidden | QDir::NoSymLinks);
@@ -462,7 +462,7 @@ Importer::LatteFileVersion Importer::fileVersion(QString file)
 
 
     //rc file
-    QString rcFile(archiveTempDir.path() + "/lattedockrc");
+    QString rcFile(archiveTempDir.path() + "/syndockrc");
 
     if (QFile(rcFile).exists()) {
         KSharedConfigPtr lConfig = KSharedConfig::openConfig(rcFile);
@@ -477,7 +477,7 @@ Importer::LatteFileVersion Importer::fileVersion(QString file)
     }
 
     //applets file
-    QString appletsFile(archiveTempDir.path() + "/lattedock-appletsrc");
+    QString appletsFile(archiveTempDir.path() + "/syndock-appletsrc");
 
     if (QFile(appletsFile).exists() && version1rc) {
         KSharedConfigPtr lConfig = KSharedConfig::openConfig(appletsFile);
@@ -528,29 +528,29 @@ bool Importer::importHelper(QString fileName)
         latteDir.removeRecursively();
     }
 
-    archive.directory()->copyTo(Latte::configPath());
+    archive.directory()->copyTo(NSE::configPath());
 
     return true;
 }
 
 bool Importer::isAutostartEnabled()
 {
-    QFile autostartFile(Latte::configPath() + "/autostart/org.kde.latte-dock.desktop");
+    QFile autostartFile(NSE::configPath() + "/autostart/org.syndromatic.syndock.desktop");
     return autostartFile.exists();
 }
 
 void Importer::enableAutostart()
 {
     //! deprecated old file
-    QFile oldAutostartFile(Latte::configPath() + "/autostart/latte-dock.desktop");
+    QFile oldAutostartFile(NSE::configPath() + "/autostart/syndock.desktop");
 
     if (oldAutostartFile.exists()) {
         //! remove deprecated file
         oldAutostartFile.remove();
     }
 
-    QFile autostartFile(Latte::configPath() + "/autostart/org.kde.latte-dock.desktop");
-    QFile metaFile(standardPath("applications/org.kde.latte-dock.desktop", false));
+    QFile autostartFile(NSE::configPath() + "/autostart/org.syndromatic.syndock.desktop");
+    QFile metaFile(standardPath("applications/org.syndromatic.syndock.desktop", false));
 
     if (autostartFile.exists()) {
         //! if autostart file already exists, do nothing
@@ -559,9 +559,9 @@ void Importer::enableAutostart()
 
     if (metaFile.exists()) {
         //! check if autostart folder exists and create otherwise
-        QDir autostartDir(Latte::configPath() + "/autostart");
+        QDir autostartDir(NSE::configPath() + "/autostart");
         if (!autostartDir.exists()) {
-            QDir configDir(Latte::configPath());
+            QDir configDir(NSE::configPath());
             configDir.mkdir("autostart");
         }
 
@@ -571,14 +571,14 @@ void Importer::enableAutostart()
 
 void Importer::disableAutostart()
 {
-    QFile oldAutostartFile(Latte::configPath() + "/autostart/latte-dock.desktop");
+    QFile oldAutostartFile(NSE::configPath() + "/autostart/syndock.desktop");
 
     if (oldAutostartFile.exists()) {
         //! remove deprecated file
         oldAutostartFile.remove();
     }
 
-    QFile autostartFile(Latte::configPath() + "/autostart/org.kde.latte-dock.desktop");
+    QFile autostartFile(NSE::configPath() + "/autostart/org.syndromatic.syndock.desktop");
 
     if (autostartFile.exists()) {
         autostartFile.remove();
@@ -617,7 +617,7 @@ QString Importer::importLayoutHelper(const QString &fileName, const QString &sug
     QDir localLayoutsDir(layoutUserDir());
 
     if (!localLayoutsDir.exists()) {
-        QDir(Latte::configPath()).mkdir("latte");
+        QDir(NSE::dataPath()).mkdir("syndock");
     }
 
     QFile(fileName).copy(newPath);
@@ -719,7 +719,7 @@ bool Importer::layoutExists(QString layoutName)
 
 QString Importer::layoutUserDir()
 {
-    return QString(Latte::configPath() + "/latte");
+    return QString(NSE::dataPath() + "/syndock");
 }
 
 QString Importer::layoutUserFilePath(QString layoutName)
@@ -731,7 +731,7 @@ QString Importer::systemShellDataPath()
 {
     QStringList paths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
     QString rootpath = paths.count() > 0 ? paths[paths.count()-1] : "/usr/share";
-    return  rootpath + "/plasma/shells/org.kde.latte.shell";
+    return  rootpath + "/plasma/shells/org.syndromatic.syndock.shell";
 }
 
 QString Importer::layoutTemplateSystemFilePath(const QString &name)
@@ -759,19 +759,19 @@ QString Importer::uniqueLayoutName(QString name)
     return name;
 }
 
-Latte::MultipleLayouts::Status Importer::multipleLayoutsStatus()
+NSE::MultipleLayouts::Status Importer::multipleLayoutsStatus()
 {
     QString linkedFilePath = layoutUserFilePath(Layout::MULTIPLELAYOUTSHIDDENNAME);
     if (!QFileInfo(linkedFilePath).exists()) {
-        return Latte::MultipleLayouts::Uninitialized;
+        return NSE::MultipleLayouts::Uninitialized;
     }
 
     KSharedConfigPtr filePtr = KSharedConfig::openConfig(linkedFilePath);
     KConfigGroup multipleSettings = KConfigGroup(filePtr, "MultipleLayoutsSettings");
-    return static_cast<Latte::MultipleLayouts::Status>(multipleSettings.readEntry("status", (int)Latte::MultipleLayouts::Uninitialized));
+    return static_cast<NSE::MultipleLayouts::Status>(multipleSettings.readEntry("status", (int)NSE::MultipleLayouts::Uninitialized));
 }
 
-void Importer::setMultipleLayoutsStatus(const Latte::MultipleLayouts::Status &status)
+void Importer::setMultipleLayoutsStatus(const NSE::MultipleLayouts::Status &status)
 {
     QString linkedFilePath = layoutUserFilePath(Layout::MULTIPLELAYOUTSHIDDENNAME);
 

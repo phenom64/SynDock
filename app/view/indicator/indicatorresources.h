@@ -9,13 +9,13 @@
 // Qt
 #include <QObject>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 class Indicator;
 }
 }
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 namespace IndicatorPart {
 

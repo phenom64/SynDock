@@ -24,16 +24,16 @@
 #include <KPluginMetaData>
 #include <PlasmaQuick/SharedQmlEngine>
 
-namespace Latte {
+namespace NSE {
 namespace ViewPart {
 
-Indicator::Indicator(Latte::View *parent)
+Indicator::Indicator(NSE::View *parent)
     : QObject(parent),
       m_view(parent),
       m_info(new IndicatorPart::Info(this)),
       m_resources(new IndicatorPart::Resources(this))
 {
-    m_corona = qobject_cast<Latte::Corona *>(m_view->corona());
+    m_corona = qobject_cast<NSE::Corona *>(m_view->corona());
     loadConfig();
 
     connect(this, &Indicator::enabledChanged, this, &Indicator::saveConfig);
@@ -41,15 +41,15 @@ Indicator::Indicator(Latte::View *parent)
 
     connect(m_view->extendedInterface(), &ContainmentInterface::hasLatteTasksChanged, this, &Indicator::latteTasksArePresentChanged);
 
-    connect(m_view, &Latte::View::indicatorPluginChanged, [this](const QString &indicatorId) {
+    connect(m_view, &NSE::View::indicatorPluginChanged, [this](const QString &indicatorId) {
         if (m_corona && m_corona->indicatorFactory()->isCustomType(indicatorId)) {
             emit customPluginsChanged();
         }
     });
 
-    connect(m_view, &Latte::View::indicatorPluginRemoved, [this](const QString &indicatorId) {
+    connect(m_view, &NSE::View::indicatorPluginRemoved, [this](const QString &indicatorId) {
         if (m_corona && m_type == indicatorId && !m_corona->indicatorFactory()->pluginExists(indicatorId)) {
-            setType("org.kde.latte.default");
+            setType("org.syndromatic.syndock.default");
         }
 
         if (m_corona && m_corona->indicatorFactory()->isCustomType(indicatorId)) {
@@ -140,11 +140,11 @@ void Indicator::setPluginIsReady(bool ready)
 
 int Indicator::index(const QString &type)
 {
-    if (type == QLatin1String("org.kde.latte.default")) {
+    if (type == QLatin1String("org.syndromatic.syndock.default")) {
         return 0;
-    } else if (type == QLatin1String("org.kde.latte.plasma")) {
+    } else if (type == QLatin1String("org.syndromatic.syndock.plasma")) {
         return 1;
-    } else if (type == QLatin1String("org.kde.latte.plasmatabstyle")) {
+    } else if (type == QLatin1String("org.syndromatic.syndock.plasmatabstyle")) {
         return 2;
     } else if (customPluginIds().contains(type)){
         return 3 + customPluginIds().indexOf(type);
@@ -256,9 +256,9 @@ void Indicator::load(QString type)
 
         //! create all indicators with the new type
         setPluginIsReady(true);
-    } else if (type!="org.kde.latte.default") {
+    } else if (type!="org.syndromatic.syndock.default") {
         qDebug() << " Indicator metadata are not valid : " << type;
-        setType("org.kde.latte.default");
+        setType("org.syndromatic.syndock.default");
     }
 }
 
@@ -266,7 +266,7 @@ void Indicator::updateComponent()
 {
     auto prevComponent = m_component;
 
-    QString uiPath = m_metadata.value("X-Latte-MainScript");
+    QString uiPath = m_metadata.value("X-SynDock-MainScript");
 
     if (!uiPath.isEmpty()) {
         uiPath = m_pluginPath + "/package/" + uiPath;
@@ -282,8 +282,8 @@ void Indicator::loadPlasmaComponent()
 {
     auto prevComponent = m_plasmaComponent;
 
-    KPluginMetaData metadata = m_corona->indicatorFactory()->metadata("org.kde.latte.plasmatabstyle");
-    QString uiPath = metadata.value("X-Latte-MainScript");
+    KPluginMetaData metadata = m_corona->indicatorFactory()->metadata("org.syndromatic.syndock.plasmatabstyle");
+    QString uiPath = metadata.value("X-SynDock-MainScript");
 
     if (!uiPath.isEmpty()) {
         uiPath = QFileInfo(metadata.fileName()).absolutePath() + "/package/" + uiPath;
@@ -307,7 +307,7 @@ void Indicator::updateScheme()
     auto prevConfigLoader = m_configLoader;
     auto prevConfiguration = m_configuration;
 
-    QString xmlPath = m_metadata.value("X-Latte-ConfigXml");
+    QString xmlPath = m_metadata.value("X-SynDock-ConfigXml");
 
     if (!xmlPath.isEmpty()) {
         QFile file(m_pluginPath + "/package/" + xmlPath);
@@ -334,7 +334,7 @@ void Indicator::loadConfig()
     auto config = m_view->containment()->config().group("Indicator");
     m_customType = config.readEntry("customType", QString());
     m_enabled = config.readEntry("enabled", true);
-    m_type = config.readEntry("type", "org.kde.latte.default");
+    m_type = config.readEntry("type", "org.syndromatic.syndock.default");
 }
 
 void Indicator::saveConfig()

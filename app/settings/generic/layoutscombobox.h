@@ -13,7 +13,7 @@
 #include <QComboBox>
 #include <QPaintEvent>
 
-namespace Latte {
+namespace NSE {
 namespace Settings {
 
 class LayoutsComboBox : public QComboBox
@@ -22,14 +22,14 @@ class LayoutsComboBox : public QComboBox
 public:
   LayoutsComboBox(QWidget *parent = nullptr);
 
-  Latte::Data::LayoutIcon layoutIcon() const;
-  void setLayoutIcon(const Latte::Data::LayoutIcon &icon);
+  NSE::Data::LayoutIcon layoutIcon() const;
+  void setLayoutIcon(const NSE::Data::LayoutIcon &icon);
 
 protected:
   void paintEvent(QPaintEvent *event) override;
 
 private:
-  Latte::Data::LayoutIcon m_layoutIcon;
+  NSE::Data::LayoutIcon m_layoutIcon;
 
 };
 
