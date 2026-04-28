@@ -77,7 +77,9 @@ KSvg.FrameSvgItem {
         containment.parent = containmentParent;
         containment.visible = true;
         containment.anchors.fill = containmentParent;
-        containment.locationChanged.connect(adjustPrefix);
+        if (containment.locationChanged) {
+            containment.locationChanged.connect(adjustPrefix);
+        }
         adjustPrefix();
 
         for(var i=0; i<containment.children.length; ++i){

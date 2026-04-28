@@ -40,6 +40,7 @@
 #include <QDebug>
 #include <QLatin1String>
 #include <QQuickView>
+#include <QScreen>
 #include <QTimer>
 
 // KDE
@@ -184,6 +185,50 @@ int exclusiveZoneFor(const QRect &rect, Plasma::Types::Location location)
     default:
         return 0;
     }
+}
+
+Plasma::Types::Location layerShellLocationFor(NSE::View *view)
+{
+    if (!view) {
+        return Plasma::Types::BottomEdge;
+    }
+
+    switch (view->location()) {
+    case Plasma::Types::TopEdge:
+    case Plasma::Types::BottomEdge:
+    case Plasma::Types::LeftEdge:
+    case Plasma::Types::RightEdge:
+        return view->location();
+    default:
+        return Plasma::Types::BottomEdge;
+    }
+}
+
+void ensureLayerShellWindowHasInitialSize(QWindow *window, Plasma::Types::Location location)
+{
+    if (!window || (window->width() > 0 && window->height() > 0)) {
+        return;
+    }
+
+    const QSize screenSize = window->screen() ? window->screen()->size() : QSize(1, 1);
+    QSize size = window->size();
+
+    switch (location) {
+    case Plasma::Types::LeftEdge:
+    case Plasma::Types::RightEdge:
+        size.setWidth(qMax(1, size.width()));
+        size.setHeight(qMax(1, screenSize.height()));
+        break;
+    case Plasma::Types::TopEdge:
+    case Plasma::Types::BottomEdge:
+    default:
+        size.setWidth(qMax(1, screenSize.width()));
+        size.setHeight(qMax(1, size.height()));
+        break;
+    }
+
+    window->setMinimumSize(size);
+    window->resize(size);
 }
 }
 
@@ -337,10 +382,16 @@ void WaylandInterface::setViewExtraFlags(QObject *view, bool isPanelWindow, NSE:
     }
 
     QWindow *window = latteView ? static_cast<QWindow *>(latteView) : qobject_cast<QWindow *>(view);
-    LayerShellQt::Window *layerWindow = window ? LayerShellQt::Window::get(window) : nullptr;
+    LayerShellQt::Window *layerWindow = nullptr;
+
+    if (latteView) {
+        const Plasma::Types::Location location = layerShellLocationFor(latteView);
+        ensureLayerShellWindowHasInitialSize(window, location);
+        layerWindow = window ? LayerShellQt::Window::get(window) : nullptr;
+    }
 
     if (layerWindow) {
-        const Plasma::Types::Location location = latteView ? latteView->location() : Plasma::Types::BottomEdge;
+        const Plasma::Types::Location location = layerShellLocationFor(latteView);
         layerWindow->setScope(QStringLiteral("syndock"));
         layerWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityNone);
         layerWindow->setActivateOnShow(false);

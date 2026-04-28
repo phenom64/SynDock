@@ -8,6 +8,7 @@ MultiEffect {
     property real horizontalOffset: 0
     property real verticalOffset: 0
     property bool cached: false
+    property bool fast: false
 
     shadowEnabled: true
     shadowBlur: Math.max(0, radius) / 64
