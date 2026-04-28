@@ -536,7 +536,7 @@ ContainmentItem {
     }
 
     Component.onDestruction: {
-        console.debug("Destroying Latte Dock Containment ui...");
+        console.debug("Destroying SynDock Containment ui...");
 
         layouter.appletsInParentChange = true;
         fastLayoutManager.save();

@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2019 Michail Vourlakos <mvourlakos@gmail.com>
 
@@ -859,13 +879,17 @@ void GenericLayout::addView(Plasma::Containment *containment)
     qDebug().noquote() << "Adding View: Called for layout:" << m_layoutName << "with m_containments.size() ::" << m_containments.size();
 
     if (!containment || !m_corona || !containment->pluginMetaData().isValid()) {
-        qWarning() << "Adding View: The requested containment plugin can not be located or loaded";
+        qWarning() << "SynDock startup: requested containment plugin can not be located or loaded"
+                   << (containment ? containment->pluginMetaData().pluginId() : QStringLiteral("<null containment>"));
         return;
     }
 
     qDebug() << "Adding View:" << containment->id() << "- Step 1...";
 
     if (!Layouts::Storage::self()->isLatteContainment(containment)) {
+        qWarning() << "SynDock startup: containment is not a SynDock containment, skipping view"
+                   << containment->pluginMetaData().pluginId()
+                   << "id" << containment->id();
         return;
     }
 

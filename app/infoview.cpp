@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
     SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
@@ -25,7 +45,6 @@
 #include <KWindowSystem>
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/surface.h>
-#include <KX11Extras>
 
 namespace NSE {
 
@@ -212,7 +231,7 @@ bool InfoView::event(QEvent *e)
 
 void InfoView::setOnActivities(QStringList activities)
 {
-    KX11Extras::setOnActivities(winId(), activities);
+    Q_UNUSED(activities);
 }
 
 }

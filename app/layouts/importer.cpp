@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2017 Smith AR <audoban@openmailbox.org>
     SPDX-FileCopyrightText: 2017 Michail Vourlakos <mvourlakos@gmail.com>
@@ -274,18 +294,18 @@ QString Importer::layoutCanBeImported(QString oldAppletsPath, QString newName, Q
         }
     }
 
-    QString newLayoutPath = layoutDir.absolutePath() + "/" + newName + ".layout.latte";
+    QString newLayoutPath = layoutDir.absolutePath() + "/" + newName + Templates::Manager::layoutTemplateExtension();
     QFile newLayoutFile(newLayoutPath);
 
     QStringList filter;
-    filter.append(QString(newName + "*.layout.latte"));
+    filter.append(QString(newName + "*") + Templates::Manager::layoutTemplateExtension());
     QStringList files = layoutDir.entryList(filter, QDir::Files | QDir::NoSymLinks);
 
     //! if the newLayout already exists provide a newName that doesn't
     if (files.count() >= 1) {
         int newCounter = files.count() + 1;
 
-        newLayoutPath = layoutDir.absolutePath() + "/" + newName + "-" + QString::number(newCounter) + ".layout.latte";
+        newLayoutPath = layoutDir.absolutePath() + "/" + newName + "-" + QString::number(newCounter) + Templates::Manager::layoutTemplateExtension();
     }
 
     return newLayoutPath;
@@ -393,27 +413,27 @@ bool Importer::exportFullConfiguration(QString file)
     archive.addLocalFile(QString(NSE::configPath() + "/syndockrc"), QStringLiteral("syndockrc"));
 
     for(const auto &layoutName : availableLayouts()) {
-        archive.addLocalFile(layoutUserFilePath(layoutName), QString("latte/" + layoutName + ".layout.latte"));
+        archive.addLocalFile(layoutUserFilePath(layoutName), QString("syndock/" + layoutName + Templates::Manager::layoutTemplateExtension()));
     }
 
     //! custom templates
     QDir templatesDir(NSE::dataPath() + "/syndock/templates");
     QStringList filters;
-    filters.append(QString("*.layout.latte"));
+    filters.append(QString("*") + Templates::Manager::layoutTemplateExtension());
     QStringList templates = templatesDir.entryList(filters, QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
     for (int i=0; i<templates.count(); ++i) {
         QString templatePath = templatesDir.path() + "/" + templates[i];
-        archive.addLocalFile(templatePath, QString("latte/templates/" + templates[i]));
+        archive.addLocalFile(templatePath, QString("syndock/templates/" + templates[i]));
     }
 
     filters.clear();
-    filters.append(QString("*.view.latte"));
+    filters.append(QString("*") + Templates::Manager::viewTemplateExtension());
     templates = templatesDir.entryList(filters, QDir::Files | QDir::Hidden | QDir::NoSymLinks);
 
     for (int i=0; i<templates.count(); ++i) {
         QString templatePath = templatesDir.path() + "/" + templates[i];
-        archive.addLocalFile(templatePath, QString("latte/templates/" + templates[i]));
+        archive.addLocalFile(templatePath, QString("syndock/templates/" + templates[i]));
     }
 
     archive.close();
@@ -426,7 +446,7 @@ Importer::LatteFileVersion Importer::fileVersion(QString file)
     if (!QFile::exists(file))
         return UnknownFileType;
 
-    if (file.endsWith(".layout.latte")) {
+    if (file.endsWith(Templates::Manager::layoutTemplateExtension())) {
         KSharedConfigPtr lConfig = KSharedConfig::openConfig(QFileInfo(file).absoluteFilePath());
         KConfigGroup layoutGroup = KConfigGroup(lConfig, "LayoutSettings");
         int version = layoutGroup.readEntry("version", 1);
@@ -635,7 +655,7 @@ QStringList Importer::availableLayouts()
 {
     QDir layoutDir(layoutUserDir());
     QStringList filter;
-    filter.append(QString("*.layout.latte"));
+    filter.append(QString("*") + Templates::Manager::layoutTemplateExtension());
     QStringList files = layoutDir.entryList(filter, QDir::Files | QDir::NoSymLinks);
 
     QStringList layoutNames;
@@ -653,7 +673,7 @@ QStringList Importer::availableViewTemplates()
 
     QDir localDir(layoutUserDir() + "/templates");
     QStringList filter;
-    filter.append(QString("*.view.latte"));
+    filter.append(QString("*") + Templates::Manager::viewTemplateExtension());
     QStringList files = localDir.entryList(filter, QDir::Files | QDir::NoSymLinks);
 
     for(const auto &file : files) {
@@ -679,7 +699,7 @@ QStringList Importer::availableLayoutTemplates()
 
     QDir localDir(layoutUserDir() + "/templates");
     QStringList filter;
-    filter.append(QString("*.layout.latte"));
+    filter.append(QString("*") + Templates::Manager::layoutTemplateExtension());
     QStringList files = localDir.entryList(filter, QDir::Files | QDir::NoSymLinks);
 
     for(const auto &file : files) {
@@ -724,19 +744,24 @@ QString Importer::layoutUserDir()
 
 QString Importer::layoutUserFilePath(QString layoutName)
 {
-    return QString(layoutUserDir() + "/" + layoutName + ".layout.latte");
+    return QString(layoutUserDir() + "/" + layoutName + Templates::Manager::layoutTemplateExtension());
 }
 
 QString Importer::systemShellDataPath()
 {
-    QStringList paths = QStandardPaths::standardLocations(QStandardPaths::GenericDataLocation);
-    QString rootpath = paths.count() > 0 ? paths[paths.count()-1] : "/usr/share";
-    return  rootpath + "/plasma/shells/org.syndromatic.syndock.shell";
+    const QString shellPath = standardPath(QStringLiteral("plasma/shells/org.syndromatic.syndock.shell"));
+
+    if (!shellPath.isEmpty()) {
+        return shellPath;
+    }
+
+    qWarning() << "SynDock layouts: system shell package path was not found in XDG data locations";
+    return QStringLiteral("/usr/share/plasma/shells/org.syndromatic.syndock.shell");
 }
 
 QString Importer::layoutTemplateSystemFilePath(const QString &name)
 {
-    return systemShellDataPath() + "/contents/templates/" + name + ".layout.latte";
+    return systemShellDataPath() + "/contents/templates/" + name + Templates::Manager::layoutTemplateExtension();
 }
 
 QString Importer::uniqueLayoutName(QString name)

@@ -1,7 +1,7 @@
 # SynDock
 
 SynDock is the SynOS dock for KDE Plasma 6. It is currently being reset from
-KDE Latte Dock's `work/plasma6` branch and ported for SynOS Canora 1.0.
+KDE SynDock's `work/plasma6` branch and ported for SynOS Canora 1.0.
 
 The target runtime is:
 
@@ -10,7 +10,7 @@ The target runtime is:
 - KDE Frameworks 6.24.0
 - Wayland only
 
-The first goal is functional parity with Latte Dock on Plasma 6: layouts,
+The first goal is functional parity with SynDock on Plasma 6: layouts,
 indicators, templates, task grouping, parabolic zoom, auto-hide and dodge modes,
 multi-screen handling, shortcuts, and settings dialogs. Visual redesign work is
 intentionally secondary until the port builds and runs reliably.
@@ -36,7 +36,7 @@ ninja -C build
 
 ## Migration
 
-Latte Dock configs can be copied into SynDock locations with:
+SynDock configs can be copied into SynDock locations with:
 
 ```sh
 tools/migrate-latte-config.py --dry-run

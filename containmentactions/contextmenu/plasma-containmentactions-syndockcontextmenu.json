@@ -2,6 +2,14 @@
     "KPlugin": {
         "Authors": [
             {
+                "Name": "Syndromatic Ltd.",
+                "Email": "kavish@syndromatic.com"
+            },
+            {
+                "Name": "Kavish Krishnakumar",
+                "Email": "kavish@syndromatic.com"
+            },
+            {
                 "Email": "mvourlakos@gmail.com",
                 "Name": "Michail Vourlakos",
                 "Name[az]": "Michail Vourlakos",

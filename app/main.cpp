@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
     SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
@@ -528,7 +548,7 @@ inline void configureAboutData()
                      , QStringLiteral(VERSION)
                      , i18n("SynDock is a Plasma 6 dock for SynOS with layouts, indicators, tasks, and parabolic zoom.")
                      , KAboutLicense::GPL_V2
-                     , QStringLiteral("\251 2016-2017 Michail Vourlakos, Smith AR"));
+                     , QStringLiteral("\251 2026 Syndromatic Ltd. \251 2016-2017 Michail Vourlakos, Smith AR"));
 
     about.setHomepage(WEBSITE);
     about.setProgramLogo(QIcon::fromTheme(QStringLiteral("syndock")));
@@ -536,6 +556,8 @@ inline void configureAboutData()
     about.setProductName(QByteArray("syndock"));
 
     // Authors
+    about.addAuthor(QStringLiteral("Syndromatic Ltd."), QStringLiteral("SynDock development"), QStringLiteral("kavish@syndromatic.com"));
+    about.addAuthor(QStringLiteral("Kavish Krishnakumar"), QStringLiteral("Design and SynOS integration"), QStringLiteral("kavish@syndromatic.com"));
     about.addAuthor(QStringLiteral("Michail Vourlakos"), QString(), QStringLiteral("mvourlakos@gmail.com"));
     about.addAuthor(QStringLiteral("Smith AR"), QString(), QStringLiteral("audoban@openmailbox.org"));
 

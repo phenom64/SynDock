@@ -19,7 +19,6 @@
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/surface.h>
 #include <KWindowSystem>
-#include <KX11Extras>
 
 // X11
 #include <NETWM>
@@ -78,7 +77,7 @@ void ScreenEdgeGhostWindow::updateGeometry()
 
     QRect newGeometry = m_latteView->absoluteGeometry();
 
-    if (KX11Extras::compositingActive()) {
+    if (true) {
         m_thickness = 6;
     } else {
         m_thickness = 2;

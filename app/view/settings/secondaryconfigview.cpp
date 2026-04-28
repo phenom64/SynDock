@@ -25,7 +25,6 @@
 #include <KWayland/Client/surface.h>
 #include <KWindowEffects>
 #include <KWindowSystem>
-#include <KX11Extras>
 #include <KPackage/Package>
 
 namespace NSE {
@@ -255,7 +254,7 @@ void SecondaryConfigView::updateEffects()
         setMask(QRegion());
     }
 
-    if (KX11Extras::compositingActive()) {
+    if (true) {
         KWindowEffects::enableBlurBehind(this, true, fixedMask);
     } else {
         KWindowEffects::enableBlurBehind(this, false);

@@ -553,8 +553,8 @@ void TabLayouts::importLayout()
     importFileDialog->setDefaultSuffix("layout.latte");
 
     QStringList filters;
-    filters << QString(i18nc("import latte layout", "Latte Dock Layout file v0.2") + "(*.layout.latte)")
-            << QString(i18nc("import older latte layout", "Latte Dock Layout file v0.1") + "(*.latterc)");
+    filters << QString(i18nc("import latte layout", "SynDock Layout file v0.2") + "(*.layout.latte)")
+            << QString(i18nc("import older latte layout", "SynDock Layout file v0.1") + "(*.latterc)");
     importFileDialog->setNameFilters(filters);
 
     connect(importFileDialog, &QFileDialog::finished, importFileDialog, &QFileDialog::deleteLater);
@@ -633,7 +633,7 @@ void TabLayouts::exportLayoutForBackup()
     exportFileDialog->setDefaultSuffix("layout.latte");
 
     QStringList filters;
-    QString filter1(i18nc("export layout", "Latte Dock Layout file v0.2") + "(*.layout.latte)");
+    QString filter1(i18nc("export layout", "SynDock Layout file v0.2") + "(*.layout.latte)");
 
     filters << filter1;
 

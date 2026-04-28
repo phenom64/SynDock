@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2019 Michail Vourlakos <mvourlakos@gmail.com>
     SPDX-License-Identifier: GPL-2.0-or-later
@@ -36,6 +56,32 @@
 namespace NSE {
 namespace Indicator {
 
+namespace {
+QString indicatorMetadataValue(const KPluginMetaData &metadata, const QString &key)
+{
+    const QString value = metadata.value(key);
+    if (!value.isEmpty()) {
+        return value;
+    }
+
+    if (key.startsWith(QLatin1String("X-SynDock-"))) {
+        const QString legacyKey = QString(key).replace(QStringLiteral("X-SynDock-"), QStringLiteral("X-Latte-"));
+        return metadata.value(legacyKey);
+    }
+
+    return QString();
+}
+
+KPluginMetaData loadIndicatorMetadata(const QString &metadataFile)
+{
+    if (metadataFile.endsWith(QLatin1String(".json"))) {
+        return KPluginMetaData::fromJsonFile(metadataFile);
+    }
+
+    return KPluginMetaData(metadataFile);
+}
+}
+
 Factory::Factory(QObject *parent)
     : QObject(parent)
 {
@@ -44,8 +90,17 @@ Factory::Factory(QObject *parent)
     m_mainPaths = NSE::Layouts::Importer::standardPaths();
 
     for(int i=0; i<m_mainPaths.count(); ++i) {
-        m_mainPaths[i] = m_mainPaths[i] + "/latte/indicators";
+        m_mainPaths[i] = m_mainPaths[i] + "/syndock/indicators";
         discoverNewIndicators(m_mainPaths[i]);
+    }
+
+    //! Legacy Latte indicator locations are read-only compatibility paths for imported indicators.
+    const QStringList legacyPaths = NSE::Layouts::Importer::standardPathsFor(QStringLiteral("latte/indicators"));
+    for (const auto &legacyPath : legacyPaths) {
+        if (!m_mainPaths.contains(legacyPath)) {
+            m_mainPaths << legacyPath;
+            discoverNewIndicators(legacyPath);
+        }
     }
 
     //! track paths for changes
@@ -120,11 +175,11 @@ void Factory::reload(const QString &indicatorPath)
         QString metadataFile = metadataFileAbsolutePath(indicatorPath);
 
         if(QFileInfo(metadataFile).exists()) {
-            KPluginMetaData metadata = KPluginMetaData(metadataFile);
+            KPluginMetaData metadata = loadIndicatorMetadata(metadataFile);
 
             if (metadataAreValid(metadata)) {
                 pluginChangedId = metadata.pluginId();
-                QString uiFile = indicatorPath + "/package/" + metadata.value("X-SynDock-MainScript");
+                QString uiFile = indicatorPath + "/package/" + indicatorMetadataValue(metadata, QStringLiteral("X-SynDock-MainScript"));
 
                 if (!m_plugins.contains(metadata.pluginId())) {
                     m_plugins[metadata.pluginId()] = metadata;
@@ -240,13 +295,13 @@ bool Factory::metadataAreValid(KPluginMetaData &metadata)
 {
     return metadata.isValid()
             && metadata.category() == QLatin1String("SynDock Indicator")
-            && !metadata.value("X-SynDock-MainScript").isEmpty();
+            && !indicatorMetadataValue(metadata, QStringLiteral("X-SynDock-MainScript")).isEmpty();
 }
 
 bool Factory::metadataAreValid(QString &file)
 {
     if (QFileInfo(file).exists()) {
-        KPluginMetaData metadata(file);
+        KPluginMetaData metadata = loadIndicatorMetadata(file);
         return metadata.isValid();
     }
 
@@ -339,11 +394,11 @@ NSE::ImportExport::State Factory::importIndicatorFile(QString compressedFile)
         }
     }
 
-    KPluginMetaData metadata = KPluginMetaData(metadataFile);
+    KPluginMetaData metadata = loadIndicatorMetadata(metadataFile);
 
     if (metadataAreValid(metadata)) {
         QStringList standardPaths = NSE::Layouts::Importer::standardPaths();
-        QString installPath = standardPaths[0] + "/latte/indicators/" + metadata.pluginId();
+        QString installPath = standardPaths[0] + "/syndock/indicators/" + metadata.pluginId();
 
         bool updated{QDir(installPath).exists()};
 

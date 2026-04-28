@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
     SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
@@ -49,7 +69,6 @@
 #include <KWayland/Client/plasmashell.h>
 #include <KWayland/Client/surface.h>
 #include <KWindowSystem>
-#include <KX11Extras>
 
 // Plasma
 #include <PlasmaActivities/Consumer>
@@ -100,15 +119,6 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
         m_byPassWM = byPassX11WM;
     } else {
         setFlags(flags);
-    }
-
-    if (false) {
-        //! Enable OnAllDesktops during creation in order to protect corner cases that is ignored
-        //! during startup. Such corner case is bug #447689.
-        //! Best guess is that this is needed because OnAllDesktops is set through visibilitymanager
-        //! after containment has been assigned. That delay might lead wm ignoring the flag
-        //! until it is reapplied.
-        KX11Extras::setOnAllDesktops(winId(), true);
     }
 
     if (targetScreen) {
@@ -213,6 +223,7 @@ View::View(Plasma::Corona *corona, QScreen *targetScreen, bool byPassX11WM)
     if (m_corona) {
         connect(m_corona, &NSE::Corona::viewLocationChanged, this, &View::dockLocationChanged);
     }
+
 }
 
 View::~View()
@@ -393,12 +404,17 @@ void View::init(Plasma::Containment *plasma_containment)
         }
     }
 
-    setSource(corona()->kPackage().filePath("syndockui"));
+    const QString sourcePath = corona()->kPackage().filePath("syndockui");
+    if (sourcePath.isEmpty()) {
+        qWarning() << "SynDock startup: shell package did not resolve the main dock QML file";
+    }
+
+    setSource(sourcePath);
 
     //! immediateSyncGeometry helps avoiding binding loops from containment qml side
     m_positioner->immediateSyncGeometry();
 
-    qDebug() << "SOURCE:" << source();
+    qDebug() << "SynDock startup: dock view QML source:" << source();
 }
 
 void View::reloadSource()
@@ -732,9 +748,6 @@ void View::statusChanged(Plasma::Types::ItemStatus status)
         m_visibility->removeBlockHidingEvent(BLOCKHIDINGNEEDSATTENTIONTYPE);
         setFlags(flags() & ~Qt::WindowDoesNotAcceptFocus);
         m_visibility->initViewFlags();
-        if (false) {
-            KX11Extras::forceActiveWindow(winId());
-        }
         if (m_shellSurface) {
             m_shellSurface->setPanelTakesFocus(true);
         }

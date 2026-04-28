@@ -179,11 +179,11 @@ PlasmoidItem {
 
     property alias tasksCount: tasksModel.count
 
-    //END Latte Dock Panel properties
+    //END SynDock Panel properties
 
     readonly property bool inEditMode: latteInEditMode || plasmoid.userConfiguring
 
-    //BEGIN Latte Dock Communicator
+    //BEGIN SynDock Communicator
     property QtObject latteBridge: null
 
     readonly property bool inPlasma: latteBridge === null
@@ -193,7 +193,7 @@ PlasmoidItem {
                                                        || plasmoid.location === PlasmaCore.Types.BottomEdge
                                                        || plasmoid.location === PlasmaCore.Types.TopEdge)
     readonly property bool latteInEditMode: latteBridge && latteBridge.inEditMode
-    //END  Latte Dock Communicator
+    //END  SynDock Communicator
 
     Plasmoid.preferredRepresentation: Plasmoid.fullRepresentation
     Plasmoid.backgroundHints: inPlasmaDesktop ? PlasmaCore.Types.StandardBackground : PlasmaCore.Types.NoBackground

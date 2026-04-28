@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2017 Smith AR <audoban@openmailbox.org>
     SPDX-FileCopyrightText: 2017 Michail Vourlakos <mvourlakos@gmail.com>
@@ -34,7 +54,6 @@
 #include <KMessageBox>
 #include <KWindowSystem>
 #include <KIO/OpenFileManagerWindowJob>
-#include <KX11Extras>
 
 
 namespace NSE {
@@ -267,7 +286,7 @@ void SettingsDialog::importFullConfiguration()
     importFileDialog->setDefaultSuffix("latterc");
 
     QStringList filters;
-    filters << QString(i18nc("import full configuration", "Latte Dock Full Configuration file") + "(*.latterc)");
+    filters << QString(i18nc("import full configuration", "SynDock Full Configuration file") + "(*.latterc)");
     importFileDialog->setNameFilters(filters);
 
     connect(importFileDialog, &QFileDialog::finished, importFileDialog, &QFileDialog::deleteLater);
@@ -332,7 +351,7 @@ void SettingsDialog::exportFullConfiguration()
     exportFileDialog->setDefaultSuffix("latterc");
 
     QStringList filters;
-    QString filter2(i18nc("export full configuration", "Latte Dock Full Configuration file v0.2") + "(*.latterc)");
+    QString filter2(i18nc("export full configuration", "SynDock Full Configuration file v0.2") + "(*.latterc)");
 
     filters << filter2;
 
@@ -374,7 +393,7 @@ void SettingsDialog::exportFullConfiguration()
     exportFileDialog->open();
 
     QDate currentDate = QDate::currentDate();
-    QString proposedName = QStringLiteral("Latte Dock (") + currentDate.toString("yyyy-MM-dd")+")";
+    QString proposedName = QStringLiteral("SynDock (") + currentDate.toString("yyyy-MM-dd")+")";
 
     exportFileDialog->selectFile(proposedName);
 }
@@ -607,9 +626,6 @@ void SettingsDialog::dropEvent(QDropEvent *event)
 
 void SettingsDialog::updateWindowActivities()
 {
-    if (false) {
-        KX11Extras::setOnActivities(winId(), QStringList());
-    }
 }
 
 void SettingsDialog::save()

@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
     SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
@@ -28,6 +48,8 @@
 #include <KWayland/Client/surface.h>
 
 #include <KWayland/Client/plasmavirtualdesktop.h>
+
+#include <LayerShellQt/Window>
 
 using namespace KWayland::Client;
 
@@ -112,6 +134,58 @@ public slots:
 };
 
 namespace WindowSystem {
+
+namespace {
+LayerShellQt::Window::Anchors anchorsForLocation(Plasma::Types::Location location)
+{
+    using LayerWindow = LayerShellQt::Window;
+
+    switch (location) {
+    case Plasma::Types::TopEdge:
+        return LayerWindow::Anchors(LayerWindow::AnchorTop) | LayerWindow::AnchorLeft | LayerWindow::AnchorRight;
+    case Plasma::Types::BottomEdge:
+        return LayerWindow::Anchors(LayerWindow::AnchorBottom) | LayerWindow::AnchorLeft | LayerWindow::AnchorRight;
+    case Plasma::Types::LeftEdge:
+        return LayerWindow::Anchors(LayerWindow::AnchorLeft) | LayerWindow::AnchorTop | LayerWindow::AnchorBottom;
+    case Plasma::Types::RightEdge:
+        return LayerWindow::Anchors(LayerWindow::AnchorRight) | LayerWindow::AnchorTop | LayerWindow::AnchorBottom;
+    default:
+        return LayerWindow::AnchorNone;
+    }
+}
+
+LayerShellQt::Window::Anchor exclusiveEdgeForLocation(Plasma::Types::Location location)
+{
+    using LayerWindow = LayerShellQt::Window;
+
+    switch (location) {
+    case Plasma::Types::TopEdge:
+        return LayerWindow::AnchorTop;
+    case Plasma::Types::BottomEdge:
+        return LayerWindow::AnchorBottom;
+    case Plasma::Types::LeftEdge:
+        return LayerWindow::AnchorLeft;
+    case Plasma::Types::RightEdge:
+        return LayerWindow::AnchorRight;
+    default:
+        return LayerWindow::AnchorNone;
+    }
+}
+
+int exclusiveZoneFor(const QRect &rect, Plasma::Types::Location location)
+{
+    switch (location) {
+    case Plasma::Types::TopEdge:
+    case Plasma::Types::BottomEdge:
+        return rect.height();
+    case Plasma::Types::LeftEdge:
+    case Plasma::Types::RightEdge:
+        return rect.width();
+    default:
+        return 0;
+    }
+}
+}
 
 WaylandInterface::WaylandInterface(QObject *parent)
     : AbstractWindowInterface(parent)
@@ -245,19 +319,41 @@ void WaylandInterface::setViewExtraFlags(QObject *view, bool isPanelWindow, NSE:
     }
 
     if (!surface) {
-        return;
+        qDebug() << "SynDock Wayland: Plasma shell surface is unavailable for view flags; trying LayerShellQt only";
+    } else {
+        surface->setSkipTaskbar(true);
+        surface->setSkipSwitcher(true);
     }
-
-    surface->setSkipTaskbar(true);
-    surface->setSkipSwitcher(true);
 
     bool atBottom{!isPanelWindow && (mode == NSE::Types::WindowsCanCover || mode == NSE::Types::WindowsAlwaysCover)};
 
-    if (isPanelWindow) {
-        surface->setRole(PlasmaShellSurface::Role::Panel);
-        surface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AutoHide);
-    } else {
-        surface->setRole(PlasmaShellSurface::Role::Normal);
+    if (surface) {
+        if (isPanelWindow) {
+            surface->setRole(PlasmaShellSurface::Role::Panel);
+            surface->setPanelBehavior(PlasmaShellSurface::PanelBehavior::AutoHide);
+        } else {
+            surface->setRole(PlasmaShellSurface::Role::Normal);
+        }
+    }
+
+    QWindow *window = latteView ? static_cast<QWindow *>(latteView) : qobject_cast<QWindow *>(view);
+    LayerShellQt::Window *layerWindow = window ? LayerShellQt::Window::get(window) : nullptr;
+
+    if (layerWindow) {
+        const Plasma::Types::Location location = latteView ? latteView->location() : Plasma::Types::BottomEdge;
+        layerWindow->setScope(QStringLiteral("syndock"));
+        layerWindow->setKeyboardInteractivity(LayerShellQt::Window::KeyboardInteractivityNone);
+        layerWindow->setActivateOnShow(false);
+        layerWindow->setLayer(atBottom ? LayerShellQt::Window::LayerBottom : LayerShellQt::Window::LayerTop);
+        layerWindow->setAnchors(anchorsForLocation(location));
+        layerWindow->setExclusiveEdge(exclusiveEdgeForLocation(location));
+        layerWindow->setScreen(window->screen());
+        qDebug() << "SynDock Wayland: LayerShellQt flags applied"
+                 << "panel" << isPanelWindow
+                 << "mode" << mode
+                 << "location" << location;
+    } else if (latteView) {
+        qWarning() << "SynDock Wayland: LayerShellQt window is unavailable for dock view";
     }
 
     if (latteView || configView) {
@@ -283,13 +379,27 @@ void WaylandInterface::setViewExtraFlags(QObject *view, bool isPanelWindow, NSE:
         //!  2. View at the end MUST BE AT THE BOTTOM of windows stack
 
         QTimer::singleShot(50, [this, surface]() {
-            surface->setRole(PlasmaShellSurface::Role::ToolTip);
+            if (surface) {
+                surface->setRole(PlasmaShellSurface::Role::ToolTip);
+            }
         });
     }
 }
 
 void WaylandInterface::setViewStruts(QWindow &view, const QRect &rect, Plasma::Types::Location location)
 {
+    if (LayerShellQt::Window *layerWindow = LayerShellQt::Window::get(&view)) {
+        const int zone = exclusiveZoneFor(rect, location);
+        layerWindow->setExclusiveZone(zone);
+        layerWindow->setExclusiveEdge(exclusiveEdgeForLocation(location));
+        layerWindow->setAnchors(anchorsForLocation(location));
+        layerWindow->setMargins(QMargins());
+        qDebug() << "SynDock Wayland: LayerShellQt exclusive zone set" << zone << rect << location;
+        return;
+    }
+
+    qWarning() << "SynDock Wayland: LayerShellQt unavailable, using legacy ghost window strut fallback";
+
     if (!m_ghostWindows.contains(view.winId())) {
         m_ghostWindows[view.winId()] = new Private::GhostWindow(this);
     }
@@ -406,6 +516,11 @@ void WaylandInterface::setWindowOnActivities(const WindowId &wid, const QStringL
 
 void WaylandInterface::removeViewStruts(QWindow &view)
 {
+    if (LayerShellQt::Window *layerWindow = LayerShellQt::Window::get(&view)) {
+        layerWindow->setExclusiveZone(0);
+        qDebug() << "SynDock Wayland: LayerShellQt exclusive zone cleared";
+    }
+
     delete m_ghostWindows.take(view.winId());
 }
 
@@ -423,7 +538,7 @@ WindowId WaylandInterface::activeWindow()
 void WaylandInterface::skipTaskBar(const QDialog &dialog)
 {
     //FIXME:
-    // setState() was an X11 call. It is available in KX11Extras
+    // Wayland window slide hints are handled by compositor protocols when available.
     // but this isn't what we want here.
     // Wayland sucks donkey balls and I hate it so much...
     //KWindowSystem::setState(dialog.winId(), NET::SkipTaskbar);

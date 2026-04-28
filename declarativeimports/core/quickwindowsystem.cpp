@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmailbox.org>
     SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
@@ -10,30 +30,13 @@
 // Qt
 #include <QDebug>
 
-// X11
-#include <KWindowSystem>
-#include <KX11Extras>
-
 namespace NSE {
 
 QuickWindowSystem::QuickWindowSystem(QObject *parent)
     : QObject(parent)
 {
-    if (KWindowSystem::isPlatformWayland()) {
-        // Compositing on Wayland is always active.
-        m_compositing = true;
-    } else {
-        connect(KX11Extras::self(), &KX11Extras::compositingChanged
-        , this, [&](bool enabled) {
-            if (m_compositing == enabled)
-                return;
-
-            m_compositing = enabled;
-            emit compositingChanged();
-        });
-
-        m_compositing = KX11Extras::compositingActive();
-    }
+    // SynDock is Wayland-only; compositing is always active.
+    m_compositing = true;
 }
 
 QuickWindowSystem::~QuickWindowSystem()
@@ -48,7 +51,7 @@ bool QuickWindowSystem::compositingActive() const
 
 bool QuickWindowSystem::isPlatformWayland() const
 {
-    return KWindowSystem::isPlatformWayland();
+    return true;
 }
 
 } //end of namespace

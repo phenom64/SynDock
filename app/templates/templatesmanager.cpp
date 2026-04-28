@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2020 Michail Vourlakos <mvourlakos@gmail.com>
     SPDX-License-Identifier: GPL-2.0-or-later
@@ -16,6 +36,7 @@
 
 // Qt
 #include <QDir>
+#include <QFileInfo>
 
 // KDE
 #include <KDirWatch>
@@ -50,7 +71,14 @@ void Manager::init()
 void Manager::initLayoutTemplates()
 {
     m_layoutTemplates.clear();
-    initLayoutTemplates(m_corona->kPackage().filePath("templates"));
+    const QString systemTemplates = m_corona->kPackage().filePath("templates");
+    if (systemTemplates.isEmpty()) {
+        qWarning() << "SynDock templates: shell package did not resolve a system templates directory";
+    } else {
+        qDebug() << "SynDock templates: loading layout templates from" << systemTemplates;
+    }
+
+    initLayoutTemplates(systemTemplates);
     initLayoutTemplates(NSE::dataPath() + "/syndock/templates");
     emit layoutTemplatesChanged();
 }
@@ -58,17 +86,30 @@ void Manager::initLayoutTemplates()
 void Manager::initViewTemplates()
 {
     m_viewTemplates.clear();
-    initViewTemplates(m_corona->kPackage().filePath("templates"));
+    const QString systemTemplates = m_corona->kPackage().filePath("templates");
+    if (systemTemplates.isEmpty()) {
+        qWarning() << "SynDock templates: shell package did not resolve a system templates directory";
+    } else {
+        qDebug() << "SynDock templates: loading view templates from" << systemTemplates;
+    }
+
+    initViewTemplates(systemTemplates);
     initViewTemplates(NSE::dataPath() + "/syndock/templates");
     emit viewTemplatesChanged();
 }
 
 void Manager::initLayoutTemplates(const QString &path)
 {
+    if (path.isEmpty()) {
+        return;
+    }
+
     QDir templatesDir(path);
     QStringList filter;
-    filter.append(QString("*.layout.latte"));
+    filter.append(QString("*") + layoutTemplateExtension());
     QStringList templates = templatesDir.entryList(filter, QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+
+    qDebug() << "SynDock templates: found" << templates.count() << "layout templates in" << path;
 
     for (int i=0; i<templates.count(); ++i) {
         QString templatePath = templatesDir.path() + "/" + templates[i];
@@ -90,12 +131,18 @@ void Manager::initLayoutTemplates(const QString &path)
 
 void Manager::initViewTemplates(const QString &path)
 {
+    if (path.isEmpty()) {
+        return;
+    }
+
     bool istranslated = (m_corona->kPackage().filePath("templates") == path);
 
     QDir templatesDir(path);
     QStringList filter;
-    filter.append(QString("*.view.latte"));
+    filter.append(QString("*") + viewTemplateExtension());
     QStringList templates = templatesDir.entryList(filter, QDir::Files | QDir::Hidden | QDir::NoSymLinks);
+
+    qDebug() << "SynDock templates: found" << templates.count() << "view templates in" << path;
 
     for (int i=0; i<templates.count(); ++i) {
         QString templatePath = templatesDir.path() + "/" + templates[i];
@@ -155,7 +202,14 @@ Data::GenericBasicTable Manager::viewTemplates()
 QString Manager::newLayout(QString layoutName, QString layoutTemplate)
 {
     if (!m_layoutTemplates.containsName(layoutTemplate)) {
-        return QString();
+        qWarning() << "SynDock templates: requested layout template is missing:" << layoutTemplate;
+
+        if (layoutTemplate != i18n(DEFAULTLAYOUTTEMPLATENAME) && m_layoutTemplates.containsName(i18n(DEFAULTLAYOUTTEMPLATENAME))) {
+            qWarning() << "SynDock templates: falling back to Default layout template";
+            layoutTemplate = i18n(DEFAULTLAYOUTTEMPLATENAME);
+        } else {
+            return QString();
+        }
     }
 
     if (layoutName.isEmpty()) {
@@ -167,8 +221,17 @@ QString Manager::newLayout(QString layoutName, QString layoutTemplate)
     QString newLayoutPath = Layouts::Importer::layoutUserFilePath(layoutName);
 
     Data::Layout dlayout = layoutTemplateForName(layoutTemplate);
-    QFile(dlayout.id).copy(newLayoutPath);
-    qDebug() << "adding layout : " << layoutName << " based on layout template:" << layoutTemplate;
+    if (dlayout.id.isEmpty() || !QFileInfo::exists(dlayout.id)) {
+        qWarning() << "SynDock templates: layout template file is missing:" << dlayout.id << "for template" << layoutTemplate;
+        return QString();
+    }
+
+    if (!QFile(dlayout.id).copy(newLayoutPath)) {
+        qWarning() << "SynDock templates: failed to copy layout template" << dlayout.id << "to" << newLayoutPath;
+        return QString();
+    }
+
+    qDebug() << "SynDock templates: added layout" << layoutName << "from template" << layoutTemplate << "at" << newLayoutPath;
 
     emit newLayoutAdded(newLayoutPath);
 
@@ -188,9 +251,9 @@ bool Manager::exportTemplate(const NSE::View *view, const QString &destinationFi
 void Manager::onCustomTemplatesCountChanged(const QString &file)
 {
     if (file.startsWith(NSE::dataPath() + "/syndock/templates")) {
-        if (file.endsWith(".layout.latte")) {
+        if (file.endsWith(layoutTemplateExtension())) {
             initLayoutTemplates();
-        } else if (file.endsWith(".view.latte")) {
+        } else if (file.endsWith(viewTemplateExtension())) {
             initViewTemplates();
         }
     }
@@ -214,12 +277,12 @@ QString Manager::proposedTemplateAbsolutePath(QString templateFilename)
 {
     QString tempfilename = templateFilename;
 
-    if (tempfilename.endsWith(".layout.latte")) {
-        QString clearedname = tempfilename.chopped(QString(".layout.latte").size());
-        tempfilename = uniqueLayoutTemplateName(clearedname) + ".layout.latte";
-    } else if (tempfilename.endsWith(".view.latte")) {
-        QString clearedname = tempfilename.chopped(QString(".view.latte").size());
-        tempfilename = uniqueViewTemplateName(clearedname) + ".view.latte";
+    if (tempfilename.endsWith(layoutTemplateExtension())) {
+        QString clearedname = tempfilename.chopped(layoutTemplateExtension().size());
+        tempfilename = uniqueLayoutTemplateName(clearedname) + layoutTemplateExtension();
+    } else if (tempfilename.endsWith(viewTemplateExtension())) {
+        QString clearedname = tempfilename.chopped(viewTemplateExtension().size());
+        tempfilename = uniqueViewTemplateName(clearedname) + viewTemplateExtension();
     }
 
     return QString(NSE::dataPath() + "/syndock/templates/" + tempfilename);
@@ -257,13 +320,13 @@ QString Manager::viewTemplateFilePath(const QString templateName) const
 
 void Manager::installCustomLayoutTemplate(const QString &templateFilePath)
 {
-    if (!templateFilePath.endsWith(".layout.latte")) {
+    if (!templateFilePath.endsWith(layoutTemplateExtension())) {
         return;
     }
 
     QString layoutName = QFileInfo(templateFilePath).baseName();
 
-    QString destinationFilePath = NSE::dataPath() + "/syndock/templates/" + layoutName + ".layout.latte";
+    QString destinationFilePath = NSE::dataPath() + "/syndock/templates/" + layoutName + layoutTemplateExtension();
 
     if (hasCustomLayoutTemplate(layoutName)) {
         QFile(destinationFilePath).remove();
@@ -318,12 +381,12 @@ QString Manager::templateName(const QString &filePath)
     QString tempFilePath = filePath;
     QString templatename = tempFilePath.remove(0, lastSlash + 1);
 
-    QString extension(".layout.latte");
+    QString extension(layoutTemplateExtension());
     int ext = templatename.lastIndexOf(extension);
     if (ext>0) {
         templatename = templatename.remove(ext, extension.size());
     } else {
-        extension = ".view.latte";
+        extension = viewTemplateExtension();
         ext = templatename.lastIndexOf(extension);
         templatename = templatename.remove(ext,extension.size());
     }
@@ -331,10 +394,21 @@ QString Manager::templateName(const QString &filePath)
     return templatename;
 }
 
+QString Manager::layoutTemplateExtension()
+{
+    return QStringLiteral(".layout.latte");
+}
+
+QString Manager::viewTemplateExtension()
+{
+    return QStringLiteral(".view.latte");
+}
+
 //! it is used in order to provide translations for system templates
 void Manager::exposeTranslatedTemplateNames()
 {
     //! layout templates default names
+    i18nc("synos layout template name", "SynOS");
     i18nc("default layout template name", "Default");
     i18nc("empty layout template name", "Empty");
 

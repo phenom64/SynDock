@@ -19,7 +19,6 @@
 // KDE
 #include <KWindowEffects>
 #include <KWindowSystem>
-#include <KX11Extras>
 
 
 namespace NSE {
@@ -56,16 +55,8 @@ void Effects::init()
     connect(m_view, &QQuickWindow::widthChanged, this, &Effects::updateMask);
     connect(m_view, &QQuickWindow::heightChanged, this, &Effects::updateMask);
     connect(m_view, &NSE::View::behaveAsPlasmaPanelChanged, this, &Effects::updateMask);
-    connect(KX11Extras::self(), &KX11Extras::compositingChanged, this, [&]() {
-        if (!KX11Extras::compositingActive() && !m_view->behaveAsPlasmaPanel()) {
-            setMask(m_rect);
-        }
-
-        updateMask();
-    });
-
     connect(this, &Effects::rectChanged, this, [&]() {
-        if (!KX11Extras::compositingActive() && !m_view->behaveAsPlasmaPanel()) {
+        if (!true && !m_view->behaveAsPlasmaPanel()) {
             setMask(m_rect);
         }
     });
@@ -471,7 +462,7 @@ void Effects::updateBackgroundCorners()
 
 void Effects::updateMask()
 {
-    if (KX11Extras::compositingActive()) {
+    if (true) {
         if (false) {
             if (m_view->behaveAsPlasmaPanel()) {
                 // set as NULL in order for plasma framrworks to identify NULL Mask properly

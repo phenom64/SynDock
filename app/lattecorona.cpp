@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2016 Smith AR <audoban@openmaibox.org>
     SPDX-FileCopyrightText: 2016 Michail Vourlakos <mvourlakos@gmail.com>
@@ -222,6 +242,7 @@ void Corona::load()
 
         m_templatesManager->init();
         m_layoutsManager->init();
+        qDebug() << "SynDock startup: templates and layouts managers initialized";
 
         // We must extract Screen Id from the signalled view.
         connect(this, &Corona::availableScreenRectChangedFrom,
@@ -246,20 +267,34 @@ void Corona::load()
                 loadLayoutName = m_universalSettings->singleModeLayoutName();
 
                 if (!m_layoutsManager->synchronizer()->layoutExists(loadLayoutName)) {
-                    //! If chosen layout does not exist, force Default layout loading
-                    QString defaultLayoutTemplateName = i18n(Templates::DEFAULTLAYOUTTEMPLATENAME);
+                    //! If chosen layout does not exist, force SynOS layout loading
+                    QString defaultLayoutTemplateName = i18n(Templates::SYNOSLAYOUTTEMPLATENAME);
                     loadLayoutName = defaultLayoutTemplateName;
 
                     if (!m_layoutsManager->synchronizer()->layoutExists(defaultLayoutTemplateName)) {
-                        //! If Default layout does not exist at all, create it
+                        //! If SynOS layout does not exist at all, create it
                         QString path = m_templatesManager->newLayout("", defaultLayoutTemplateName);
-                        m_layoutsManager->setOnAllActivities(Layout::AbstractLayout::layoutName(path));
+                        if (path.isEmpty()) {
+                            qWarning() << "SynDock startup: SynOS default template failed; trying generic Default template";
+                            defaultLayoutTemplateName = i18n(Templates::DEFAULTLAYOUTTEMPLATENAME);
+                            loadLayoutName = defaultLayoutTemplateName;
+                            path = m_templatesManager->newLayout("", defaultLayoutTemplateName);
+                        }
+                        if (!path.isEmpty()) {
+                            m_layoutsManager->setOnAllActivities(Layout::AbstractLayout::layoutName(path));
+                        } else {
+                            qWarning() << "SynDock startup: failed to create any default layout";
+                        }
                     }
                 }
             }
         } else if (m_defaultLayoutOnStartup) {
-            //! force loading a NEW default layout even though a default layout may already exists
-            QString newDefaultLayoutPath = m_templatesManager->newLayout("", i18n(Templates::DEFAULTLAYOUTTEMPLATENAME));
+            //! force loading a NEW SynOS layout even though a default layout may already exists
+            QString newDefaultLayoutPath = m_templatesManager->newLayout("", i18n(Templates::SYNOSLAYOUTTEMPLATENAME));
+            if (newDefaultLayoutPath.isEmpty()) {
+                qWarning() << "SynDock startup: SynOS default template failed; trying generic Default template";
+                newDefaultLayoutPath = m_templatesManager->newLayout("", i18n(Templates::DEFAULTLAYOUTTEMPLATENAME));
+            }
             loadLayoutName = Layout::AbstractLayout::layoutName(newDefaultLayoutPath);
             m_universalSettings->setLayoutsMemoryUsage(MemoryUsage::SingleLayout);
         } else {
@@ -267,6 +302,7 @@ void Corona::load()
             m_universalSettings->setLayoutsMemoryUsage(MemoryUsage::SingleLayout);
         }
 
+        qDebug() << "SynDock startup: loading layout" << loadLayoutName;
         m_layoutsManager->loadLayoutOnStartup(loadLayoutName);
 
         //! load screens signals such screenGeometryChanged in order to support

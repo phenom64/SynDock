@@ -291,7 +291,7 @@ PlasmoidItem {
       //  anchors.verticalCenterOffset:  (mainColumn.height / 4)
 
         width: 0.85 * mainItem.width
-        text: i18n("For the disabled settings you should use the Latte Dock Configuration Window")
+        text: i18n("For the disabled settings you should use the SynDock Configuration Window")
         visible: mainItem.isInSynDock
 
         horizontalAlignment: Text.AlignHCenter

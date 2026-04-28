@@ -75,7 +75,7 @@ void GlobalShortcuts::init()
 
     //show-hide the main view in the primary screen
     QAction *showAction = generalActions->addAction(QStringLiteral("show latte view"));
-    showAction->setText(i18n("Show Latte Dock/Panel"));
+    showAction->setText(i18n("Show SynDock Dock/Panel"));
     showAction->setShortcut(QKeySequence(Qt::META | '`'));
     KGlobalAccel::setGlobalShortcut(showAction, QKeySequence(Qt::META | '`'));
     connect(showAction, &QAction::triggered, this, [this]() {

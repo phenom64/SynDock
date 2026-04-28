@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(VERSION 1.0.0)
 set(AUTHOR "Syndromatic Ltd.")
-set(EMAIL "support@syndromatic.com")
+set(EMAIL "kavish@syndromatic.com")
 set(WEBSITE "https://syndromatic.com/syndock")
 set(BUG_ADDRESS "https://github.com/phenom64/SynDock/issues")
 

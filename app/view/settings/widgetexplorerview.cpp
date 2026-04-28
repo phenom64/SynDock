@@ -22,7 +22,6 @@
 #include <KWindowEffects>
 #include <KWindowSystem>
 #include <KWayland/Client/plasmashell.h>
-#include <KX11Extras>
 #include <KPackage/Package>
 
 namespace NSE {
@@ -206,7 +205,7 @@ void WidgetExplorerView::updateEffects()
         setMask(QRegion());
     }
 
-    if (KX11Extras::compositingActive()) {
+    if (true) {
         KWindowEffects::enableBlurBehind(this, true, fixedMask);
     } else {
         KWindowEffects::enableBlurBehind(this, false);

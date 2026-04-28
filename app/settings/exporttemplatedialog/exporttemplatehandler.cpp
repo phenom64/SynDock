@@ -161,9 +161,9 @@ void ExportTemplateHandler::chooseFileDialog()
     QStringList filters;
 
     if (inLayoutState) {
-        filters << QString(i18nc("layout template", "Latte Dock Layout Template file v0.2") + "(*.layout.latte)");
+        filters << QString(i18nc("layout template", "SynDock Layout Template file v0.2") + "(*.layout.latte)");
     } else {
-        filters << QString(i18nc("view template", "Latte Dock View Template file v0.2") + "(*.view.latte)");
+        filters << QString(i18nc("view template", "SynDock View Template file v0.2") + "(*.view.latte)");
     }
 
     chooseFileDlg->setNameFilters(filters);

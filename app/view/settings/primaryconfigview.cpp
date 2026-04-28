@@ -34,7 +34,6 @@
 #include <KWindowEffects>
 #include <KWindowSystem>
 #include <KPackage/Package>
-#include <KX11Extras>
 
 #define CANVASWINDOWINTERVAL 50
 #define PRIMARYWINDOWINTERVAL 250
@@ -662,7 +661,7 @@ void PrimaryConfigView::updateEffects()
         setMask(QRegion());
     }
 
-    if (KX11Extras::compositingActive()) {
+    if (true) {
         KWindowEffects::enableBlurBehind(this, true, fixedMask);
     } else {
         KWindowEffects::enableBlurBehind(this, false);

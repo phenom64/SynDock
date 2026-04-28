@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2020 Michail Vourlakos <mvourlakos@gmail.com>
     SPDX-License-Identifier: GPL-2.0-or-later
@@ -15,6 +35,7 @@
 // Qt
 #include <QFileDialog>
 #include <QFileInfo>
+#include <QLatin1String>
 #include <QTimer>
 
 // KDE
@@ -24,6 +45,23 @@
 
 namespace NSE {
 namespace ViewPart {
+
+namespace {
+QString indicatorMetadataValue(const KPluginMetaData &metadata, const QString &key)
+{
+    const QString value = metadata.value(key);
+    if (!value.isEmpty()) {
+        return value;
+    }
+
+    if (key.startsWith(QLatin1String("X-SynDock-"))) {
+        const QString legacyKey = QString(key).replace(QStringLiteral("X-SynDock-"), QStringLiteral("X-Latte-"));
+        return metadata.value(legacyKey);
+    }
+
+    return QString();
+}
+}
 namespace Config {
 
 IndicatorUiManager::IndicatorUiManager(ViewPart::PrimaryConfigView *parent)
@@ -116,7 +154,7 @@ void IndicatorUiManager::ui(const QString &type, NSE::View *view)
     KPluginMetaData metadata = m_primary->corona()->indicatorFactory()->metadata(type);
 
     if (metadata.isValid()) {
-        QString uiPath = metadata.value("X-SynDock-ConfigUi");
+        QString uiPath = indicatorMetadataValue(metadata, QStringLiteral("X-SynDock-ConfigUi"));
 
         if (!uiPath.isEmpty()) {
             IndicatorUiData uidata;

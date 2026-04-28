@@ -1,3 +1,23 @@
+/* This file is a part of the Atmo Desktop Dock project 'SynDock' for SynOS.
+ * Copyright (C) 2026 Syndromatic Ltd. All rights reserved
+ * Designed by Kavish Krishnakumar in Manchester.
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITH ABSOLUTELY NO WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ *
+ * Based on Latte Dock.
+ */
+
 /*
     SPDX-FileCopyrightText: 2017 Smith AR <audoban@openmailbox.org>
     SPDX-FileCopyrightText: 2019 Michail Vourlakos <mvourlakos@gmail.com>
@@ -76,15 +96,23 @@ void Manager::init()
 
     if (firstRun) {
         m_corona->universalSettings()->setVersion(2);
-        m_corona->universalSettings()->setSingleModeLayoutName(i18n("My Layout"));
+        m_corona->universalSettings()->setSingleModeLayoutName(i18n(Templates::SYNOSLAYOUTTEMPLATENAME));
 
         //startup create what is necessary....
         if (!layoutsDir.exists()) {
             QDir(NSE::dataPath()).mkdir("syndock");
         }
 
-        QString defpath = m_corona->templatesManager()->newLayout(i18n("My Layout"), i18n(Templates::DEFAULTLAYOUTTEMPLATENAME));
-        setOnAllActivities(Layout::AbstractLayout::layoutName(defpath));
+        QString defpath = m_corona->templatesManager()->newLayout(i18n(Templates::SYNOSLAYOUTTEMPLATENAME), i18n(Templates::SYNOSLAYOUTTEMPLATENAME));
+        if (defpath.isEmpty()) {
+            qWarning() << "SynDock layouts: failed to create SynOS first-run layout; trying generic Default template";
+            defpath = m_corona->templatesManager()->newLayout(i18n(Templates::SYNOSLAYOUTTEMPLATENAME), i18n(Templates::DEFAULTLAYOUTTEMPLATENAME));
+        }
+        if (!defpath.isEmpty()) {
+            setOnAllActivities(Layout::AbstractLayout::layoutName(defpath));
+        } else {
+            qWarning() << "SynDock layouts: first-run layout creation failed; no default layout was assigned";
+        }
 
         m_corona->templatesManager()->importSystemLayouts();
     } else if (configVer < 2 && !firstRun) {
@@ -95,7 +123,7 @@ void Manager::init()
             qDebug() << "Latte is updating its older configuration...";
             m_corona->templatesManager()->importSystemLayouts();
         } else {
-            m_corona->universalSettings()->setSingleModeLayoutName(i18n("My Layout"));
+            m_corona->universalSettings()->setSingleModeLayoutName(i18n(Templates::SYNOSLAYOUTTEMPLATENAME));
         }
     }
 
@@ -111,7 +139,7 @@ void Manager::init()
         m_corona->templatesManager()->newLayout("", Layout::MULTIPLELAYOUTSHIDDENNAME);
     }
 
-    qDebug() << "Latte is loading  its layouts...";
+    qDebug() << "SynDock is loading its layouts...";
 
     m_synchronizer->initLayouts();
 }
